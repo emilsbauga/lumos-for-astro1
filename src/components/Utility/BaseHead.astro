@@ -26,7 +26,10 @@ const socialImage = new URL(image, Astro.site);
   @layer base, patterns, components, utilities;
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<Font cssVariable="--font-inter" preload />
+{/* The brand black, so the browser chrome meets the page rather than framing it. */}
+<meta name="theme-color" content="#141617" />
+<Font cssVariable="--font-display" preload />
+<Font cssVariable="--font-body" preload />
 <title>{pageTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />

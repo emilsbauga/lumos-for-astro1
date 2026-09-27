@@ -1,0 +1,845 @@
+---
+import Img from "@/components/Media/Img.astro";
+import Symbol from "@/assets/logo/studeja-symbol.svg";
+
+interface Heading {
+  /** BCP 47 tag for this version, e.g. `lv` or `ltg`. */
+  lang: string;
+  /** The headline, one entry per line. The line breaks are deliberate. */
+  lines: string[];
+}
+
+interface Media {
+  /** An imported asset, a remote `http(s)` URL, or a path to a file in `public/`. */
+  image: ImageMetadata;
+  /** Decorative here, so this is only for the rare item that carries meaning. */
+  imageAlt?: string;
+  /** A short muted loop. Given one, the still becomes its poster. */
+  video?: string;
+  /** Horizontal centre, as a percentage of the hero. */
+  x: number;
+  /** Vertical centre, as a percentage of the hero. */
+  y: number;
+  /** Width in rem. */
+  width: number;
+  /** Aspect ratio, written as CSS does it: `4 / 5`, `16 / 9`, `1`. */
+  ratio: string;
+  /** Tilt in degrees. */
+  rot: number;
+  /** How long one float cycle takes, in seconds. Vary it per item. */
+  duration: number;
+  /** Where in that cycle it starts, in seconds. Vary it per item. */
+  delay: number;
+  /** Whether it survives on a phone, where there is far less room. */
+  small?: boolean;
+}
+
+interface Props {
+  /** Set to `false` to skip rendering this component and its children. */
+  render?: boolean;
+  /** The headline in each language. The first is the one screen readers get. */
+  headings: Heading[];
+  /** The sentence under the headline. It never changes language. */
+  text: string;
+  /** The call to action's label, and its accessible name. */
+  buttonLabel: string;
+  /** What rolls up in its place on hover. Decorative, so it is never announced. */
+  buttonHoverLabel: string;
+  /** Where the call to action leads. */
+  buttonHref: string;
+  /** The photographs and clips floating around the centre. Decorative. */
+  media: Media[];
+}
+
+const {
+  render = true,
+  headings,
+  text,
+  buttonLabel,
+  buttonHoverLabel,
+  buttonHref,
+  media,
+} = Astro.props;
+
+const escape = (value: string) =>
+  value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+/* Split server-side so the first frame is already the finished headline: with
+   no JavaScript the first version simply stays on screen. The spans are built
+   as one string because whitespace between them renders as a gap between
+   letters, and a newline between them becomes a line break. */
+const versions = headings.map((heading) => ({
+  ...heading,
+  lines: heading.lines.map((line) => {
+    const chars = [...line];
+    return {
+      count: chars.length,
+      html: chars
+        .map(
+          (char, index) =>
+            `<span class="herov2_char" style="--_i:${index}">${
+              char === " " ? "&#160;" : escape(char)
+            }</span>`,
+        )
+        .join(""),
+    };
+  }),
+}));
+
+const spoken = headings[0]?.lines.join(" ") ?? "";
+---
+
+{
+  render && versions.length > 0 && (
+    <section class="herov2_wrap" data-hero>
+      {/* Scattered all around, then faded back into the field as they near
+          the copy by the scrim above them. */}
+      <div class="herov2_field" aria-hidden="true">
+        {media.map((item) => (
+          <div
+            class:list={["herov2_media", item.small && "on-small"]}
+            style={`--_x:${item.x}%;--_y:${item.y}%;--_w:${item.width}rem;--_ratio:${item.ratio};--_rot:${item.rot}deg;--_dur:${item.duration}s;--_delay:${item.delay}s`}
+          >
+            <div class="herov2_card">
+              {item.video ? (
+                <video
+                  class="herov2_video"
+                  src={item.video}
+                  poster={
+                    typeof item.image === "string" ? item.image : item.image.src
+                  }
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                />
+              ) : (
+                <Img
+                  src={item.image}
+                  alt={item.imageAlt}
+                  variant="constrained"
+                  loading="lazy"
+                  sizes="16rem"
+                />
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="herov2_scrim" aria-hidden="true" />
+      <div class="herov2_grain" aria-hidden="true" />
+
+      <div class="herov2_content">
+        <Symbol class="herov2_symbol" aria-hidden="true" />
+
+        <h1 class="herov2_heading">
+          <span class="sr-only">{spoken}</span>
+          <span class="herov2_headline" aria-hidden="true">
+            {versions.map((version, versionIndex) => (
+              <span
+                class="herov2_version"
+                lang={version.lang}
+                data-version={version.lang}
+              >
+                {version.lines.map((line, lineIndex) => (
+                  <span
+                    class="herov2_line"
+                    data-line={lineIndex}
+                    data-state={versionIndex === 0 ? "shown" : "hidden"}
+                    style={`--_stagger:${Math.min(26, Math.round(380 / line.count))}ms`}
+                    set:html={line.html}
+                  />
+                ))}
+              </span>
+            ))}
+          </span>
+        </h1>
+
+        <p class="herov2_text">{text}</p>
+
+        <div class="herov2_actions">
+          <a class="herov2_cta" href={buttonHref} data-cta="hero">
+            <span class="herov2_cta_roll">
+              <span class="herov2_cta_label">{buttonLabel}</span>
+              <span class="herov2_cta_label alt" aria-hidden="true">
+                {buttonHoverLabel}
+              </span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  /* Timings, in milliseconds. A swap runs line by line: one line is always
+     complete while the other changes, so the headline area never empties. */
+  const WRITE = 440;
+  const ERASE = 260;
+  const HOLD = 4000;
+  const LINE_OVERLAP = 350;
+  /* The pulse is fired from the same timeline as the headline, a beat after a
+     swap settles and well before the next one, so the two never overlap. */
+  const PULSE_AFTER = 1300;
+  const PULSE_RUN = 900;
+
+  type LineState = "hidden" | "writing" | "shown" | "erasing";
+
+  const hero = document.querySelector<HTMLElement>("[data-hero]");
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  if (hero) {
+    const versions = [...hero.querySelectorAll<HTMLElement>(".herov2_version")];
+    const cta = hero.querySelector<HTMLElement>(".herov2_cta");
+    const videos = [...hero.querySelectorAll<HTMLVideoElement>("video")];
+
+    const linesOf = (version: HTMLElement) => [
+      ...version.querySelectorAll<HTMLElement>(".herov2_line"),
+    ];
+
+    const setLine = (version: HTMLElement, line: number, state: LineState) => {
+      linesOf(version)[line]?.setAttribute("data-state", state);
+    };
+
+    const setVersion = (version: HTMLElement, state: LineState) => {
+      linesOf(version).forEach((line) =>
+        line.setAttribute("data-state", state),
+      );
+    };
+
+    /* One queue of pending steps, so a pause can drop all of them at once. */
+    let timers: number[] = [];
+    const after = (delay: number, run: () => void) => {
+      timers.push(window.setTimeout(run, delay));
+    };
+    const clear = () => {
+      timers.forEach((id) => window.clearTimeout(id));
+      timers = [];
+    };
+
+    let current = 0;
+    /* True while the headline is writing or swapping, so resuming never
+       schedules a hold on top of a sequence already in flight. */
+    let busy = false;
+    /* The version the headline is settling towards. A pause mid-swap lands
+       here, never on a half-written line. */
+    let target = 0;
+
+    const pauses = new Set<string>();
+    const isPaused = () => pauses.size > 0;
+
+    const settle = () => {
+      clear();
+      busy = false;
+      cta?.classList.remove("is-pulsing");
+      versions.forEach((version, index) => {
+        setVersion(version, index === target ? "shown" : "hidden");
+      });
+      current = target;
+    };
+
+    const write = (version: HTMLElement, line: number, done?: () => void) => {
+      setLine(version, line, "writing");
+      after(WRITE, () => {
+        setLine(version, line, "shown");
+        done?.();
+      });
+    };
+
+    const swap = () => {
+      if (isPaused()) return;
+      busy = true;
+      const from = versions[current];
+      target = (current + 1) % versions.length;
+      const to = versions[target];
+
+      /* Line one changes while line two still reads; then they trade. */
+      setLine(from, 0, "erasing");
+      after(ERASE, () => {
+        setLine(from, 0, "hidden");
+        write(to, 0);
+      });
+      after(ERASE + WRITE, () => setLine(from, 1, "erasing"));
+      after(ERASE * 2 + WRITE, () => {
+        setLine(from, 1, "hidden");
+        write(to, 1, () => {
+          current = target;
+          busy = false;
+          hold();
+        });
+      });
+    };
+
+    const pulse = () => {
+      if (isPaused() || still.matches || !cta) return;
+      cta.classList.add("is-pulsing");
+      after(PULSE_RUN, () => cta.classList.remove("is-pulsing"));
+    };
+
+    const hold = () => {
+      if (isPaused()) return;
+      after(PULSE_AFTER, pulse);
+      after(HOLD, swap);
+    };
+
+    const enter = () => {
+      const first = versions[0];
+      busy = true;
+      setVersion(first, "hidden");
+      /* A frame's gap so the hidden state paints before the write begins. */
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          write(first, 0);
+          after(LINE_OVERLAP, () =>
+            write(first, 1, () => {
+              busy = false;
+              hold();
+            }),
+          );
+        });
+      });
+    };
+
+    const setStill = (stop: boolean) => {
+      hero.classList.toggle("is-still", stop);
+      videos.forEach((video) => {
+        if (stop) video.pause();
+        else if (video.readyState > 0) void video.play().catch(() => {});
+      });
+    };
+
+    const addPause = (source: string) => {
+      const was = isPaused();
+      pauses.add(source);
+      if (!was) {
+        settle();
+        setStill(true);
+      }
+    };
+
+    const removePause = (source: string) => {
+      pauses.delete(source);
+      if (isPaused() || still.matches) return;
+      setStill(false);
+      /* A fresh reading interval, rather than finishing the old one. The
+         pulse rides along with it. */
+      if (!busy) hold();
+    };
+
+    /* Hovering or focusing the call to action stops everything else, so it is
+       the only thing moving. */
+    if (cta) {
+      const quiet = () => addPause("pointer");
+      const loud = () => removePause("pointer");
+      cta.addEventListener("pointerenter", quiet);
+      cta.addEventListener("pointerleave", loud);
+      cta.addEventListener("focus", quiet);
+      cta.addEventListener("blur", loud);
+    }
+
+    /* Nothing runs off screen or in a background tab. */
+    let seen = false;
+    new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          seen = true;
+          removePause("offscreen");
+        } else if (seen) {
+          addPause("offscreen");
+        }
+      },
+      { threshold: 0 },
+    ).observe(hero);
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) addPause("hidden");
+      else removePause("hidden");
+    });
+
+    /* A shove from the cursor, then a spring back. Each photograph keeps its
+       own velocity, so they scatter at slightly different rates and settle in
+       their own time rather than moving as one block. */
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+    if (fine.matches) {
+      const items = [...hero.querySelectorAll<HTMLElement>(".herov2_media")];
+      const drift = items.map(() => ({ x: 0, y: 0, vx: 0, vy: 0 }));
+      const REACH = 240; // how close the cursor has to come, in px
+      const SHOVE = 1.3; // how hard it pushes
+      const SPRING = 0.035;
+      const DAMPING = 0.62; // at critical, so it eases back without rebounding
+      const CAP = 7; // how far a photograph will go, in px
+      const VCAP = 1.5; // stops a circling cursor piling impulse on impulse
+
+      let last = { x: 0, y: 0, t: 0 };
+      let frame = 0;
+
+      const step = () => {
+        let moving = false;
+        for (let i = 0; i < items.length; i++) {
+          const d = drift[i];
+          d.vx = (d.vx - d.x * SPRING) * DAMPING;
+          d.vy = (d.vy - d.y * SPRING) * DAMPING;
+          d.x = Math.max(-CAP, Math.min(CAP, d.x + d.vx));
+          d.y = Math.max(-CAP, Math.min(CAP, d.y + d.vy));
+          if (
+            Math.abs(d.x) > 0.2 ||
+            Math.abs(d.y) > 0.2 ||
+            Math.abs(d.vx) > 0.2
+          ) {
+            moving = true;
+            items[i].style.transform =
+              `translate(${d.x.toFixed(2)}px, ${d.y.toFixed(2)}px)`;
+          } else if (d.x !== 0 || d.y !== 0) {
+            d.x = 0;
+            d.y = 0;
+            items[i].style.transform = "";
+          }
+        }
+        frame = moving ? requestAnimationFrame(step) : 0;
+      };
+
+      hero.addEventListener(
+        "pointermove",
+        (event) => {
+          if (hero.classList.contains("is-still")) return;
+          const now = performance.now();
+          const dt = Math.max(16, now - last.t);
+          /* A quick sweep shoves harder than a slow one. */
+          const speed = Math.min(
+            2.2,
+            (Math.hypot(event.clientX - last.x, event.clientY - last.y) / dt) *
+              14,
+          );
+          last = { x: event.clientX, y: event.clientY, t: now };
+          if (speed < 0.08) return;
+
+          for (let i = 0; i < items.length; i++) {
+            const box = items[i].getBoundingClientRect();
+            const dx = box.left + box.width / 2 - event.clientX;
+            const dy = box.top + box.height / 2 - event.clientY;
+            const distance = Math.hypot(dx, dy);
+            if (distance > REACH || distance < 1) continue;
+            const falloff = 1 - distance / REACH;
+            const push = SHOVE * falloff * falloff * speed;
+            const item = drift[i];
+            item.vx = Math.max(
+              -VCAP,
+              Math.min(VCAP, item.vx + (dx / distance) * push),
+            );
+            item.vy = Math.max(
+              -VCAP,
+              Math.min(VCAP, item.vy + (dy / distance) * push),
+            );
+          }
+          if (!frame) frame = requestAnimationFrame(step);
+        },
+        { passive: true },
+      );
+    }
+
+    const start = () => {
+      if (still.matches) {
+        hero.classList.remove("is-animated");
+        hero.classList.add("is-still");
+        settle();
+        videos.forEach((video) => video.pause());
+        return;
+      }
+      hero.classList.add("is-animated");
+      hero.classList.remove("is-still");
+      videos.forEach((video) => {
+        video.preload = "metadata";
+        void video.play().catch(() => {});
+      });
+      enter();
+    };
+
+    still.addEventListener("change", () => {
+      clear();
+      target = 0;
+      start();
+    });
+
+    start();
+  }
+</script>
+<style is:global>
+  @layer components {
+    /* The hero carries its own palette: a solid brand teal, with the depth
+       coming from typography, media and movement rather than a gradient. */
+    .herov2_wrap {
+      --hero-field: var(--field-green);
+      --hero-ink: #e1dcd6;
+      --hero-ink-2: #c8c7bf;
+      --hero-cta: #e1dcd6;
+      --hero-cta-ink: #123d3b;
+      --hero-cta-hover: #f2ede6;
+
+      /* The strip of hero below the fold. The copy still centres in the
+         first screen; this is the run of photographs you scroll through
+         before the next section begins. */
+      --hero-tail: 24svh;
+      /* Keeps the outermost photographs off the section's own edges, since
+         `overflow: clip` would otherwise cut the ones that hang past. */
+      --hero-field-top: 7rem;
+      --hero-field-bottom: 9rem;
+
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100svh + var(--hero-tail));
+      padding-inline: var(--site-margin);
+      /* Bottom padding carries the tail, which puts the centre of the copy
+         back at the centre of the first screen: (nav + 100svh) / 2. */
+      padding-block: calc(var(--section-space-small) + var(--nav-height))
+        calc(var(--section-space-small) + var(--hero-tail));
+      background-color: var(--hero-field);
+      color: var(--hero-ink);
+      overflow: clip;
+      isolation: isolate;
+    }
+
+    /* Layers, bottom to top: media, the scrim that hides it near the middle,
+       grain, then the copy. */
+    .herov2_field {
+      position: absolute;
+      inset: var(--hero-field-top) 0 var(--hero-field-bottom);
+      z-index: -3;
+      pointer-events: none;
+    }
+
+    .herov2_scrim {
+      position: absolute;
+      left: 50%;
+      top: calc((var(--nav-height) + 100svh) / 2);
+      translate: -50% -50%;
+      width: 150rem;
+      height: 104rem;
+      z-index: -2;
+      pointer-events: none;
+      /* The box is twice each radius, so `closest-side` gives a 75rem by
+         52rem ellipse. The core still covers the copy outright to about the
+         same distance as before, but the fade past it runs roughly twice as
+         far and in twice as many steps, so there is no ring where the field
+         lets go. */
+      background: radial-gradient(
+        ellipse closest-side,
+        var(--hero-field) 0%,
+        var(--hero-field) 34%,
+        color-mix(in srgb, var(--hero-field) 94%, transparent) 42%,
+        color-mix(in srgb, var(--hero-field) 84%, transparent) 49%,
+        color-mix(in srgb, var(--hero-field) 71%, transparent) 56%,
+        color-mix(in srgb, var(--hero-field) 56%, transparent) 63%,
+        color-mix(in srgb, var(--hero-field) 41%, transparent) 70%,
+        color-mix(in srgb, var(--hero-field) 28%, transparent) 77%,
+        color-mix(in srgb, var(--hero-field) 17%, transparent) 84%,
+        color-mix(in srgb, var(--hero-field) 9%, transparent) 90%,
+        color-mix(in srgb, var(--hero-field) 3%, transparent) 96%,
+        transparent 100%
+      );
+    }
+
+    .herov2_grain {
+      z-index: -1;
+    }
+
+    .herov2_content {
+      position: relative;
+      z-index: 1;
+      width: min(52rem, 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .herov2_symbol {
+      display: block;
+      width: auto;
+      height: clamp(3.25rem, 6.2vw, 5rem);
+      color: var(--hero-ink);
+    }
+
+    .herov2_heading {
+      margin: calc(var(--space-8) * 1.35) 0 0;
+      font-family: var(--display-family);
+      font-weight: 400;
+      font-synthesis-weight: none;
+      font-size: clamp(2.25rem, 5.5vw, 4.75rem);
+      line-height: 1.02;
+      letter-spacing: var(--letter-spacing-display);
+      text-transform: none;
+      text-wrap: nowrap;
+    }
+
+    /* Both versions share one cell, so the reserved area is as tall and wide
+       as the longest of them and nothing moves when they trade. */
+    .herov2_headline {
+      display: grid;
+      justify-items: center;
+    }
+
+    .herov2_version {
+      grid-area: 1 / 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .herov2_line {
+      display: block;
+      white-space: nowrap;
+      visibility: hidden;
+    }
+
+    .herov2_line:is(
+      [data-state="writing"],
+      [data-state="shown"],
+      [data-state="erasing"]
+    ) {
+      visibility: visible;
+    }
+
+    /* Without the script every character is simply on screen, which is why the
+       first version renders complete and the second renders hidden. */
+    .herov2_char {
+      display: inline-block;
+      opacity: 1;
+    }
+
+    .is-animated .herov2_line[data-state="hidden"] .herov2_char {
+      opacity: 0;
+      transition: none;
+    }
+
+    .is-animated .herov2_line[data-state="writing"] .herov2_char {
+      opacity: 1;
+      transition: opacity 160ms linear;
+      transition-delay: calc(var(--_i) * var(--_stagger, 18ms));
+    }
+
+    .is-animated .herov2_line[data-state="shown"] .herov2_char {
+      opacity: 1;
+      transition: none;
+    }
+
+    .is-animated .herov2_line[data-state="erasing"] .herov2_char {
+      opacity: 0;
+      transition: opacity 120ms linear;
+      transition-delay: calc(var(--_i) * 7ms);
+    }
+
+    .herov2_text {
+      max-width: 54ch;
+      margin: calc(var(--space-8) * 1.1) 0 0;
+      color: var(--hero-ink-2);
+      font-size: var(--text-large);
+      line-height: var(--line-height-large);
+      text-wrap: pretty;
+    }
+
+    .herov2_actions {
+      margin-top: calc(var(--space-8) * 1.35);
+    }
+
+    /* The hero's own control: no travelling arrow, and on hover the label
+       rolls up out of the way while the second one rolls in behind it. */
+    .herov2_cta {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.15em 2.6em;
+      background-color: var(--hero-cta);
+      color: var(--hero-cta-ink);
+      border-radius: var(--radius-main);
+      font-family: var(--primary-family);
+      font-size: clamp(1rem, 1.6vw, 1.35rem);
+      font-weight: var(--primary-medium);
+      letter-spacing: var(--letter-spacing-wide);
+      line-height: 1.15;
+      /* No transform: each label keeps the case it was written in, so the
+         formal Latvian call rolls away and a casual Latgalian one rolls in. */
+      text-decoration: none;
+      transform-origin: center;
+      will-change: transform;
+      transition:
+        background-color var(--hover-duration) var(--hover-ease),
+        scale var(--hover-duration) var(--hover-ease),
+        box-shadow calc(var(--hover-duration) * 1.6) var(--hover-ease);
+    }
+
+    .herov2_cta_roll {
+      display: grid;
+      overflow: clip;
+    }
+
+    .herov2_cta_label {
+      grid-area: 1 / 1;
+      display: block;
+      white-space: nowrap;
+      transition: translate calc(var(--hover-duration) * 1.8) var(--hover-ease);
+    }
+
+    .herov2_cta_label.alt {
+      translate: 0 110%;
+    }
+
+    .herov2_cta:is(:hover, :focus-visible) {
+      background-color: var(--hero-cta-hover);
+      scale: 1.03;
+      box-shadow:
+        0 0 0 0.0625rem
+          color-mix(in srgb, var(--hero-cta-hover) 55%, transparent),
+        0 0.75rem 2.5rem -0.5rem
+          color-mix(in srgb, var(--hero-cta-hover) 65%, transparent),
+        0 0 4.5rem color-mix(in srgb, var(--hero-cta-hover) 40%, transparent);
+      animation-play-state: paused;
+    }
+
+    .herov2_cta:is(:hover, :focus-visible) .herov2_cta_label {
+      translate: 0 -110%;
+    }
+
+    .herov2_cta:is(:hover, :focus-visible) .herov2_cta_label.alt {
+      translate: 0 0;
+    }
+
+    .herov2_cta:focus-visible {
+      outline: var(--focus-width) solid var(--hero-ink);
+      outline-offset: 0.375rem;
+    }
+
+    .herov2_cta:active {
+      scale: 0.99;
+    }
+
+    /* Fired once per reading interval by the script, never on a loop of its
+       own, so it can be kept clear of the headline's own animation. */
+    @media (prefers-reduced-motion: no-preference) {
+      .herov2_cta.is-pulsing {
+        animation: herov2-pulse 900ms var(--hover-ease) 1;
+      }
+    }
+
+    @keyframes herov2-pulse {
+      0%,
+      100% {
+        scale: 1;
+      }
+      45% {
+        scale: 1.025;
+      }
+    }
+
+    /* Floating media. The outer element places the item and carries the push
+       from the cursor; the inner one holds the tilt, the float and the card
+       itself, so the three never fight over one transform. */
+    .herov2_media {
+      position: absolute;
+      left: var(--_x);
+      top: var(--_y);
+      width: var(--_w);
+      aspect-ratio: var(--_ratio);
+      translate: -50% -50%;
+      pointer-events: none;
+    }
+
+    .herov2_card {
+      width: 100%;
+      height: 100%;
+      rotate: var(--_rot);
+      border-radius: var(--radius-main);
+      border: var(--border-width) solid rgb(0 0 0 / 0.3);
+      overflow: clip;
+      box-shadow: 0 1.5rem 3rem -1rem rgb(0 0 0 / 0.4);
+
+      & > .image,
+      & > .herov2_video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .is-animated .herov2_card {
+        animation: herov2-float var(--_dur) ease-in-out infinite alternate;
+        animation-delay: calc(var(--_delay) * -1);
+      }
+      .is-still .herov2_card {
+        animation-play-state: paused;
+      }
+    }
+
+    /* Animated through `transform`, so the tilt survives the float. */
+    @keyframes herov2-float {
+      from {
+        transform: translate(-0.5rem, -1.05rem);
+      }
+      to {
+        transform: translate(0.55rem, 1.05rem);
+      }
+    }
+
+    .herov2_media:not(.on-small) {
+      display: none;
+    }
+
+    @media (width < 48rem) {
+      .herov2_wrap {
+        --hero-tail: 16svh;
+        --hero-field-top: 4rem;
+        --hero-field-bottom: 5rem;
+        min-height: calc(100svh + var(--hero-tail));
+        padding-block: calc(var(--section-space-small) + var(--nav-height))
+          calc(var(--section-space-small) + var(--hero-tail));
+      }
+
+      .herov2_media.on-small {
+        width: calc(var(--_w) * 0.52);
+      }
+
+      .herov2_heading {
+        font-size: clamp(1.6rem, 7.6vw, 2.75rem);
+      }
+
+      /* Two lines hold down to 530px. Below that the sentence needs three,
+         and under 24rem it needs a size down to stop at three rather than
+         running to four. */
+      @media (width < 24rem) {
+        .herov2_text {
+          font-size: 1rem;
+        }
+      }
+
+      .herov2_scrim {
+        width: 72rem;
+        height: 88rem;
+        background: radial-gradient(
+          ellipse closest-side,
+          var(--hero-field) 0%,
+          var(--hero-field) 30%,
+          color-mix(in srgb, var(--hero-field) 93%, transparent) 39%,
+          color-mix(in srgb, var(--hero-field) 82%, transparent) 47%,
+          color-mix(in srgb, var(--hero-field) 68%, transparent) 55%,
+          color-mix(in srgb, var(--hero-field) 52%, transparent) 63%,
+          color-mix(in srgb, var(--hero-field) 37%, transparent) 71%,
+          color-mix(in srgb, var(--hero-field) 24%, transparent) 79%,
+          color-mix(in srgb, var(--hero-field) 13%, transparent) 86%,
+          color-mix(in srgb, var(--hero-field) 5%, transparent) 93%,
+          transparent 100%
+        );
+      }
+    }
+
+    @media (width >= 48rem) {
+      .herov2_media:not(.on-small) {
+        display: block;
+      }
+    }
+  }
+</style>

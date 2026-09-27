@@ -1081,3 +1081,45 @@
   inset: 0% 0% auto;
   overflow: hidden;
 }
+
+/* Scroll-driven media parallax. The picture drifts inside its frame as the
+   section crosses the screen. It runs off the main thread where the browser
+   supports a view timeline, and is simply absent where it does not. */
+.parallax {
+  overflow: clip;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .parallax > :is(.image, .video) {
+      height: 118%;
+      animation: media-parallax linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+  }
+}
+
+@keyframes media-parallax {
+  from {
+    translate: 0 -7.5%;
+  }
+  to {
+    translate: 0 7.5%;
+  }
+}
+
+/* Locks a card's picture to one ratio. A stacked card otherwise keeps each
+   photograph's own shape, so a row of them lines up only by luck, and the
+   brief asks for one ratio across the base cards. */
+.media-landscape :is(.image, .video) {
+  aspect-ratio: 3 / 2;
+  height: auto;
+  object-fit: cover;
+}
+
+.media-portrait :is(.image, .video) {
+  aspect-ratio: 3 / 4;
+  height: auto;
+  object-fit: cover;
+}

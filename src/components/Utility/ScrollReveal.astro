@@ -1,0 +1,96 @@
+---
+interface Props {
+  /** Set to `false` to skip rendering this component and its children. */
+  render?: boolean;
+}
+
+const { render = true } = Astro.props;
+---
+
+{render && <Fragment />}
+
+<script>
+  /* Nothing is hidden until this runs, so a failed or blocked script leaves
+     the page fully readable rather than blank. */
+  const root = document.documentElement;
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  if (!still.matches && "IntersectionObserver" in window) {
+    root.classList.add("reveal-ready");
+
+    const show = (element: Element) => element.classList.add("is-revealed");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          show(entry.target);
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0 },
+    );
+
+    const watch = () => {
+      document.querySelectorAll("[data-reveal]:not(.is-revealed)").forEach(
+        (element) => {
+          /* Anything already on screen at load shows at once: the reveal is
+             for content scrolled to, never for content already being read. */
+          const box = element.getBoundingClientRect();
+          if (box.top < window.innerHeight * 0.88) show(element);
+          else observer.observe(element);
+        },
+      );
+    };
+
+    watch();
+    document.addEventListener("astro:after-swap", watch);
+
+    /* A printed page has no scrolling to trigger anything, so everything is
+       shown before the print dialog reads the document. */
+    window.addEventListener("beforeprint", () => {
+      document
+        .querySelectorAll("[data-reveal]:not(.is-revealed)")
+        .forEach(show);
+    });
+  }
+</script>
+
+<style is:global>
+  @layer components {
+    .reveal-ready [data-reveal] {
+      opacity: 0;
+      translate: 0 0.75rem;
+      transition:
+        opacity var(--reveal-duration) var(--reveal-ease),
+        translate var(--reveal-duration) var(--reveal-ease);
+      transition-delay: calc(var(--_reveal-index, 0) * 70ms);
+    }
+
+    .reveal-ready [data-reveal].is-revealed {
+      opacity: 1;
+      translate: 0 0;
+    }
+
+    /* A list hands each child its own place in the queue, so one attribute on
+       the parent staggers the whole row. */
+    [data-reveal-stagger] > * {
+      --_reveal-index: 0;
+    }
+    [data-reveal-stagger] > *:nth-child(2) {
+      --_reveal-index: 1;
+    }
+    [data-reveal-stagger] > *:nth-child(3) {
+      --_reveal-index: 2;
+    }
+    [data-reveal-stagger] > *:nth-child(4) {
+      --_reveal-index: 3;
+    }
+    [data-reveal-stagger] > *:nth-child(5) {
+      --_reveal-index: 4;
+    }
+    [data-reveal-stagger] > *:nth-child(n + 6) {
+      --_reveal-index: 5;
+    }
+  }
+</style>

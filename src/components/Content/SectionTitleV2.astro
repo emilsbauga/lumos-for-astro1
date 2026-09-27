@@ -1,0 +1,52 @@
+---
+interface Props {
+  /** Set to `false` to skip rendering this component and its children. */
+  render?: boolean;
+  /** The page's name, as its only heading. */
+  heading: string;
+}
+
+const { render = true, heading } = Astro.props;
+---
+
+{
+  render && (
+    <section class="titlev2_wrap">
+      <div data-grain aria-hidden="true" />
+      <h1 class="titlev2_heading" data-reveal>
+        {heading}
+      </h1>
+    </section>
+  )
+}
+
+<style is:global>
+  @layer components {
+    /* A page's name on the v2 field, and nothing else yet. */
+    .titlev2_wrap {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 60svh;
+      padding-inline: var(--site-margin);
+      padding-block: var(--section-space-large);
+      background-color: var(--field-green);
+      color: var(--sand-300);
+      text-align: center;
+      isolation: isolate;
+    }
+
+    .titlev2_heading {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-family: var(--display-family);
+      font-size: clamp(2.125rem, 5vw, 4rem);
+      font-weight: var(--display-bold);
+      line-height: var(--line-height-small);
+      letter-spacing: var(--letter-spacing-display);
+      text-transform: uppercase;
+      text-wrap: balance;
+    }
+  }
+</style>

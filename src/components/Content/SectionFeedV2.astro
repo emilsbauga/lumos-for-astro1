@@ -1,0 +1,206 @@
+---
+import type { SvgComponent } from "astro/types";
+import Icon from "@/components/Media/Icon.astro";
+
+interface Social {
+  /** What the button says. */
+  label: string;
+  /** Where it goes. */
+  href: string;
+  /** The mark beside the label. */
+  icon: SvgComponent;
+}
+
+interface Props {
+  /** Set to `false` to skip rendering this component and its children. */
+  render?: boolean;
+  /** The anchor site search and the drawer link to. */
+  id?: string;
+  /** The section title, the handle included. */
+  heading: string;
+  /**
+   * The Elfsight widget's ID, the part after `elfsight-app-` in its embed
+   * code. Left out, the section holds an empty square where the feed will sit.
+   */
+  elfsightId?: string;
+  /** Where to follow, under the feed. */
+  socials: Social[];
+}
+
+const {
+  render = true,
+  id = "jaunumi",
+  heading,
+  elfsightId,
+  socials,
+} = Astro.props;
+---
+
+{
+  render && (
+    <section class="feedv2_wrap" id={id}>
+      <div data-grain aria-hidden="true" />
+
+      <div class="feedv2_inner">
+        <h2 class="feedv2_heading" data-reveal>
+          {heading}
+        </h2>
+
+        {elfsightId ? (
+          <div class="feedv2_embed is-live" data-reveal>
+            <script is:inline src="https://elfsightcdn.com/platform.js" async />
+            <div class={`elfsight-app-${elfsightId}`} data-elfsight-app-lazy />
+          </div>
+        ) : (
+          <div class="feedv2_embed" data-reveal>
+            <div class="feedv2_slot" />
+          </div>
+        )}
+
+        <ul class="feedv2_socials" role="list" data-reveal-stagger>
+          {socials.map((social) => (
+            <li data-reveal>
+              <a
+                class="feedv2_social"
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon
+                  class="feedv2_social_mark"
+                  src={social.icon}
+                  variant="small"
+                />
+                <span>{social.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<style is:global>
+  @layer components {
+    .feedv2_wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100svh;
+      padding-inline: var(--site-margin);
+      padding-block: var(--section-space-large);
+      /* The same field as the hero and the section above, so the page reads
+         as one surface rather than a stack of panels. */
+      background-color: var(--field-green);
+      color: var(--sand-300);
+      isolation: isolate;
+    }
+
+    .feedv2_inner {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: var(--max-width-main);
+      margin-inline: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-8);
+      text-align: center;
+    }
+
+    .feedv2_heading {
+      margin: 0;
+      font-family: var(--display-family);
+      font-size: clamp(2.125rem, 5vw, 4rem);
+      font-weight: var(--display-bold);
+      line-height: var(--line-height-small);
+      letter-spacing: var(--letter-spacing-display);
+      text-transform: uppercase;
+    }
+
+    /* Square, because that is the shape the feed will come in. The `svh`
+       term keeps the title and the follow buttons in reach on a short
+       window instead of pushing them a screen apart. */
+    .feedv2_embed {
+      width: min(44rem, 100%, 58svh);
+      aspect-ratio: 1;
+
+      /* The widget sets its own height from its layout. It gets the full
+         content width and keeps the square only as a floor, so the follow
+         buttons don't jump while it loads. */
+      &.is-live {
+        width: 100%;
+        aspect-ratio: auto;
+        min-height: min(44rem, 58svh);
+        text-align: start;
+      }
+    }
+
+    .feedv2_slot {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: var(--border-width) solid
+        color-mix(in lab, var(--text) 16%, transparent);
+      border-radius: var(--radius-main);
+    }
+
+    .feedv2_slot {
+      background-color: color-mix(in lab, var(--text) 4%, transparent);
+    }
+
+    /* Socials */
+    .feedv2_socials {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-3);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .feedv2_social {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0.62em 1.15em;
+      border: var(--border-width) solid
+        color-mix(in lab, var(--text) 24%, transparent);
+      border-radius: var(--radius-main);
+      color: var(--text);
+      font-size: var(--text-small);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+      text-decoration: none;
+      transition:
+        border-color var(--hover-duration) var(--hover-ease),
+        background-color var(--hover-duration) var(--hover-ease),
+        color var(--hover-duration) var(--hover-ease),
+        box-shadow calc(var(--hover-duration) * 1.6) var(--hover-ease);
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--sand-100);
+          border-color: var(--sand-100);
+          color: var(--ink-900);
+          box-shadow:
+            0 0 1.5rem color-mix(in srgb, var(--sand-100) 30%, transparent),
+            0 0 4rem color-mix(in srgb, var(--sand-100) 16%, transparent);
+        }
+      }
+      &:focus-visible {
+        outline: var(--focus-width) solid var(--text);
+        outline-offset: var(--focus-offset);
+      }
+    }
+
+    .feedv2_social_mark {
+      width: 1.05em;
+      flex: none;
+    }
+  }
+</style>

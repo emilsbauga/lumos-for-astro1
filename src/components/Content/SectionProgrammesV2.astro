@@ -1,0 +1,544 @@
+---
+import Img from "@/components/Media/Img.astro";
+
+interface Filter {
+  /** Matches the `filters` on a programme. */
+  id: string;
+  /** What the pill says. */
+  label: string;
+}
+
+interface Programme {
+  /** An imported asset, a remote `http(s)` URL, or a path to a file in `public/`. */
+  image: ImageMetadata;
+  /** What the photograph shows. */
+  imageAlt: string;
+  /** The programme's name. */
+  name: string;
+  /** Who plays it, as one line under the name. */
+  performers: string[];
+  /** Up to two, the sound itself. */
+  genres: string[];
+  /** Which pills this programme answers to. The first two also show as tags. */
+  filters: string[];
+  /** The opening of the longer description. Clamped to two lines. */
+  text: string;
+  /** Where the full programme lives. */
+  href: string;
+}
+
+interface Props {
+  /** Set to `false` to skip rendering this component and its children. */
+  render?: boolean;
+  /** The anchor site search and the drawer link to. */
+  id?: string;
+  /** The section title. */
+  heading: string;
+  /** One line under it: who these acts are, and what they could be for you. */
+  text: string;
+  /** The pills under that line. The `all` one is added in front, and a pill no programme answers to is left out. */
+  filters: Filter[];
+  /** What the first pill says. */
+  allLabel?: string;
+  /** The catalogue. */
+  programmes: Programme[];
+  /** The most cards ever shown, whichever pill is chosen. The rest are in the catalogue. */
+  shown?: number;
+  /** The label on the link below the grid. */
+  linkLabel: string;
+  /** What rolls up in its place on hover. Decorative, so it is never announced. */
+  linkHoverLabel: string;
+  /** Where that link leads. The chosen pill is added as `&notikums=`. */
+  linkHref: string;
+}
+
+const {
+  render = true,
+  id = "koncertprogrammas",
+  heading,
+  text,
+  filters,
+  allLabel = "Visi",
+  programmes,
+  shown = 9,
+  linkLabel,
+  linkHoverLabel,
+  linkHref,
+} = Astro.props;
+
+const labels = new Map(filters.map((filter) => [filter.id, filter.label]));
+const pills = filters.filter((filter) =>
+  programmes.some((programme) => programme.filters.includes(filter.id)),
+);
+
+/* Two of each at most, genres first, so a card never runs past one row of
+   tags however much a programme carries. */
+const tagsFor = (programme: Programme) => [
+  ...programme.genres.slice(0, 2).map((label) => ({ label, kind: "genre" })),
+  ...programme.filters
+    .slice(0, 2)
+    .map((filter) => ({
+      label: labels.get(filter) ?? filter,
+      kind: "occasion",
+    })),
+];
+---
+
+{
+  render && (
+    <section class="progv2_wrap" id={id} data-catalogue data-shown={shown}>
+      <div data-grain aria-hidden="true" />
+
+      <div class="progv2_inner">
+        <header class="progv2_head" data-reveal-stagger>
+          <h2 class="progv2_heading" data-reveal>
+            {heading}
+          </h2>
+          <p class="progv2_text" data-reveal>
+            {text}
+          </p>
+
+          <ul class="progv2_pills" role="list" data-reveal>
+            <li>
+              <button
+                class="progv2_pill"
+                type="button"
+                data-filter="all"
+                aria-pressed="true"
+              >
+                {allLabel}
+              </button>
+            </li>
+            {pills.map((filter) => (
+              <li>
+                <button
+                  class="progv2_pill"
+                  type="button"
+                  data-filter={filter.id}
+                  aria-pressed="false"
+                >
+                  {filter.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </header>
+
+        <ul class="progv2_grid" role="list" data-reveal-stagger>
+          {programmes.map((programme, index) => (
+            <li
+              class="progv2_item"
+              data-reveal
+              data-filters={["all", ...programme.filters].join(" ")}
+              hidden={index >= shown}
+            >
+              <a class="progv2_card" href={programme.href}>
+                <span class="progv2_thumb">
+                  <Img
+                    src={programme.image}
+                    alt={programme.imageAlt}
+                    variant="constrained"
+                    loading="lazy"
+                    sizes="(width >= 64rem) 22rem, (width >= 40rem) 44vw, 88vw"
+                  />
+                </span>
+
+                <span class="progv2_body">
+                  <span class="progv2_name">{programme.name}</span>
+                  <span class="progv2_performers">
+                    {programme.performers.join(", ")}
+                  </span>
+
+                  <span class="progv2_tags">
+                    {tagsFor(programme).map((tag) => (
+                      <span class:list={["progv2_tag", tag.kind]}>
+                        {tag.label}
+                      </span>
+                    ))}
+                  </span>
+
+                  <span class="progv2_blurb">{programme.text}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <div class="progv2_foot" data-reveal>
+          <a class="progv2_link" href={linkHref} data-base={linkHref}>
+            <span class="progv2_roll">
+              <span class="progv2_roll_label">{linkLabel}</span>
+              <span class="progv2_roll_label alt" aria-hidden="true">
+                {linkHoverLabel}
+              </span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  document
+    .querySelectorAll<HTMLElement>("[data-catalogue]")
+    .forEach((section) => {
+      const pills = [
+        ...section.querySelectorAll<HTMLButtonElement>(".progv2_pill"),
+      ];
+      const items = [...section.querySelectorAll<HTMLElement>(".progv2_item")];
+      const link = section.querySelector<HTMLAnchorElement>(".progv2_link");
+      const shown = Number(section.dataset.shown ?? 9);
+
+      pills.forEach((pill) => {
+        pill.addEventListener("click", () => {
+          const filter = pill.dataset.filter ?? "all";
+          pills.forEach((other) =>
+            other.setAttribute("aria-pressed", String(other === pill)),
+          );
+
+          /* Never more than `shown`, whichever pill: the catalogue holds the
+           rest, and the link below now opens it on the same filter. */
+          let count = 0;
+          items.forEach((item) => {
+            const hit = (item.dataset.filters ?? "")
+              .split(" ")
+              .includes(filter);
+            item.hidden = !hit || count >= shown;
+            if (hit) count += 1;
+          });
+
+          if (link?.dataset.base) {
+            link.href =
+              filter === "all"
+                ? link.dataset.base
+                : `${link.dataset.base}&notikums=${encodeURIComponent(filter)}`;
+          }
+        });
+      });
+    });
+</script>
+
+<style is:global>
+  @layer components {
+    .progv2_wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100svh;
+      padding-inline: var(--site-margin);
+      padding-block: var(--section-space-large);
+      /* The hero's own field, so the two sections meet with no seam. */
+      background-color: var(--field-green);
+      color: var(--sand-300);
+      isolation: isolate;
+    }
+
+    .progv2_inner {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: var(--max-width-main);
+      margin-inline: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+    }
+
+    /* Head */
+    .progv2_head {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-6);
+      text-align: center;
+    }
+
+    .progv2_heading {
+      margin: 0;
+      font-family: var(--display-family);
+      font-size: clamp(2.125rem, 5vw, 4rem);
+      font-weight: var(--display-bold);
+      line-height: var(--line-height-small);
+      letter-spacing: var(--letter-spacing-display);
+      text-transform: uppercase;
+    }
+
+    /* One line wherever it fits. No `balance`, which would split it evenly
+       across two lines long before the width runs out. */
+    .progv2_text {
+      margin: 0;
+      max-width: 100%;
+      color: var(--text-2);
+      text-wrap: pretty;
+    }
+
+    /* Pills */
+    .progv2_pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-2);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .progv2_pill {
+      padding: 0.42em 0.9em;
+      border: var(--border-width) solid
+        color-mix(in lab, var(--text) 20%, transparent);
+      border-radius: var(--radius-round);
+      background: none;
+      color: var(--text-2);
+      font-size: var(--text-small);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+      cursor: pointer;
+      transition:
+        border-color var(--hover-duration) var(--hover-ease),
+        background-color var(--hover-duration) var(--hover-ease),
+        color var(--hover-duration) var(--hover-ease);
+
+      @media (hover: hover) {
+        &:hover {
+          border-color: color-mix(in lab, var(--text) 45%, transparent);
+          color: var(--text);
+        }
+      }
+      &[aria-pressed="true"] {
+        background-color: var(--sand-100);
+        border-color: var(--sand-100);
+        color: var(--ink-900);
+      }
+      &:focus-visible {
+        outline: var(--focus-width) solid var(--text);
+        outline-offset: var(--focus-offset);
+      }
+    }
+
+    /* Grid */
+    .progv2_grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+      gap: var(--space-6);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .progv2_item {
+      display: flex;
+      &[hidden] {
+        display: none;
+      }
+    }
+
+    .progv2_card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      width: 100%;
+      color: inherit;
+      text-decoration: none;
+      border-radius: var(--radius-main);
+      transition: translate var(--hover-duration) var(--hover-ease);
+
+      @media (hover: hover) {
+        &:hover {
+          translate: 0 -0.25rem;
+        }
+      }
+      &:focus-visible {
+        outline: var(--focus-width) solid var(--text);
+        outline-offset: var(--focus-offset);
+      }
+    }
+
+    /* The photograph is taken out of flow, so a portrait one fills the
+       frame instead of stretching it past 4:3. */
+    .progv2_thumb {
+      position: relative;
+      display: block;
+      aspect-ratio: 4 / 3;
+      overflow: clip;
+      border-radius: var(--radius-main);
+      border: var(--border-width) solid
+        color-mix(in lab, var(--text) 10%, transparent);
+      background-color: var(--background-2);
+
+      & > .image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: scale 520ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+    }
+
+    @media (hover: hover) {
+      .progv2_card:hover .progv2_thumb > .image {
+        scale: 1.04;
+      }
+    }
+
+    .progv2_body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .progv2_name {
+      font-family: var(--display-family);
+      font-size: var(--h4);
+      font-weight: var(--display-bold);
+      line-height: var(--line-height-medium);
+      letter-spacing: var(--letter-spacing-display);
+    }
+
+    .progv2_performers {
+      margin-top: calc(var(--space-2) * -1);
+      color: var(--text-2);
+      font-size: var(--text-small);
+    }
+
+    /* Tags */
+    .progv2_tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .progv2_tag {
+      padding: 0.3em 0.6em;
+      border: var(--border-width) solid transparent;
+      border-radius: var(--radius-small);
+      font-size: var(--text-small);
+      line-height: var(--line-height-medium);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+      white-space: nowrap;
+
+      /* The sound reads first, the occasion second. */
+      &.genre {
+        border-color: color-mix(in lab, var(--green-200) 45%, transparent);
+        color: var(--green-200);
+      }
+      &.occasion {
+        border-color: color-mix(in lab, var(--text) 16%, transparent);
+        color: var(--text-2);
+      }
+    }
+
+    /* Two lines, then it stops. The full text lives on the profile. */
+    .progv2_blurb {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      overflow: hidden;
+      color: var(--text-2);
+      font-size: var(--text-small);
+      line-height: var(--line-height-large);
+
+      /* The leading trim adds a `::before` and `::after`, and inside a
+         `-webkit-box` those count against the line budget, so a two-line
+         clamp renders one real line and cuts the next through the glyphs. */
+      &::before,
+      &::after {
+        content: none;
+      }
+    }
+
+    /* Foot */
+    .progv2_foot {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* The label rolls up and its Latgalian twin rolls in behind it. */
+    .progv2_roll {
+      display: grid;
+      overflow: clip;
+    }
+
+    .progv2_roll_label {
+      grid-area: 1 / 1;
+      display: block;
+      text-align: center;
+      white-space: nowrap;
+      transition: translate calc(var(--hover-duration) * 1.8) var(--hover-ease);
+      &.alt {
+        translate: 0 110%;
+      }
+    }
+
+    @media (hover: hover) {
+      .progv2_link:hover .progv2_roll_label {
+        translate: 0 -110%;
+      }
+      .progv2_link:hover .progv2_roll_label.alt {
+        translate: 0 0;
+      }
+    }
+    .progv2_link:focus-visible .progv2_roll_label {
+      translate: 0 -110%;
+    }
+    .progv2_link:focus-visible .progv2_roll_label.alt {
+      translate: 0 0;
+    }
+
+    .progv2_link {
+      --_line: color-mix(in lab, var(--text) 24%, transparent);
+      display: inline-flex;
+      align-items: center;
+      padding: 0.62em 1.15em;
+      border: var(--border-width) solid var(--_line);
+      border-radius: var(--radius-main);
+      color: var(--text);
+      font-size: var(--text-small);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+      text-decoration: none;
+      transition:
+        border-color var(--hover-duration) var(--hover-ease),
+        background-color var(--hover-duration) var(--hover-ease),
+        color var(--hover-duration) var(--hover-ease),
+        box-shadow calc(var(--hover-duration) * 1.6) var(--hover-ease);
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--sand-100);
+          border-color: var(--sand-100);
+          color: var(--ink-900);
+          box-shadow:
+            0 0 1.5rem color-mix(in srgb, var(--sand-100) 30%, transparent),
+            0 0 4rem color-mix(in srgb, var(--sand-100) 16%, transparent);
+        }
+      }
+      &:focus-visible {
+        outline: var(--focus-width) solid var(--text);
+        outline-offset: var(--focus-offset);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .progv2_card,
+      .progv2_thumb > .image,
+      .progv2_roll_label {
+        transition: none;
+      }
+      .progv2_roll_label.alt {
+        display: none;
+      }
+      .progv2_card:hover {
+        translate: none;
+      }
+      .progv2_card:hover .progv2_thumb > .image {
+        scale: none;
+      }
+    }
+  }
+</style>

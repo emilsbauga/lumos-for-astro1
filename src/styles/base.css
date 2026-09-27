@@ -1,50 +1,99 @@
 /* 1. Design tokens */
 :root {
-  /* Swatches */
-  --light-100: #ffffff;
-  --light-200: #ebebeb;
-  --light-300: #d9d9d9;
-  --dark-700: #453e42;
-  --dark-800: #2f2b2d;
-  --dark-900: #1f1d1e;
-  --brand-500: #c6fb50;
-  --brand-text: var(--dark-900);
+  /* Swatches. The brand's three exact values are --sand-300 #e1dcd6,
+     --ink-900 #141617 and --green-600 #1c5755; every other step is a tint
+     or shade mixed around them. */
+  --sand-100: #f5f2ee;
+  --sand-200: #e9e5df;
+  --sand-300: #e1dcd6;
+  --sand-400: #c4beb5;
+  /* --green-400 clears 4.5:1 on the near-black page; --green-200 is the step
+     that clears it on the green field. */
+  --green-200: #7fcdc7;
+  --green-400: #45a19c;
+  --green-500: #256e6b;
+  --green-600: #1c5755;
+  --green-700: #143f3d;
+  --green-800: #0f2a28;
+
+  /* The brand's depth gradient. Its light end is only 4.1:1 against sand, so
+     it fills buttons and decorative glows, and over a panel it is a wash on a
+     darker base rather than the base itself. */
+  --gradient-from: #164a49;
+  --gradient-to: #0d7b77;
+  /* Only the footer's glow still uses these. Everywhere else the field is
+     the near-black and green appears as a flat accent. */
+  --ink-700: #252b2a;
+  --ink-800: #1b1f1e;
+  --ink-900: #141617;
+  --ink-950: #0e0f10;
+  /* The hero's field. Shared, so the section under it can run straight on
+     from the hero with no seam between them. */
+  --field-green: #123d3b;
+  --brand-500: var(--green-600);
+  --brand-text: var(--sand-100);
 
   /* Typography primitives */
-  --primary-family: var(--font-inter, system-ui, sans-serif);
+  --display-family: var(--font-display, system-ui, sans-serif);
+  --primary-family: var(--font-body, system-ui, sans-serif);
   --primary-regular: 400;
   --primary-medium: 500;
-  --primary-bold: 700;
+  --primary-bold: 600;
+  /* Capriola has one weight, so the display face has one too. Extra weight
+     comes from stroking the glyphs in their own colour, since a synthesised
+     bold smears at display sizes. */
+  --display-medium: 400;
+  --display-bold: 400;
+  --display-stroke: 0.055em;
   --primary-trim-top: 0.4em;
   --primary-trim-bottom: 0.38em;
+  --display-trim: 0.33em;
 
   /* Letter spacing */
-  --letter-spacing-tight: -0.03em;
+  --letter-spacing-tight: -0.012em;
+  --letter-spacing-display: -0.02em;
   --letter-spacing-normal: 0em;
+  --letter-spacing-wide: 0.08em;
 
   /* Line height */
-  --line-height-small: 1;
-  --line-height-medium: 1.1;
-  --line-height-large: 1.3;
-  --line-height-huge: 1.5;
+  --line-height-small: 1.02;
+  --line-height-medium: 1.14;
+  --line-height-large: 1.35;
+  --line-height-huge: 1.6;
 
   /* Borders & focus */
   --border-width: 0.0625rem;
   --focus-width: 0.125rem;
-  --focus-offset: 0.1827rem;
+  --focus-offset: 0.1875rem;
   --focus-offset-inner: calc(var(--focus-width) * -1);
 
   /* Hover motion */
   --hover-duration: 200ms;
-  --hover-ease: ease;
+  --hover-ease: cubic-bezier(0.2, 0, 0, 1);
 
   /* Opening motion */
-  --open-duration: var(--hover-duration);
-  --open-ease: var(--hover-ease);
+  --open-duration: 320ms;
+  --open-ease: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Reveal motion: the long, quiet one sections arrive on */
+  --reveal-duration: 700ms;
+  --reveal-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* The colour of the light that tracks the cursor across a surface. Kept
+     neutral: the only green gradient left on the site is the footer's. */
+  --lit-color: var(--sand-100);
+
+  /* Pointer position, written by Atmosphere as -1..1 from the centre. */
+  --pointer-nx: 0;
+  --pointer-ny: 0;
+
+  /* Grain. A single tile repeated, so the whole page costs one small texture. */
+  --grain-opacity: 0.05;
+  --grain-tile: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='160'%20height='160'%3E%3Cfilter%20id='g'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.7'%20numOctaves='4'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='matrix'%20values='0%200%200%200%201%200%200%200%200%201%200%200%200%200%201%201%200%200%200%200'/%3E%3CfeComponentTransfer%3E%3CfeFuncA%20type='linear'%20slope='2.6'%20intercept='-1.05'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect%20width='160'%20height='160'%20filter='url(%23g)'/%3E%3C/svg%3E");
 
   /* Radius */
-  --radius-small: 0.5rem;
-  --radius-main: 1rem;
+  --radius-small: 0.375rem;
+  --radius-main: 0.6875rem;
   --radius-round: 100vw;
 
   /* Fluid scale range */
@@ -52,92 +101,92 @@
   --viewport-max: 1440;
 
   /* Max width */
-  --max-width-small: 70rem;
-  --max-width-main: calc(var(--viewport-max) / 16 * 1rem);
+  --max-width-small: 44rem;
+  --max-width-main: 75rem;
   --max-width-full: 100%;
 
   /* Nav */
-  --nav-height: 5rem;
+  --nav-height: 4.5rem;
 
   /* Typography styles */
   --display: clamp(var(--display-min) / 16 * 1rem, ((var(--display-min) - ((var(--display-max) - var(--display-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--display-max) - var(--display-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--display-max) / 16 * 1rem);
-  --display-min: 64;
-  --display-max: 112;
-  --display-line-height: var(--line-height-small);
-  --display-letter-spacing: var(--letter-spacing-tight);
+  --display-min: 40;
+  --display-max: 84;
+  --display-line-height: 1;
+  --display-letter-spacing: var(--letter-spacing-display);
   --display-text-transform: none;
   --display-margin-top: var(--space-7);
   --display-margin-bottom: var(--space-6);
-  --display-font-family: var(--primary-family);
-  --display-font-weight: var(--primary-medium);
-  --display-trim-top: var(--primary-trim-top);
-  --display-trim-bottom: var(--primary-trim-bottom);
+  --display-font-family: var(--display-family);
+  --display-font-weight: var(--display-bold);
+  --display-trim-top: var(--display-trim);
+  --display-trim-bottom: var(--display-trim);
   --display-text-wrap: balance;
 
   --h1: clamp(var(--h1-min) / 16 * 1rem, ((var(--h1-min) - ((var(--h1-max) - var(--h1-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--h1-max) - var(--h1-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--h1-max) / 16 * 1rem);
-  --h1-min: 48;
-  --h1-max: 80;
+  --h1-min: 34;
+  --h1-max: 60;
   --h1-line-height: var(--line-height-small);
-  --h1-letter-spacing: var(--letter-spacing-tight);
+  --h1-letter-spacing: var(--letter-spacing-display);
   --h1-text-transform: none;
   --h1-margin-top: var(--space-7);
   --h1-margin-bottom: var(--space-6);
-  --h1-font-family: var(--primary-family);
-  --h1-font-weight: var(--primary-medium);
-  --h1-trim-top: var(--primary-trim-top);
-  --h1-trim-bottom: var(--primary-trim-bottom);
+  --h1-font-family: var(--display-family);
+  --h1-font-weight: var(--display-bold);
+  --h1-trim-top: var(--display-trim);
+  --h1-trim-bottom: var(--display-trim);
   --h1-text-wrap: balance;
 
   --h2: clamp(var(--h2-min) / 16 * 1rem, ((var(--h2-min) - ((var(--h2-max) - var(--h2-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--h2-max) - var(--h2-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--h2-max) / 16 * 1rem);
-  --h2-min: 40;
-  --h2-max: 64;
-  --h2-line-height: var(--line-height-small);
-  --h2-letter-spacing: var(--letter-spacing-tight);
+  --h2-min: 28;
+  --h2-max: 42;
+  --h2-line-height: var(--line-height-medium);
+  --h2-letter-spacing: var(--letter-spacing-display);
   --h2-text-transform: none;
   --h2-margin-top: var(--space-7);
-  --h2-margin-bottom: var(--space-5);
-  --h2-font-family: var(--primary-family);
-  --h2-font-weight: var(--primary-medium);
-  --h2-trim-top: var(--primary-trim-top);
-  --h2-trim-bottom: var(--primary-trim-bottom);
+  --h2-margin-bottom: var(--space-6);
+  --h2-font-family: var(--display-family);
+  --h2-font-weight: var(--display-bold);
+  --h2-trim-top: var(--display-trim);
+  --h2-trim-bottom: var(--display-trim);
   --h2-text-wrap: balance;
 
   --h3: clamp(var(--h3-min) / 16 * 1rem, ((var(--h3-min) - ((var(--h3-max) - var(--h3-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--h3-max) - var(--h3-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--h3-max) / 16 * 1rem);
-  --h3-min: 36;
-  --h3-max: 48;
+  --h3-min: 22;
+  --h3-max: 28;
   --h3-line-height: var(--line-height-medium);
-  --h3-letter-spacing: var(--letter-spacing-tight);
+  --h3-letter-spacing: var(--letter-spacing-display);
   --h3-text-transform: none;
   --h3-margin-top: var(--space-6);
   --h3-margin-bottom: var(--space-5);
-  --h3-font-family: var(--primary-family);
-  --h3-font-weight: var(--primary-medium);
-  --h3-trim-top: var(--primary-trim-top);
-  --h3-trim-bottom: var(--primary-trim-bottom);
+  --h3-font-family: var(--display-family);
+  --h3-font-weight: var(--display-bold);
+  --h3-trim-top: var(--display-trim);
+  --h3-trim-bottom: var(--display-trim);
   --h3-text-wrap: balance;
 
   --h4: clamp(var(--h4-min) / 16 * 1rem, ((var(--h4-min) - ((var(--h4-max) - var(--h4-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--h4-max) - var(--h4-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--h4-max) / 16 * 1rem);
-  --h4-min: 28;
-  --h4-max: 32;
+  --h4-min: 19;
+  --h4-max: 23;
   --h4-line-height: var(--line-height-medium);
-  --h4-letter-spacing: var(--letter-spacing-tight);
+  --h4-letter-spacing: var(--letter-spacing-display);
   --h4-text-transform: none;
-  --h4-margin-top: var(--space-6);
+  --h4-margin-top: var(--space-5);
   --h4-margin-bottom: var(--space-4);
-  --h4-font-family: var(--primary-family);
-  --h4-font-weight: var(--primary-medium);
-  --h4-trim-top: var(--primary-trim-top);
-  --h4-trim-bottom: var(--primary-trim-bottom);
+  --h4-font-family: var(--display-family);
+  --h4-font-weight: var(--display-bold);
+  --h4-trim-top: var(--display-trim);
+  --h4-trim-bottom: var(--display-trim);
   --h4-text-wrap: balance;
 
   --h5: clamp(var(--h5-min) / 16 * 1rem, ((var(--h5-min) - ((var(--h5-max) - var(--h5-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--h5-max) - var(--h5-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--h5-max) / 16 * 1rem);
-  --h5-min: 22;
-  --h5-max: 24;
-  --h5-line-height: var(--line-height-medium);
-  --h5-letter-spacing: var(--letter-spacing-tight);
+  --h5-min: 17;
+  --h5-max: 19;
+  --h5-line-height: var(--line-height-large);
+  --h5-letter-spacing: var(--letter-spacing-display);
   --h5-text-transform: none;
   --h5-margin-top: var(--space-5);
-  --h5-margin-bottom: var(--space-4);
+  --h5-margin-bottom: var(--space-3);
   --h5-font-family: var(--primary-family);
   --h5-font-weight: var(--primary-medium);
   --h5-trim-top: var(--primary-trim-top);
@@ -145,27 +194,27 @@
   --h5-text-wrap: balance;
 
   --h6: clamp(var(--h6-min) / 16 * 1rem, ((var(--h6-min) - ((var(--h6-max) - var(--h6-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--h6-max) - var(--h6-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--h6-max) / 16 * 1rem);
-  --h6-min: 16;
-  --h6-max: 18;
-  --h6-line-height: var(--line-height-medium);
-  --h6-letter-spacing: var(--letter-spacing-tight);
+  --h6-min: 15;
+  --h6-max: 16;
+  --h6-line-height: var(--line-height-large);
+  --h6-letter-spacing: var(--letter-spacing-display);
   --h6-text-transform: none;
   --h6-margin-top: var(--space-5);
   --h6-margin-bottom: var(--space-3);
   --h6-font-family: var(--primary-family);
-  --h6-font-weight: var(--primary-medium);
+  --h6-font-weight: var(--primary-bold);
   --h6-trim-top: var(--primary-trim-top);
   --h6-trim-bottom: var(--primary-trim-bottom);
   --h6-text-wrap: balance;
 
   --text-large: clamp(var(--text-large-min) / 16 * 1rem, ((var(--text-large-min) - ((var(--text-large-max) - var(--text-large-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--text-large-max) - var(--text-large-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--text-large-max) / 16 * 1rem);
-  --text-large-min: 18;
+  --text-large-min: 17;
   --text-large-max: 20;
   --text-large-line-height: var(--line-height-large);
   --text-large-letter-spacing: var(--letter-spacing-normal);
   --text-large-text-transform: none;
-  --text-large-margin-top: var(--space-4);
-  --text-large-margin-bottom: var(--space-4);
+  --text-large-margin-top: var(--space-5);
+  --text-large-margin-bottom: var(--space-5);
   --text-large-font-family: var(--primary-family);
   --text-large-font-weight: var(--primary-regular);
   --text-large-trim-top: var(--primary-trim-top);
@@ -174,12 +223,12 @@
 
   --text-main: clamp(var(--text-main-min) / 16 * 1rem, ((var(--text-main-min) - ((var(--text-main-max) - var(--text-main-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--text-main-max) - var(--text-main-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--text-main-max) / 16 * 1rem);
   --text-main-min: 16;
-  --text-main-max: 18;
+  --text-main-max: 17;
   --text-main-line-height: var(--line-height-huge);
   --text-main-letter-spacing: var(--letter-spacing-normal);
   --text-main-text-transform: none;
-  --text-main-margin-top: var(--space-4);
-  --text-main-margin-bottom: var(--space-4);
+  --text-main-margin-top: var(--space-5);
+  --text-main-margin-bottom: var(--space-5);
   --text-main-font-family: var(--primary-family);
   --text-main-font-weight: var(--primary-regular);
   --text-main-trim-top: var(--primary-trim-top);
@@ -188,8 +237,8 @@
 
   --text-small: clamp(var(--text-small-min) / 16 * 1rem, ((var(--text-small-min) - ((var(--text-small-max) - var(--text-small-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--text-small-max) - var(--text-small-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--text-small-max) / 16 * 1rem);
   --text-small-min: 14;
-  --text-small-max: 16;
-  --text-small-line-height: var(--line-height-huge);
+  --text-small-max: 15;
+  --text-small-line-height: var(--line-height-large);
   --text-small-letter-spacing: var(--letter-spacing-normal);
   --text-small-text-transform: none;
   --text-small-margin-top: var(--space-4);
@@ -202,168 +251,207 @@
 
   /* Site layout */
   --site-margin: clamp(var(--site-margin-min) / 16 * 1rem, ((var(--site-margin-min) - ((var(--site-margin-max) - var(--site-margin-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--site-margin-max) - var(--site-margin-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--site-margin-max) / 16 * 1rem);
-  --site-margin-min: 16;
-  --site-margin-max: 48;
+  --site-margin-min: 20;
+  --site-margin-max: 40;
 
   --site-gutter: clamp(var(--site-gutter-min) / 16 * 1rem, ((var(--site-gutter-min) - ((var(--site-gutter-max) - var(--site-gutter-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--site-gutter-max) - var(--site-gutter-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--site-gutter-max) / 16 * 1rem);
   --site-gutter-min: 16;
-  --site-gutter-max: 32;
+  --site-gutter-max: 24;
 
   --site-width: calc(100% - var(--site-margin) * 2);
 
   /* Spacing */
-  --space-1: clamp(var(--space-1-min) / 16 * 1rem, ((var(--space-1-min) - ((var(--space-1-max) - var(--space-1-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--space-1-max) - var(--space-1-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--space-1-max) / 16 * 1rem);
-  --space-1-min: 6;
-  --space-1-max: 8;
-  --space-2: clamp(var(--space-2-min) / 16 * 1rem, ((var(--space-2-min) - ((var(--space-2-max) - var(--space-2-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--space-2-max) - var(--space-2-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--space-2-max) / 16 * 1rem);
-  --space-2-min: 10;
-  --space-2-max: 12;
-  --space-3: clamp(var(--space-3-min) / 16 * 1rem, ((var(--space-3-min) - ((var(--space-3-max) - var(--space-3-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--space-3-max) - var(--space-3-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--space-3-max) / 16 * 1rem);
-  --space-3-min: 14;
-  --space-3-max: 16;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
   --space-4: clamp(var(--space-4-min) / 16 * 1rem, ((var(--space-4-min) - ((var(--space-4-max) - var(--space-4-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--space-4-max) - var(--space-4-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--space-4-max) / 16 * 1rem);
-  --space-4-min: 20;
-  --space-4-max: 24;
+  --space-4-min: 16;
+  --space-4-max: 18;
   --space-5: clamp(var(--space-5-min) / 16 * 1rem, ((var(--space-5-min) - ((var(--space-5-max) - var(--space-5-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--space-5-max) - var(--space-5-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--space-5-max) / 16 * 1rem);
-  --space-5-min: 28;
-  --space-5-max: 32;
+  --space-5-min: 22;
+  --space-5-max: 26;
   --space-6: clamp(var(--space-6-min) / 16 * 1rem, ((var(--space-6-min) - ((var(--space-6-max) - var(--space-6-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--space-6-max) - var(--space-6-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--space-6-max) / 16 * 1rem);
-  --space-6-min: 32;
-  --space-6-max: 40;
+  --space-6-min: 28;
+  --space-6-max: 34;
   --space-7: clamp(var(--space-7-min) / 16 * 1rem, ((var(--space-7-min) - ((var(--space-7-max) - var(--space-7-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--space-7-max) - var(--space-7-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--space-7-max) / 16 * 1rem);
   --space-7-min: 36;
-  --space-7-max: 48;
+  --space-7-max: 44;
   --space-8: clamp(var(--space-8-min) / 16 * 1rem, ((var(--space-8-min) - ((var(--space-8-max) - var(--space-8-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--space-8-max) - var(--space-8-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--space-8-max) / 16 * 1rem);
-  --space-8-min: 40;
-  --space-8-max: 64;
+  --space-8-min: 44;
+  --space-8-max: 56;
 
   --section-space-small: clamp(var(--section-space-small-min) / 16 * 1rem, ((var(--section-space-small-min) - ((var(--section-space-small-max) - var(--section-space-small-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--section-space-small-max) - var(--section-space-small-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--section-space-small-max) / 16 * 1rem);
   --section-space-small-min: 48;
   --section-space-small-max: 80;
   --section-space-medium: clamp(var(--section-space-medium-min) / 16 * 1rem, ((var(--section-space-medium-min) - ((var(--section-space-medium-max) - var(--section-space-medium-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--section-space-medium-max) - var(--section-space-medium-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--section-space-medium-max) / 16 * 1rem);
-  --section-space-medium-min: 64;
-  --section-space-medium-max: 112;
+  --section-space-medium-min: 88;
+  --section-space-medium-max: 152;
   --section-space-large: clamp(var(--section-space-large-min) / 16 * 1rem, ((var(--section-space-large-min) - ((var(--section-space-large-max) - var(--section-space-large-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--section-space-large-max) - var(--section-space-large-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--section-space-large-max) / 16 * 1rem);
-  --section-space-large-min: 88;
-  --section-space-large-max: 160;
+  --section-space-large-min: 120;
+  --section-space-large-max: 224;
   --section-space-nav-overlap: clamp(var(--section-space-nav-overlap-min) / 16 * 1rem, ((var(--section-space-nav-overlap-min) - ((var(--section-space-nav-overlap-max) - var(--section-space-nav-overlap-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--section-space-nav-overlap-max) - var(--section-space-nav-overlap-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--section-space-nav-overlap-max) / 16 * 1rem);
-  --section-space-nav-overlap-min: 160;
-  --section-space-nav-overlap-max: 224;
+  --section-space-nav-overlap-min: 112;
+  --section-space-nav-overlap-max: 152;
 }
 
-/* 2. Color themes */
+/* 2. Color themes
+
+   The site is dark by default: near-black carrying a green cast, with deep
+   green as the one saturated field. `theme-light` is the exception, kept for
+   the rare panel that has to invert.
+
+   Brand green #1c5755 reaches only 2.4:1 on the near-black, so it never sets
+   type there — it fills buttons and marks. Green that has to be read as text
+   is --green-400: 5.9:1 on the page, 5.4:1 on a card. */
 :root,
-.theme-light,
-.theme-dark .theme-invert,
-.theme-brand .theme-invert {
-  color-scheme: light;
-
-  --background: var(--light-300);
-  --background-2: var(--light-200);
-  --background-3: var(--light-100);
-  --background-skeleton: color-mix(in lab, currentcolor 10%, transparent);
-  --text: var(--dark-900);
-  --text-2: color-mix(in lab, currentcolor 60%, transparent);
-  --border: color-mix(in lab, var(--text) 20%, transparent);
-  --heading-accent: color-mix(in srgb, var(--brand-500), black 20%);
-
-  --selection-background: var(--text);
-  --selection-text: var(--background);
-
-  --button-background: var(--brand-500);
-  --button-border: var(--button-background);
-  --button-text: var(--brand-text);
-  --button-background-hover: var(--text);
-  --button-border-hover: var(--button-background-hover);
-  --button-text-hover: var(--background);
-
-  --button-2-background: transparent;
-  --button-2-border: var(--border);
-  --button-2-text: var(--text);
-  --button-2-background-hover: var(--text);
-  --button-2-border-hover: var(--button-2-background-hover);
-  --button-2-text-hover: var(--background);
-
-  --link-text: var(--text);
-  --link-border: var(--border);
-  --link-text-hover: var(--text);
-  --link-border-hover: var(--brand-500);
-}
-
 .theme-dark,
-.theme-light .theme-invert {
+.theme-light .theme-invert,
+.theme-brand .theme-invert {
   color-scheme: dark;
 
-  --background: var(--dark-900);
-  --background-2: var(--dark-800);
-  --background-3: var(--dark-700);
-  --background-skeleton: color-mix(in lab, currentcolor 10%, transparent);
-  --text: var(--light-100);
-  --text-2: color-mix(in lab, currentcolor 60%, transparent);
-  --border: color-mix(in lab, var(--text) 20%, transparent);
-  --heading-accent: var(--brand-500);
+  --background: var(--ink-900);
+  --background-image: none;
+  --background-2: var(--ink-800);
+  --background-3: var(--ink-700);
+  --background-well: var(--ink-950);
+  --background-skeleton: color-mix(in lab, currentcolor 7%, transparent);
+  --text: var(--sand-300);
+  --text-2: color-mix(in lab, currentcolor 66%, transparent);
+  --border: color-mix(in lab, var(--text) 12%, transparent);
+  --rule: color-mix(in lab, var(--text) 18%, transparent);
+  --heading-accent: var(--green-400);
 
-  --selection-background: var(--text);
-  --selection-text: var(--background);
+  --selection-background: var(--green-600);
+  --selection-text: var(--sand-100);
 
-  --button-background: var(--brand-500);
+  --button-background: var(--green-600);
   --button-border: var(--button-background);
-  --button-text: var(--brand-text);
-  --button-background-hover: var(--text);
+  --button-text: var(--sand-100);
+  --button-background-hover: var(--green-500);
   --button-border-hover: var(--button-background-hover);
-  --button-text-hover: var(--background);
+  --button-text-hover: var(--sand-100);
 
   --button-2-background: transparent;
-  --button-2-border: var(--border);
+  --button-2-border: color-mix(in lab, var(--text) 22%, transparent);
   --button-2-text: var(--text);
-  --button-2-background-hover: var(--text);
-  --button-2-border-hover: var(--button-2-background-hover);
-  --button-2-text-hover: var(--background);
+  --button-2-background-hover: color-mix(in lab, var(--text) 8%, transparent);
+  --button-2-border-hover: color-mix(in lab, var(--text) 45%, transparent);
+  --button-2-text-hover: var(--text);
 
   --link-text: var(--text);
   --link-border: var(--border);
   --link-text-hover: var(--text);
-  --link-border-hover: var(--text);
+  --link-border-hover: color-mix(in lab, var(--text) 26%, transparent);
+  --link-background-hover: color-mix(in lab, var(--text) 7%, transparent);
+  --button-glow-color: var(--sand-100);
 }
 
+.theme-light,
+.theme-dark .theme-invert {
+  color-scheme: light;
+
+  --background: var(--sand-300);
+  --background-image: none;
+  --background-2: var(--sand-200);
+  --background-3: var(--sand-100);
+  --background-well: var(--sand-400);
+  --background-skeleton: color-mix(in lab, currentcolor 8%, transparent);
+  --text: var(--ink-900);
+  --text-2: color-mix(in lab, currentcolor 72%, transparent);
+  --border: color-mix(in lab, var(--text) 16%, transparent);
+  --rule: color-mix(in lab, var(--text) 24%, transparent);
+  --heading-accent: var(--green-600);
+
+  --selection-background: var(--green-600);
+  --selection-text: var(--sand-100);
+
+  --button-background: var(--green-600);
+  --button-border: var(--button-background);
+  --button-text: var(--sand-100);
+  --button-background-hover: var(--ink-900);
+  --button-border-hover: var(--button-background-hover);
+  --button-text-hover: var(--sand-100);
+
+  --button-2-background: transparent;
+  --button-2-border: color-mix(in lab, var(--text) 28%, transparent);
+  --button-2-text: var(--text);
+  --button-2-background-hover: color-mix(in lab, var(--text) 6%, transparent);
+  --button-2-border-hover: var(--text);
+  --button-2-text-hover: var(--text);
+
+  --link-text: var(--text);
+  --link-border: var(--border);
+  --link-text-hover: var(--text);
+  --link-border-hover: color-mix(in lab, var(--text) 30%, transparent);
+  --link-background-hover: color-mix(in lab, var(--text) 6%, transparent);
+  --button-glow-color: var(--sand-100);
+}
+
+/* The one saturated field. A light primary button carries more contrast here
+   than any green would, so the emphasis flips. */
 .theme-brand {
   color-scheme: dark;
 
-  --background: var(--brand-500);
-  --background-2: color-mix(in lab, var(--background) 90%, var(--text));
-  --background-3: color-mix(in lab, var(--background) 80%, var(--text));
-  --background-skeleton: color-mix(in lab, currentcolor 10%, transparent);
-  --text: var(--brand-text);
-  --text-2: color-mix(in lab, currentcolor 60%, transparent);
-  --border: color-mix(in lab, var(--text) 20%, transparent);
-  --heading-accent: color-mix(in srgb, var(--text), white 20%);
+  /* The panel starts and ends as the page colour and only becomes green in
+     the middle, so sections meet through space rather than at an edge. The
+     depth wash rides on top of that fade. */
+  --panel-green: #10403e;
+  --background: var(--ink-900);
+  --background-image:
+    radial-gradient(
+      100% 60% at 26% 50%,
+      color-mix(in srgb, var(--gradient-to) 34%, transparent) 0%,
+      color-mix(in srgb, var(--gradient-from) 20%, transparent) 42%,
+      transparent 76%
+    ),
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      var(--panel-green) 28%,
+      var(--panel-green) 72%,
+      transparent 100%
+    );
+  --background-2: var(--green-800);
+  --background-3: var(--green-700);
+  --background-well: #0b2423;
+  --background-skeleton: color-mix(in lab, currentcolor 9%, transparent);
+  --text: var(--sand-200);
+  --text-2: color-mix(in lab, currentcolor 78%, transparent);
+  --border: color-mix(in lab, var(--text) 18%, transparent);
+  --rule: color-mix(in lab, var(--text) 26%, transparent);
+  --heading-accent: var(--sand-100);
 
-  --selection-background: var(--text);
-  --selection-text: var(--background);
+  --selection-background: var(--sand-200);
+  --selection-text: var(--green-700);
 
-  --button-background: var(--brand-text);
+  --button-background: var(--sand-100);
+  --button-image: none;
   --button-border: var(--button-background);
-  --button-text: var(--background);
-  --button-background-hover: var(--light-100);
+  --button-text: var(--ink-900);
+  --button-background-hover: var(--ink-900);
   --button-border-hover: var(--button-background-hover);
-  --button-text-hover: var(--dark-900);
+  --button-text-hover: var(--sand-100);
 
   --button-2-background: transparent;
-  --button-2-border: var(--border);
+  --button-2-border: color-mix(in lab, var(--text) 32%, transparent);
   --button-2-text: var(--text);
-  --button-2-background-hover: var(--light-100);
-  --button-2-border-hover: var(--button-2-background-hover);
-  --button-2-text-hover: var(--dark-900);
+  --button-2-background-hover: color-mix(in lab, var(--text) 10%, transparent);
+  --button-2-border-hover: var(--text);
+  --button-2-text-hover: var(--text);
 
   --link-text: var(--text);
   --link-border: var(--border);
   --link-text-hover: var(--text);
-  --link-border-hover: var(--text);
+  --link-border-hover: color-mix(in lab, var(--text) 34%, transparent);
+  --link-background-hover: color-mix(in lab, var(--text) 10%, transparent);
+  /* On the green field the light reads as light, not as more green. */
+  --button-glow-color: var(--sand-100);
 }
 
 :root,
 [class*="theme-"] {
   background-color: var(--background);
+  background-image: var(--background-image, none);
   color: var(--text);
 }
 
@@ -467,8 +555,13 @@ select:has(option[value=""]:checked) {
   color: color-mix(in lab, currentcolor 60%, transparent);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 :target {
-  scroll-margin-block: 2rem;
+  scroll-margin-top: calc(var(--nav-height) + var(--space-5));
+  scroll-margin-bottom: 2rem;
 }
 
 :focus-visible {
@@ -640,6 +733,16 @@ h6,
   --_trim-bottom: var(--h6-trim-bottom);
   --_margin-top: var(--h6-margin-top);
   --_margin-bottom: var(--h6-margin-bottom);
+}
+
+/* Capriola has a single weight, so the extra weight is drawn: the glyphs are
+   stroked in their own colour. Only the levels set in the display face get it.
+   h5 and h6 run on the body face, which has real weights of its own. */
+:is(h1, h2, h3, h4, .text-style-display, .text-style-h1, .text-style-h2,
+  .text-style-h3, .text-style-h4) {
+  font-synthesis-weight: none;
+  -webkit-text-stroke: var(--display-stroke) currentColor;
+  paint-order: stroke fill;
 }
 
 /* Leading trim */

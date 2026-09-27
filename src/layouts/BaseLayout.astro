@@ -3,7 +3,10 @@ import "@/styles/global.css";
 import BaseHead from "@/components/Utility/BaseHead.astro";
 import SkipLink from "@/components/Global/SkipLink.astro";
 import Nav from "@/components/Global/Nav.astro";
+import NavV2 from "@/components/Global/NavV2.astro";
 import Footer from "@/components/Global/Footer.astro";
+import ScrollReveal from "@/components/Utility/ScrollReveal.astro";
+import Atmosphere from "@/components/Utility/Atmosphere.astro";
 import type { SeoProps } from "@/types.ts";
 
 type Props = SeoProps & {
@@ -15,23 +18,27 @@ type Props = SeoProps & {
    * `paddingTop="navoverlap"` to clear the bar.
    */
   overlap?: boolean;
+  /** Which navigation the page carries. v1 keeps the one it shipped with. */
+  nav?: "v1" | "v2";
 };
 
-const { theme = "inherit", overlap = false, ...seo } = Astro.props;
+const { theme = "inherit", overlap = false, nav = "v1", ...seo } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class:list={[theme !== "inherit" && `theme-${theme}`]}>
+<html lang="lv" class:list={[theme !== "inherit" && `theme-${theme}`]}>
   <head>
     <BaseHead {...seo} />
     <slot name="head" />
   </head>
   <body>
-    <SkipLink />
-    <Nav overlap={overlap} />
+    <SkipLink label="Pāriet uz saturu" />
+    {nav === "v2" ? <NavV2 /> : <Nav overlap={overlap} />}
     <main id="main" tabindex="-1">
       <slot />
     </main>
     <Footer />
+    <ScrollReveal />
+    <Atmosphere />
   </body>
 </html>

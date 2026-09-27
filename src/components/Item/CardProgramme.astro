@@ -1,0 +1,189 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import Heading from "@/components/Typography/Heading.astro";
+import Paragraph from "@/components/Typography/Paragraph.astro";
+import Img from "@/components/Media/Img.astro";
+
+interface Props extends HTMLAttributes<"article"> {
+  /** Set to `false` to skip rendering this component and its children. */
+  render?: boolean;
+  /** The programme's name. */
+  heading: string;
+  /** Heading level, for the page outline. Every card heading is the same size. */
+  headingTag?: "h2" | "h3" | "h4" | "h5";
+  /** Who performs it. Shown above the name. */
+  performer?: string;
+  /** One sentence on what the programme is. */
+  text?: string;
+  /** How long it runs, written the way it should be read. */
+  duration?: string;
+  /** What it costs, written the way it should be read. */
+  price?: string;
+  /** Where the programme's own page is. */
+  href: string;
+  /** An imported asset, a remote `http(s)` URL, or a path to a file in `public/`. */
+  image: ImageMetadata;
+  /** Leave unset on decorative images — renders `alt=""`. */
+  imageAlt?: string;
+}
+
+const {
+  render = true,
+  heading,
+  headingTag = "h3",
+  performer,
+  text,
+  duration,
+  price,
+  href,
+  image,
+  imageAlt,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const meta = [
+  { term: "Ilgums", value: duration },
+  { term: "Cena", value: price },
+].filter((entry) => !!entry.value);
+---
+
+{
+  render && heading && (
+    <article class:list={["programme_wrap", className]} {...rest}>
+      <div class="programme_visual">
+        <Img
+          src={image}
+          alt={imageAlt}
+          variant="constrained"
+          sizes="(min-width: 64rem) 22vw, (min-width: 30rem) 45vw, 90vw"
+        />
+      </div>
+      <div class="programme_body">
+        {performer && (
+          <p class="programme_performer text-style-small">{performer}</p>
+        )}
+        <Heading tag={headingTag} variant="h4" class="programme_title">
+          <a class="programme_link" href={href}>
+            {heading}
+          </a>
+        </Heading>
+        <Paragraph variant="small" class="programme_text">
+          {text}
+        </Paragraph>
+        {meta.length > 0 && (
+          <dl class="programme_meta text-style-small">
+            {meta.map((entry) => (
+              <div class="programme_meta_row">
+                <dt>{entry.term}</dt>
+                <dd>{entry.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+      </div>
+    </article>
+  )
+}
+
+<style is:global>
+  @layer components {
+    .programme_wrap {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      height: 100%;
+      padding: var(--space-3);
+      background-color: var(--background-2);
+      border: var(--border-width) solid var(--border);
+      border-radius: var(--radius-main);
+      transition:
+        background-color var(--hover-duration) var(--hover-ease),
+        border-color var(--hover-duration) var(--hover-ease),
+        translate var(--hover-duration) var(--hover-ease);
+    }
+
+    .programme_visual {
+      aspect-ratio: 3 / 4;
+      border-radius: calc(var(--radius-main) - var(--space-3) / 2);
+      overflow: clip;
+      background-color: var(--background-skeleton);
+
+      & > .image {
+        width: 100%;
+        height: 100%;
+        transition: scale calc(var(--hover-duration) * 3) var(--hover-ease);
+      }
+    }
+
+    .programme_body {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      gap: var(--space-2);
+      padding: var(--space-5) var(--space-2) var(--space-2);
+    }
+
+    .programme_performer {
+      color: var(--heading-accent);
+      font-weight: var(--primary-medium);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+    }
+
+    .programme_title {
+      margin-top: var(--space-1);
+    }
+
+    /* The link covers the whole card, so the picture and the meta are part of
+       the same target as the name. */
+    .programme_link::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-main);
+    }
+
+    .programme_text {
+      color: var(--text-2);
+    }
+
+    .programme_meta {
+      margin-top: auto;
+      padding-top: var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      color: var(--text-2);
+    }
+
+    .programme_meta_row {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding-top: var(--space-2);
+      border-top: var(--border-width) solid var(--border);
+
+      & dd {
+        color: var(--text);
+        text-align: right;
+      }
+    }
+
+    @media (hover: hover) {
+      .programme_wrap:hover {
+        background-color: var(--background-3);
+        border-color: color-mix(in lab, var(--text) 22%, transparent);
+        translate: 0 -0.25rem;
+      }
+      .programme_wrap:hover .programme_visual > .image {
+        scale: 1.04;
+      }
+    }
+
+    /* The whole card is one link, so the focus ring belongs to the card. */
+    .programme_wrap:focus-within {
+      border-color: color-mix(in lab, var(--text) 30%, transparent);
+    }
+  }
+</style>

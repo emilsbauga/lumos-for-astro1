@@ -1,7 +1,8 @@
 ---
-import Icon from "@/components/Media/Icon.astro";
 import NavLink from "@/components/Global/NavLink.astro";
-import logo from "@/assets/logo/logo.svg";
+import Button from "@/components/Button.astro";
+import Search from "@/components/Global/Search.astro";
+import Logo from "@/assets/logo/studeja-logo.svg";
 import { SITE_NAME } from "@/consts.ts";
 
 interface Props {
@@ -16,6 +17,43 @@ interface Props {
 }
 
 const { render = true, overlap = false } = Astro.props;
+
+/* Three items in the bar. Everything the offering covers lives one level
+   down, so the bar stays short however many services are added. */
+const offering = [
+  {
+    title: "Mūzika",
+    links: [
+      { label: "Koncertprogrammas", href: "/koncertprogrammas" },
+      { label: "Grupas un mākslinieki", href: "/koncertprogrammas/makslinieki" },
+    ],
+  },
+  {
+    title: "Pasākumi",
+    links: [
+      { label: "Pasākumu organizēšana", href: "/pasakumu-organizesana" },
+      { label: "Pakalpojumi", href: "/pakalpojumi" },
+    ],
+  },
+];
+
+const highlights = [
+  {
+    label: "Pieteikt ieceri",
+    text: "Pastāsti, kas iecerēts, un piemeklēsim risinājumu.",
+    href: "/pieteikt",
+  },
+  {
+    label: "Biežāk uzdotie jautājumi",
+    text: "Cenas, rezervācijas un tehniskais nodrošinājums.",
+    href: "/biezak-uzdotie-jautajumi",
+  },
+];
+
+const direct = [
+  { label: "Projekti", href: "/projekti" },
+  { label: "Par STUDEJA", href: "/par-studeja" },
+];
 ---
 
 {
@@ -23,23 +61,97 @@ const { render = true, overlap = false } = Astro.props;
     <header class:list={["nav_wrap", overlap && "overlap"]}>
       <div class="nav_inner">
         <a class="nav_logo" href="/" aria-label={SITE_NAME}>
-          <Icon src={logo} variant="full-width" />
+          <Logo class="nav_logo_art" />
         </a>
+
         <button
           class="nav_toggle"
           type="button"
-          aria-label="Menu"
+          aria-label="Izvēlne"
           aria-expanded="false"
           aria-controls="nav-menu"
         >
           <span class="nav_toggle_icon" />
         </button>
-        <nav class="nav_menu" id="nav-menu" aria-label="Main">
+
+        <nav class="nav_menu" id="nav-menu" aria-label="Galvenā">
           <div class="nav_menu_inner">
-            <ul class="nav_links">
-              <NavLink href="/">Home</NavLink>
-              <NavLink href="/example-components">Example Components</NavLink>
-            </ul>
+            <div class="nav_group">
+              <ul class="nav_links">
+                <li class="nav_item has-panel">
+                  <button
+                    class="nav_link nav_disclosure"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="nav-offering"
+                  >
+                    Piedāvājums
+                    <span class="nav_chevron" aria-hidden="true" />
+                  </button>
+                </li>
+                {direct.map((link) => (
+                  <NavLink href={link.href}>{link.label}</NavLink>
+                ))}
+                <li class="nav_item">
+                  <Search class="nav_link nav_search" />
+                </li>
+              </ul>
+
+              {/* One panel under the whole group, the way the reference
+                  drops it under the pill rather than under the word. */}
+              <div class="nav_panel" id="nav-offering">
+                <div class="nav_panel_inner">
+                  {offering.map((column) => (
+                    <div class="nav_column">
+                      <p class="nav_column_title text-style-small">
+                        {column.title}
+                      </p>
+                      <ul class="nav_column_links">
+                        {column.links.map((link) => (
+                          <li>
+                            <a class="nav_panel_link" href={link.href}>
+                              {link.label}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                  <div class="nav_highlights">
+                    {highlights.map((item) => (
+                      <a class="nav_highlight" href={item.href}>
+                        <span class="nav_highlight_label">{item.label}</span>
+                        <span class="nav_highlight_text text-style-small">
+                          {item.text}
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="nav_actions">
+              <ul class="nav_languages" aria-label="Valoda">
+                <li>
+                  <a class="nav_language" href="/" aria-current="true">
+                    LV
+                  </a>
+                </li>
+                <li>
+                  <a class="nav_language" href="/en/" hreflang="en">
+                    EN
+                  </a>
+                </li>
+              </ul>
+              <Button
+                element="link"
+                href="/pieteikt"
+                class="nav_cta text-style-small"
+              >
+                Pieteikt ieceri
+              </Button>
+            </div>
           </div>
         </nav>
       </div>
@@ -50,7 +162,8 @@ const { render = true, overlap = false } = Astro.props;
 {/* No-JS fallback */}
 <noscript>
   <style>
-    .nav_toggle {
+    .nav_toggle,
+    .search_trigger {
       display: none;
     }
     .nav_menu {
@@ -60,21 +173,40 @@ const { render = true, overlap = false } = Astro.props;
     .nav_menu_inner {
       opacity: 1;
     }
+    .nav_panel {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      translate: none;
+      pointer-events: auto;
+    }
   </style>
 </noscript>
 
 <script>
   const nav = document.querySelector<HTMLElement>(".nav_wrap");
   const toggle = nav?.querySelector<HTMLButtonElement>(".nav_toggle");
+  const disclosure = nav?.querySelector<HTMLButtonElement>(".nav_disclosure");
 
   if (nav && toggle) {
+    const setPanel = (open: boolean) => {
+      nav.classList.toggle("panel-open", open);
+      disclosure?.setAttribute("aria-expanded", String(open));
+    };
+
     const setOpen = (open: boolean) => {
       nav.classList.toggle("open", open);
       toggle.setAttribute("aria-expanded", String(open));
+      document.body.classList.toggle("nav-open", open);
+      if (!open) setPanel(false);
     };
 
     toggle.addEventListener("click", () => {
       setOpen(toggle.getAttribute("aria-expanded") !== "true");
+    });
+
+    disclosure?.addEventListener("click", () => {
+      setPanel(disclosure.getAttribute("aria-expanded") !== "true");
     });
 
     nav.querySelectorAll("a").forEach((link) => {
@@ -82,7 +214,11 @@ const { render = true, overlap = false } = Astro.props;
     });
 
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && nav.classList.contains("open")) {
+      if (event.key !== "Escape") return;
+      if (nav.classList.contains("panel-open")) {
+        setPanel(false);
+        disclosure?.focus();
+      } else if (nav.classList.contains("open")) {
         setOpen(false);
         toggle.focus();
       }
@@ -90,15 +226,36 @@ const { render = true, overlap = false } = Astro.props;
 
     document.addEventListener("click", (event) => {
       const target = event.target;
-      if (!nav.classList.contains("open") || !(target instanceof Node)) return;
-      if (!nav.contains(target)) setOpen(false);
+      if (!(target instanceof Node)) return;
+      if (!nav.contains(target)) {
+        setOpen(false);
+        setPanel(false);
+      }
+    });
+
+    /* Moving focus out of the disclosure closes it, so the panel never hangs
+       open behind a keyboard user. */
+    nav.addEventListener("focusout", (event) => {
+      const next = event.relatedTarget;
+      if (next instanceof Node && nav.contains(next)) return;
+      setPanel(false);
     });
 
     window
-      .matchMedia("(width >= 48rem)")
-      .addEventListener("change", (event) => {
-        if (event.matches) setOpen(false);
-      });
+      .matchMedia("(width >= 64rem)")
+      .addEventListener("change", () => setOpen(false));
+
+    /* The bar is part of the page until it moves; once it does, it separates
+       itself with a blur and a hairline rather than a hard edge. */
+    const sentinel = document.createElement("div");
+    sentinel.setAttribute("aria-hidden", "true");
+    sentinel.style.cssText = "position:absolute;top:0;height:1px;width:1px;";
+    document.body.prepend(sentinel);
+
+    new IntersectionObserver(
+      ([entry]) => nav.classList.toggle("scrolled", !entry.isIntersecting),
+      { threshold: 0 },
+    ).observe(sentinel);
   }
 </script>
 
@@ -111,14 +268,33 @@ const { render = true, overlap = false } = Astro.props;
       display: flex;
       justify-content: center;
       padding-inline: var(--site-margin);
-      background-color: var(--background);
       color: var(--text);
-      border-bottom: var(--border-width) solid var(--border);
+      border-bottom: var(--border-width) solid transparent;
+      transition:
+        border-color var(--hover-duration) var(--hover-ease),
+        background-color var(--hover-duration) var(--hover-ease);
+
+      &.scrolled {
+        background-color: color-mix(in srgb, var(--background) 82%, transparent);
+        border-bottom-color: var(--border);
+        backdrop-filter: blur(0.75rem) saturate(1.4);
+      }
+
+      /* An open menu or panel is opaque: blurred type over a scrolling page
+         is not worth reading. */
+      &:is(.open, .panel-open) {
+        background-color: var(--background);
+        backdrop-filter: none;
+      }
 
       &.overlap {
         position: fixed;
         inset-inline: 0;
       }
+    }
+
+    body.nav-open {
+      overflow: hidden;
     }
 
     .nav_inner {
@@ -139,18 +315,28 @@ const { render = true, overlap = false } = Astro.props;
     .nav_logo {
       display: flex;
       align-items: center;
-      width: 6.5rem;
+      border-radius: var(--radius-small);
       transition: opacity var(--hover-duration) var(--hover-ease);
       @media (hover: hover) {
         &:hover {
-          opacity: 0.6;
+          opacity: 0.62;
         }
       }
     }
 
+    .nav_logo_art {
+      display: block;
+      width: auto;
+      height: 1.55rem;
+      color: var(--text);
+      @media (width >= 48rem) {
+        height: 1.85rem;
+      }
+    }
+
     .nav_toggle {
-      --_icon-width: 1.5rem;
-      --_bar-gap: 0.5rem;
+      --_icon-width: 1.25rem;
+      --_bar-gap: 0.4375rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -161,7 +347,7 @@ const { render = true, overlap = false } = Astro.props;
       transition: opacity var(--hover-duration) var(--hover-ease);
       @media (hover: hover) {
         &:hover {
-          opacity: 0.6;
+          opacity: 0.62;
         }
       }
     }
@@ -235,7 +421,7 @@ const { render = true, overlap = false } = Astro.props;
       display: flex;
       flex-direction: column;
       padding: var(--space-2) var(--site-margin) var(--space-4);
-      font-size: var(--text-main);
+      font-size: var(--text-large);
       font-weight: var(--primary-medium);
       & > li + li {
         border-top: var(--border-width) solid var(--border);
@@ -244,11 +430,11 @@ const { render = true, overlap = false } = Astro.props;
 
     .nav_link {
       display: block;
+      width: 100%;
       padding-block: var(--space-3);
-      color: color-mix(in lab, currentcolor 60%, transparent);
+      color: var(--text-2);
+      text-align: left;
       text-decoration: none;
-      text-underline-offset: 0.4em;
-      text-decoration-thickness: var(--border-width);
       transition: color var(--hover-duration) var(--hover-ease);
       &[aria-current="page"] {
         color: var(--text);
@@ -260,42 +446,298 @@ const { render = true, overlap = false } = Astro.props;
       }
     }
 
-    @media (width >= 48rem) {
+    .nav_disclosure {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      cursor: pointer;
+      font: inherit;
+    }
+
+    /* Two rules, rotated. No artwork. */
+    .nav_chevron {
+      position: relative;
+      display: block;
+      width: 0.5em;
+      height: 0.5em;
+      flex: none;
+      border-right: var(--border-width) solid currentcolor;
+      border-bottom: var(--border-width) solid currentcolor;
+      rotate: 45deg;
+      translate: 0 -0.15em;
+      transition: rotate var(--open-duration) var(--open-ease);
+    }
+
+    .nav_wrap.panel-open .nav_chevron {
+      rotate: 225deg;
+      translate: 0 0.1em;
+    }
+
+    .nav_panel_inner {
+      display: grid;
+      gap: var(--space-5) var(--space-8);
+    }
+
+    .nav_column_title {
+      margin-bottom: var(--space-3);
+      color: var(--heading-accent);
+      font-weight: var(--primary-medium);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+    }
+
+    .nav_column_links {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      font-size: var(--text-main);
+      font-weight: var(--primary-regular);
+    }
+
+    .nav_panel_link {
+      color: var(--text-2);
+      transition: color var(--hover-duration) var(--hover-ease);
+      @media (hover: hover) {
+        &:hover {
+          color: var(--text);
+        }
+      }
+    }
+
+    .nav_panel_foot {
+      margin-top: var(--space-5);
+      padding-top: var(--space-4);
+      border-top: var(--border-width) solid var(--border);
+      color: var(--text-2);
+      font-weight: var(--primary-regular);
+    }
+
+    .nav_panel_inline {
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 0.25em;
+    }
+
+    .nav_actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-4);
+      padding: 0 var(--site-margin) var(--space-6);
+    }
+
+    .nav_languages {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-small);
+      font-weight: var(--primary-medium);
+      letter-spacing: var(--letter-spacing-wide);
+      & > li + li::before {
+        content: "/";
+        margin-right: var(--space-2);
+        color: color-mix(in lab, currentcolor 40%, transparent);
+      }
+    }
+
+    .nav_language {
+      color: var(--text-2);
+      transition: color var(--hover-duration) var(--hover-ease);
+      &[aria-current="true"] {
+        color: var(--text);
+      }
+      @media (hover: hover) {
+        &:hover {
+          color: var(--text);
+        }
+      }
+    }
+
+    .nav_cta {
+      --_pad-inline: 1.05em;
+      --_arrow: 1em;
+      --_arrow-gap: 0.5em;
+      padding-block: 0.6em;
+    }
+
+    @media (width < 64rem) {
+      /* On a phone the panel is just the next level of the same list. */
+      .nav_panel {
+        padding-bottom: var(--space-4);
+      }
+      .nav_wrap:not(.panel-open) .nav_panel {
+        display: none;
+      }
+      .nav_highlights {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        margin-top: var(--space-5);
+      }
+      .nav_highlight_text {
+        display: block;
+        color: var(--text-2);
+      }
+    }
+
+    @media (width >= 64rem) {
       .nav_toggle {
         display: none;
       }
 
-      .nav_menu {
-        position: static;
-        display: block;
+      /* Both wrappers dissolve so the group and the actions become cells of
+         the bar's own grid; otherwise the group cannot be centred against
+         the logo. */
+      .nav_menu,
+      .nav_menu_inner {
+        display: contents;
+        /* visibility is inherited, and a display:contents box still passes it
+           down, so the mobile hidden state has to be undone here. */
         visibility: visible;
-        background-color: transparent;
-        border-bottom: 0;
       }
 
-      .nav_menu_inner {
-        overflow: visible;
-        opacity: 1;
+      .nav_inner {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+      }
+
+      .nav_actions {
+        justify-self: end;
+        padding: 0;
+        gap: var(--space-4);
+      }
+
+      /* The links and the search sit in one rounded field. */
+      .nav_group {
+        position: relative;
+        justify-self: center;
+        padding: 0.25rem;
+        border: var(--border-width) solid var(--border);
+        border-radius: var(--radius-round);
+        background-color: color-mix(in lab, var(--text) 3%, transparent);
       }
 
       .nav_links {
         flex-direction: row;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         align-items: center;
         padding: 0;
-        gap: var(--space-4);
+        gap: 0.125rem;
         font-size: var(--text-small);
         & > li + li {
           border-top: 0;
         }
       }
 
+      .nav_item {
+        display: flex;
+      }
+
+      .nav_item:has(.nav_search) {
+        margin-left: 0.25rem;
+        padding-left: 0.375rem;
+        border-left: var(--border-width) solid var(--border);
+      }
+
+      /* Each item is its own pill. The open one is filled, the way the
+         reference marks the section you are in. */
       .nav_link {
-        padding-block: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        width: auto;
+        padding: 0.5em 0.95em;
+        border-radius: var(--radius-round);
+        white-space: nowrap;
+        transition:
+          color var(--hover-duration) var(--hover-ease),
+          background-color var(--hover-duration) var(--hover-ease);
+
+        @media (hover: hover) {
+          &:hover {
+            color: var(--text);
+            background-color: color-mix(in lab, var(--text) 8%, transparent);
+          }
+        }
+
         &[aria-current="page"] {
-          text-decoration: underline;
+          color: var(--text);
+          background-color: color-mix(in lab, var(--text) 10%, transparent);
         }
       }
+
+      .nav_wrap.panel-open .nav_disclosure {
+        background-color: var(--sand-100);
+        color: var(--ink-900);
+      }
+
+      .nav_panel {
+        position: absolute;
+        top: calc(100% + var(--space-4));
+        left: 50%;
+        translate: -50% -0.5rem;
+        width: max-content;
+        max-width: min(56rem, calc(100vw - var(--site-margin) * 2));
+        padding: var(--space-6);
+        background-color: var(--background-2);
+        border: var(--border-width) solid var(--border);
+        border-radius: var(--radius-main);
+        box-shadow: 0 1.5rem 3rem -1rem rgb(0 0 0 / 0.6);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity var(--open-duration) var(--open-ease),
+          translate var(--open-duration) var(--open-ease),
+          visibility var(--open-duration) var(--open-ease);
+      }
+
+      .nav_wrap.panel-open .nav_panel {
+        opacity: 1;
+        visibility: visible;
+        translate: -50% 0;
+        pointer-events: auto;
+      }
+
+      .nav_panel_inner {
+        grid-template-columns: repeat(2, minmax(9rem, auto)) minmax(16rem, 1fr);
+        gap: var(--space-6) var(--space-8);
+        align-items: start;
+      }
+
+      /* The right-hand block is raised, as the reference's suites are. */
+      .nav_highlights {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        padding: var(--space-3);
+        background-color: color-mix(in lab, var(--text) 4%, transparent);
+        border-radius: var(--radius-small);
+      }
+
+      .nav_highlight {
+        display: grid;
+        gap: var(--space-1);
+        padding: var(--space-3);
+        border-radius: var(--radius-small);
+        transition: background-color var(--hover-duration) var(--hover-ease);
+        @media (hover: hover) {
+          &:hover {
+            background-color: color-mix(in lab, var(--text) 7%, transparent);
+          }
+        }
+      }
+
+      .nav_highlight_label {
+        color: var(--text);
+        font-weight: var(--primary-medium);
+      }
+
+      .nav_highlight_text {
+        color: var(--text-2);
+      }
     }
+
   }
 </style>

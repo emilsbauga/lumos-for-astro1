@@ -1,0 +1,506 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Section from "@/components/Wrapper/Section.astro";
+import ContentWrapper from "@/components/Wrapper/ContentWrapper.astro";
+import Grid from "@/components/Wrapper/Grid.astro";
+import Eyebrow from "@/components/Typography/Eyebrow.astro";
+import Heading from "@/components/Typography/Heading.astro";
+import Paragraph from "@/components/Typography/Paragraph.astro";
+import Button from "@/components/Button.astro";
+import ButtonWrapper from "@/components/Wrapper/ButtonWrapper.astro";
+import Card from "@/components/Item/Card.astro";
+import Accordion from "@/components/Interactive/Accordion.astro";
+import AccordionItem from "@/components/Interactive/AccordionItem.astro";
+import SectionHeroHome from "@/components/Content/SectionHeroHome.astro";
+import ContentFeed from "@/components/Content/ContentFeed.astro";
+import ContentServices from "@/components/Content/ContentServices.astro";
+import ContentCommunity from "@/components/Content/ContentCommunity.astro";
+import CardProgramme from "@/components/Item/CardProgramme.astro";
+
+import iconInstagram from "@/assets/icons/streamline/instagram.svg";
+import iconFacebook from "@/assets/icons/streamline/facebook.svg";
+import iconMusic from "@/assets/icons/streamline/music.svg";
+import iconTicket from "@/assets/icons/streamline/ticket.svg";
+import iconSpeaker from "@/assets/icons/streamline/speaker.svg";
+import iconMicrophone from "@/assets/icons/streamline/microphone.svg";
+import iconCamera from "@/assets/icons/streamline/camera.svg";
+import iconPlaylist from "@/assets/icons/streamline/playlist.svg";
+import iconUsers from "@/assets/icons/streamline/users.svg";
+import iconHeadphones from "@/assets/icons/streamline/headphones.svg";
+
+import heroKoncerts from "@/assets/photos/hero-koncerts.webp";
+import programmasVokals from "@/assets/photos/programmas-vokals.webp";
+import pasakumiNorise from "@/assets/photos/pasakumi-norise.webp";
+import pakalpojumiSkatuve from "@/assets/photos/pakalpojumi-skatuve.webp";
+import spaitsSkatuve from "@/assets/photos/spaits-skatuve.webp";
+import komandaSpaits from "@/assets/photos/komanda-spaits.webp";
+import komandaSaruna from "@/assets/photos/komanda-saruna.webp";
+import programma01 from "@/assets/photos/programma-01.webp";
+import programma02 from "@/assets/photos/programma-02.webp";
+import programma03 from "@/assets/photos/programma-03.webp";
+import programma04 from "@/assets/photos/programma-04.webp";
+
+const INSTAGRAM = "https://www.instagram.com/siastudeja/";
+const FACEBOOK = "https://www.facebook.com/profile.php?id=61590559761386";
+
+/* The scatter behind the headline. x and y are the tile's centre as a
+   percentage of the hero; depth is how far it leans with the pointer. Only
+   the corner tiles survive on a phone, where the centre column is the
+   whole screen. */
+const heroTiles = [
+  { image: heroKoncerts, x: 4, y: 16, w: 14, rot: -7, depth: 1.4 },
+  { image: programmasVokals, x: 19, y: 46, w: 12, rot: 5, depth: 2.2 },
+  { image: pasakumiNorise, x: 5, y: 76, w: 14.5, rot: 3, depth: 1 },
+  { image: pakalpojumiSkatuve, x: 96, y: 15, w: 13.5, rot: 6, depth: 1.2 },
+  { image: spaitsSkatuve, x: 84, y: 44, w: 14, rot: -4, depth: 2.4 },
+  { image: komandaSpaits, x: 97, y: 72, w: 12, rot: 5, depth: 1.6 },
+  { image: programma01, x: 20, y: 5, w: 10, rot: 4, depth: 2.8, small: true },
+  {
+    image: programma02,
+    x: 76,
+    y: 4,
+    w: 10.5,
+    rot: -5,
+    depth: 2.4,
+    small: true,
+  },
+  { image: programma03, x: 16, y: 95, w: 10.5, rot: -3, depth: 3, small: true },
+  { image: programma04, x: 80, y: 94, w: 10, rot: 5, depth: 2.6, small: true },
+  { image: komandaSaruna, x: 33, y: 90, w: 11, rot: -6, depth: 2 },
+];
+
+/* Placeholders until the profiles are connected. The layout is the real one;
+   only the words and dates are waiting. */
+const posts = [
+  {
+    source: "Instagram",
+    icon: iconInstagram,
+    caption: "[Ieraksta teksts vienā vai divās rindās.]",
+    date: "[datums]",
+    href: INSTAGRAM,
+    image: spaitsSkatuve,
+    imageAlt: "Festivāla SPAITS skatuve un apmeklētāji ezera krastā",
+  },
+  {
+    source: "Instagram",
+    icon: iconInstagram,
+    caption: "[Ieraksta teksts vienā vai divās rindās.]",
+    date: "[datums]",
+    href: INSTAGRAM,
+    image: programmasVokals,
+    imageAlt: "Dziedātājas pie mikrofoniem koncerta laikā",
+  },
+  {
+    source: "Facebook",
+    icon: iconFacebook,
+    caption: "[Ieraksta teksts vienā vai divās rindās.]",
+    date: "[datums]",
+    href: FACEBOOK,
+    image: komandaSpaits,
+    imageAlt: "STUDEJA komanda uz skatuves pēc pasākuma",
+  },
+  {
+    source: "Facebook",
+    icon: iconFacebook,
+    caption: "[Ieraksta teksts vienā vai divās rindās.]",
+    date: "[datums]",
+    href: FACEBOOK,
+    image: pasakumiNorise,
+    imageAlt: "Pasākuma norises vieta ar apmeklētājiem brīvā dabā",
+  },
+];
+
+const services = [
+  {
+    group: "Darbības virzieni",
+    heading: "Koncertprogrammas un mākslinieki",
+    icon: iconMusic,
+    text: "Izvēlies koncertprogrammu, iepazīsti grupas un māksliniekus vai piesaki īpaši savam notikumam veidotu muzikālo piedāvājumu. Par pieejamību un uzstāšanās nosacījumiem sazinies ar STUDEJA.",
+    linkLabel: "Programmas un mākslinieki",
+    href: "/koncertprogrammas",
+  },
+  {
+    group: "Darbības virzieni",
+    heading: "Pasākumu organizēšana un producēšana",
+    icon: iconTicket,
+    text: "Veidojam pasākumus uzņēmumiem, pašvaldībām un privātiem klientiem. Var uzticēt visu organizēšanu vai piesaistīt STUDEJA konkrētam uzdevumam: idejai, programmai, māksliniekiem, tehniskajam nodrošinājumam vai norises koordinēšanai.",
+    linkLabel: "Par pasākumu veidošanu",
+    href: "/pasakumu-organizesana",
+  },
+  {
+    group: "Pakalpojumi",
+    heading: "Apskaņošana un tehniskais nodrošinājums",
+    icon: iconSpeaker,
+    text: "Apskaņošana koncertiem, svinībām, runām un citām norisēm. Atbilstoši vietai un programmai nodrošinām nepieciešamo tehniku un speciālistus. Piesaistām arī skatuves un gaismu risinājumus.",
+    linkLabel: "Pieteikt pakalpojumu",
+    href: "/pakalpojumi#apskanosana",
+  },
+  {
+    group: "Pakalpojumi",
+    heading: "Pasākumu vadītāji",
+    icon: iconMicrophone,
+    text: "Piemeklējam pasākuma vadītāju atbilstoši notikuma formātam, auditorijai un valodai. Vadītāju var piesaistīt atsevišķi vai kopā ar programmas un scenārija veidošanu.",
+    linkLabel: "Pieteikt pakalpojumu",
+    href: "/pakalpojumi#vaditaji",
+  },
+  {
+    group: "Pakalpojumi",
+    heading: "Foto un video",
+    icon: iconCamera,
+    text: "Sadarbības partneru fotogrāfi un video veidotāji pasākuma dokumentēšanai un satura radīšanai. Pirms darba vienojamies par nepieciešamo materiālu, darba apjomu un tā izmantošanu.",
+    linkLabel: "Pieteikt pakalpojumu",
+    href: "/pakalpojumi#foto-video",
+  },
+  {
+    group: "Pakalpojumi",
+    heading: "Individuālu programmu veidošana",
+    icon: iconPlaylist,
+    text: "Īpaši konkrētam pasākumam izstrādāts saturs. Apvienojam māksliniekus, repertuāru un programmas elementus atbilstoši notikuma tēmai un iecerei.",
+    linkLabel: "Pieteikt pakalpojumu",
+    href: "/pakalpojumi#programmas",
+  },
+  {
+    group: "Pakalpojumi",
+    heading: "Mūziķu menedžments",
+    icon: iconUsers,
+    text: "Palīdzam grupām un māksliniekiem attīstīt darbību, veidot piedāvājumu un organizēt sadarbības. Menedžmenta apjomu nosakām kopā ar mākslinieku, ņemot vērā viņa mērķus un nepieciešamo iesaisti.",
+    linkLabel: "Pieteikt pakalpojumu",
+    href: "/pakalpojumi#menedzments",
+  },
+  {
+    group: "Pakalpojumi",
+    heading: "Mūzikas producēšana",
+    icon: iconHeadphones,
+    text: "Palīdzam radīt un attīstīt mūziku, no ieceres un aranžējuma līdz ieraksta producēšanai un izdošanai. Sadarbojamies ar grupām un māksliniekiem gan atsevišķos darba posmos, gan visā tapšanas procesā.",
+    linkLabel: "Pieteikt pakalpojumu",
+    href: "/pakalpojumi#producesana",
+  },
+];
+
+const programmes = [
+  {
+    performer: "[Grupa vai solists]",
+    heading: "[Koncertprogrammas nosaukums]",
+    text: "[Viens teikums par programmas saturu un raksturu.]",
+    duration: "[60 min]",
+    price: "Pēc vienošanās",
+    href: "/koncertprogrammas",
+    image: programma01,
+    imageAlt: "Mūziķi uz skatuves brīvā dabā",
+  },
+  {
+    performer: "[Grupa vai solists]",
+    heading: "[Koncertprogrammas nosaukums]",
+    text: "[Viens teikums par programmas saturu un raksturu.]",
+    duration: "[2 × 45 min]",
+    price: "No [summa] €",
+    href: "/koncertprogrammas",
+    image: programma02,
+    imageAlt: "Folkloras grupa koncerta laikā",
+  },
+  {
+    performer: "[Grupa vai solists]",
+    heading: "[Koncertprogrammas nosaukums]",
+    text: "[Viens teikums par programmas saturu un raksturu.]",
+    duration: "[90 min]",
+    price: "[summa] €",
+    href: "/koncertprogrammas",
+    image: programma03,
+    imageAlt: "Grupa uz skatuves krāsainā apgaismojumā",
+  },
+  {
+    performer: "[Grupa vai solists]",
+    heading: "[Koncertprogrammas nosaukums]",
+    text: "[Viens teikums par programmas saturu un raksturu.]",
+    duration: "[45 min]",
+    price: "Pēc vienošanās",
+    href: "/koncertprogrammas",
+    image: programma04,
+    imageAlt: "Mūziķi uzstājas telpā ar skatuves gaismām",
+  },
+];
+
+const artists = [
+  {
+    eyebrow: "[Žanrs vai noskaņa]",
+    heading: "[Grupas vai solista vārds]",
+    text: "[Viens teikums par mākslinieku un to, ko klausītājs dzird.]",
+    image: programmasVokals,
+    imageAlt: "Dziedātājas pie mikrofoniem koncerta laikā",
+  },
+  {
+    eyebrow: "[Žanrs vai noskaņa]",
+    heading: "[Grupas vai solista vārds]",
+    text: "[Viens teikums par mākslinieku un to, ko klausītājs dzird.]",
+    image: programma02,
+    imageAlt: "Folkloras grupa koncerta laikā",
+  },
+  {
+    eyebrow: "[Žanrs vai noskaņa]",
+    heading: "[Grupas vai solista vārds]",
+    text: "[Viens teikums par mākslinieku un to, ko klausītājs dzird.]",
+    image: pakalpojumiSkatuve,
+    imageAlt: "Grupa uz skatuves koncerta apgaismojumā",
+  },
+];
+
+const projects = [
+  {
+    eyebrow: "5. jūlijs, 2026 · Rēzekne",
+    heading: "SPAITS",
+    text: "Pašu organizētais kultūras festivāls Kovšu ezera krastā. Programmā bija koncerti, mākslas norises, sarunas un aktivitātes ģimenēm.",
+    href: "/projekti/spaits",
+    image: spaitsSkatuve,
+    imageAlt: "Festivāla SPAITS skatuve un apmeklētāji ezera krastā",
+  },
+  {
+    eyebrow: "[datums] · [vieta]",
+    heading: "[Projekta nosaukums]",
+    text: "[Viens teikums par ieceri un STUDEJA paveikto.]",
+    href: "/projekti",
+    image: pasakumiNorise,
+    imageAlt: "Pasākuma norises vieta ar apmeklētājiem brīvā dabā",
+  },
+  {
+    eyebrow: "[datums] · [vieta]",
+    heading: "[Projekta nosaukums]",
+    text: "[Viens teikums par ieceri un STUDEJA paveikto.]",
+    href: "/projekti",
+    image: heroKoncerts,
+    imageAlt: "Grupa uz skatuves koncerta apgaismojumā",
+  },
+];
+
+const questions = [
+  {
+    heading: "Vai var pasūtīt tikai grupu vai vienu pakalpojumu?",
+    text: "Jā. Koncertprogrammas, apskaņošanu, pasākuma vadītāju un citus pakalpojumus var pieteikt atsevišķi vai apvienot vienā piedāvājumā.",
+  },
+  {
+    heading: "Vai palīdzat, ja vēl nav gatavas pasākuma idejas?",
+    text: "Jā. Pastāsti, kam pasākums paredzēts un ko vēlies tajā piedzīvot. Kopā precizēsim formātu, programmu un nepieciešamos darbus.",
+  },
+  {
+    heading: "Vai strādājat ārpus Latgales?",
+    text: "Jā, visā Latvijā. Par projektiem ārvalstīs vienojamies individuāli.",
+  },
+  {
+    heading: "Kā veidojas cena?",
+    text: "To nosaka izvēlētā programma, sastāvs, ilgums, norises vieta un nepieciešamais nodrošinājums. Piedāvājumā precizējam, kas iekļauts cenā un kādas ir papildu izmaksas. Daļai programmu ir fiksēta cena, citām sākumcena vai individuāls aprēķins.",
+  },
+  {
+    heading: "Vai pieteikuma nosūtīšana rezervē datumu?",
+    text: "Nē. Vispirms pārbaudām pieejamību un vienojamies par piedāvājumu. Rezervācijas apstiprināšanas kārtību norādām individuāli.",
+  },
+  {
+    heading: "Vai nodarbojaties ar mūzikas producēšanu un menedžmentu?",
+    text: "Jā. Mūzikas producēšana ietver darbu ar muzikālo ieceri, aranžējumu, ierakstu un izdošanu. Menedžmenta sadarbības apjomu nosakām ar katru mākslinieku atsevišķi.",
+  },
+];
+---
+
+<BaseLayout
+  title="Mūzika, pasākumi un jaunas idejas"
+  description="STUDEJA piedāvā koncertprogrammas un māksliniekus, organizē pasākumus un nodrošina pakalpojumus pasākumiem un māksliniekiem. Saknes Latgalē, darbs visā Latvijā."
+>
+  <!-- Hero -->
+  <SectionHeroHome
+    heading="Mūzika, pasākumi un jaunas idejas."
+    text="Koncertprogrammas, pasākumi un mūzikas producēšana. Saknes Latgalē, darbs visā Latvijā."
+    buttonLabel="Apskatīt piedāvājumu"
+    buttonHref="#virzieni"
+    secondaryLabel="Pieteikt ieceri"
+    secondaryHref="/pieteikt"
+    tiles={heroTiles}
+  />
+
+  <!-- Social feed -->
+  <Section id="jaunumi" paddingTop="small">
+    <ContentFeed
+      eyebrow="Sociālie tīkli"
+      heading="Jaunumi un aktivitātes"
+      text="Īsākās ziņas publicējam Instagram un Facebook. Šeit parādās pēdējās."
+      items={posts}
+      linkLabel="Sekot Instagram"
+      linkHref={INSTAGRAM}
+    />
+  </Section>
+
+  <!-- What we do -->
+  <Section id="virzieni" gap="7">
+    <ContentWrapper variant="columns" data-reveal>
+      <Heading tag="h2" maxWidth={16} class="margin-top-0">
+        Ar ko varam palīdzēt
+      </Heading>
+      <Paragraph slot="column2" maxWidth={46} class="color-faded">
+        Divi darbības virzieni un seši pakalpojumi. Tos var pieteikt atsevišķi
+        vai apvienot vienā pasākumā vai projektā.
+      </Paragraph>
+    </ContentWrapper>
+    <ContentServices items={services} />
+  </Section>
+
+  <!-- Concert programmes -->
+  <Section id="koncertprogrammas" gap="7">
+    <ContentWrapper variant="columns" data-reveal>
+      <Heading tag="h2" maxWidth={16} class="margin-top-0">
+        Atrodi sava pasākuma skanējumu.
+      </Heading>
+      <Paragraph slot="column2" maxWidth={46} class="color-faded">
+        Iepazīsti koncertprogrammas un māksliniekus. Ja izvēlei vajadzīgs
+        padoms, pastāsti par pasākumu. Palīdzēsim piemeklēt piemērotu
+        piedāvājumu.
+      </Paragraph>
+    </ContentWrapper>
+    <Grid xsmall={1} small={2} large={4} data-reveal-stagger>
+      {
+        programmes.map((programme) => (
+          <CardProgramme {...programme} data-reveal data-lit />
+        ))
+      }
+    </Grid>
+    <ButtonWrapper marginTop="0" data-reveal>
+      <Button element="link" href="/koncertprogrammas" variant="link">
+        Visas koncertprogrammas
+      </Button>
+    </ButtonWrapper>
+  </Section>
+
+  <!-- Artists -->
+  <Section id="makslinieki" gap="7">
+    <ContentWrapper variant="columns" data-reveal>
+      <div class="display-contents">
+        <Eyebrow>Mākslinieki</Eyebrow>
+        <Heading tag="h2" maxWidth={18}>
+          Grupas un solisti STUDEJA piedāvājumā.
+        </Heading>
+      </div>
+      <Paragraph slot="column2" maxWidth={46} class="color-faded">
+        Vienam māksliniekam var būt vairākas programmas, un vienā programmā var
+        piedalīties vairāki mākslinieki. Grupas profilā apkopoti visi tās
+        piedāvājumi.
+      </Paragraph>
+    </ContentWrapper>
+    <Grid xsmall={1} small={2} large={3} data-reveal-stagger>
+      {
+        artists.map((artist) => (
+          <Card
+            variant="stacked"
+            eyebrow={artist.eyebrow}
+            heading={artist.heading}
+            text={artist.text}
+            buttonLabel="Apskatīt mākslinieku"
+            buttonHref="/koncertprogrammas/makslinieki"
+            image={artist.image}
+            imageAlt={artist.imageAlt}
+            class="media-landscape"
+            data-reveal
+          />
+        ))
+      }
+    </Grid>
+    <ButtonWrapper marginTop="0" data-reveal>
+      <Button
+        element="link"
+        href="/koncertprogrammas/makslinieki"
+        variant="link"
+      >
+        Visi mākslinieki
+      </Button>
+    </ButtonWrapper>
+  </Section>
+
+  <!-- Community -->
+  <Section id="kopiena">
+    <ContentCommunity
+      eyebrow="Kopiena"
+      heading="Saknes Latgalē. Idejas visai Latvijai."
+      text="STUDEJA ir mūziķu, pasākumu veidotāju, mārketinga speciālistu un kultūras aktīvistu kopiena. Mūs vieno vēlme padarīt dzīvi interesantāku gan tepat mājās, gan visā Latvijā. Radām jaundarbus, veidojam notikumus un palīdzam jaunajām grupām ar aranžējumiem, ierakstiem un menedžmentu."
+      linkLabel="Iepazīt STUDEJA"
+      linkHref="/par-studeja"
+      image={komandaSaruna}
+      imageAlt="Divi pasākuma vadītāji ar mikrofoniem brīvā dabā"
+    />
+  </Section>
+
+  <!-- Projects -->
+  <Section id="projekti" gap="7">
+    <ContentWrapper variant="columns" data-reveal>
+      <div class="display-contents">
+        <Eyebrow>Īstenotie projekti</Eyebrow>
+        <Heading tag="h2" maxWidth={18}>
+          Notikumi un darbi, kuros esam piedalījušies.
+        </Heading>
+      </div>
+      <Paragraph slot="column2" maxWidth={46} class="color-faded">
+        Pašu radīti kultūras notikumi, klientu pasākumi un sadarbības projekti.
+        Katram projektam norādām saturu, norises vietu un STUDEJA iesaisti.
+      </Paragraph>
+    </ContentWrapper>
+    <Grid xsmall={1} small={2} large={3} data-reveal-stagger>
+      {
+        projects.map((project) => (
+          <Card
+            variant="stacked"
+            eyebrow={project.eyebrow}
+            heading={project.heading}
+            text={project.text}
+            buttonLabel="Apskatīt projektu"
+            buttonHref={project.href}
+            image={project.image}
+            imageAlt={project.imageAlt}
+            class="media-landscape"
+            data-reveal
+          />
+        ))
+      }
+    </Grid>
+    <ButtonWrapper marginTop="0" data-reveal>
+      <Button element="link" href="/projekti" variant="link">
+        Visi projekti
+      </Button>
+    </ButtonWrapper>
+  </Section>
+
+  <!-- Frequently asked questions -->
+  <Section id="buj" gap="7">
+    <ContentWrapper variant="columns" data-reveal>
+      <div class="display-contents">
+        <Eyebrow>BUJ</Eyebrow>
+        <Heading tag="h2" maxWidth={16}>Biežāk uzdotie jautājumi</Heading>
+      </div>
+      <Paragraph slot="column2" maxWidth={46} class="color-faded">
+        Cenas, rezervācijas un tehniskais nodrošinājums. Ja atbildes te nav,
+        raksti uz info@studeja.lv.
+      </Paragraph>
+    </ContentWrapper>
+    <Accordion data-reveal>
+      {
+        questions.map((question) => (
+          <AccordionItem heading={question.heading}>
+            <Paragraph maxWidth={64} class="color-faded">
+              {question.text}
+            </Paragraph>
+          </AccordionItem>
+        ))
+      }
+    </Accordion>
+    <ButtonWrapper marginTop="0" data-reveal>
+      <Button element="link" href="/biezak-uzdotie-jautajumi" variant="link">
+        Visi jautājumi
+      </Button>
+    </ButtonWrapper>
+  </Section>
+
+  <!-- Closing call to action -->
+  <Section id="pieteikt" paddingTop="large" paddingBottom="large">
+    <Heading tag="h2" maxWidth={12} data-reveal>Ko vēlies īstenot?</Heading>
+    <Paragraph variant="large" maxWidth={44} data-reveal>
+      Koncertu, svētkus, jaunu programmu vai vēl tikai ideju? Pastāsti, kas
+      iecerēts. Palīdzēsim saprast, kas nepieciešams un kā to īstenot.
+    </Paragraph>
+    <ButtonWrapper data-reveal>
+      <Button element="link" href="/pieteikt">Pieteikt ieceri</Button>
+    </ButtonWrapper>
+  </Section>
+</BaseLayout>

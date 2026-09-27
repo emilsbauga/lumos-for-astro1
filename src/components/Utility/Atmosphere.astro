@@ -1,0 +1,192 @@
+---
+interface Props {
+  /** Set to `false` to skip rendering this component and its children. */
+  render?: boolean;
+}
+
+const { render = true } = Astro.props;
+---
+
+{render && <div class="atmosphere_pointer" aria-hidden="true" />}
+
+<script>
+  /* One pointer loop for the whole page. It publishes the cursor position as
+     custom properties on the root, so anything that wants to react reads them
+     instead of adding a listener of its own. */
+  const root = document.documentElement;
+  const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  if (fine.matches && !still.matches) {
+    const glow = document.querySelector<HTMLElement>(".atmosphere_pointer");
+    const HOT = "a, button, .button_wrap, [data-lit], .hero_tile";
+
+    let target = { x: innerWidth / 2, y: innerHeight * 0.4 };
+    let current = { ...target };
+    let frame = 0;
+    let idle = 0;
+
+    const draw = () => {
+      /* A twelfth of the remaining distance each frame: the light lags far
+         enough behind the cursor to read as smoke rather than a cursor. */
+      current.x += (target.x - current.x) * 0.085;
+      current.y += (target.y - current.y) * 0.085;
+      glow?.style.setProperty("--_x", `${current.x}px`);
+      glow?.style.setProperty("--_y", `${current.y}px`);
+
+      /* Published on the root as -1..1 so anything on the page can lean with
+         the cursor without adding a listener. */
+      root.style.setProperty(
+        "--pointer-nx",
+        ((current.x / window.innerWidth) * 2 - 1).toFixed(3),
+      );
+      root.style.setProperty(
+        "--pointer-ny",
+        ((current.y / window.innerHeight) * 2 - 1).toFixed(3),
+      );
+
+      const settled =
+        Math.abs(target.x - current.x) < 0.5 &&
+        Math.abs(target.y - current.y) < 0.5;
+      frame = settled && ++idle > 20 ? 0 : requestAnimationFrame(draw);
+    };
+
+    let hot: Element | null = null;
+
+    const move = (event: PointerEvent) => {
+      target = { x: event.clientX, y: event.clientY };
+      idle = 0;
+      if (!frame) frame = requestAnimationFrame(draw);
+      root.classList.add("pointer-live");
+
+      /* One delegated listener lights whatever the cursor is over, rather
+         than a listener per button. */
+      const next =
+        event.target instanceof Element ? event.target.closest(HOT) : null;
+      if (next !== hot) {
+        hot = next;
+        root.classList.toggle("pointer-hot", !!next);
+      }
+      if (next instanceof HTMLElement) {
+        const box = next.getBoundingClientRect();
+        next.style.setProperty("--_lit-x", `${event.clientX - box.left}px`);
+        next.style.setProperty("--_lit-y", `${event.clientY - box.top}px`);
+      }
+    };
+
+    window.addEventListener("pointermove", move, { passive: true });
+    window.addEventListener(
+      "pointerleave",
+      () => root.classList.remove("pointer-hot"),
+      { passive: true },
+    );
+  }
+</script>
+
+<style is:global>
+  @layer components {
+    /* Screen blending means the light only ever adds to the background; text
+       is already near-white, so it passes through unchanged. It stays small
+       and quiet until the cursor finds something it can act on. */
+    .atmosphere_pointer {
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 22rem;
+      aspect-ratio: 1;
+      translate: calc(var(--_x, 50vw) - 50%) calc(var(--_y, 40vh) - 50%);
+      background: radial-gradient(
+        circle at 50% 50%,
+        color-mix(in srgb, var(--sand-100) 13%, transparent) 0%,
+        color-mix(in srgb, var(--sand-100) 7%, transparent) 36%,
+        transparent 70%
+      );
+      filter: blur(1.5rem);
+      mix-blend-mode: screen;
+      opacity: 0;
+      scale: 1;
+      transition:
+        opacity 700ms var(--reveal-ease),
+        scale 500ms var(--reveal-ease);
+    }
+
+    .pointer-live .atmosphere_pointer {
+      opacity: 0.7;
+    }
+
+    .pointer-live.pointer-hot .atmosphere_pointer {
+      opacity: 1;
+      scale: 1.55;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .atmosphere_pointer {
+        display: none;
+      }
+    }
+
+    /* Grain belongs to the surface, not to the window: it paints over a
+       section's own background and under everything in it, so photographs
+       stay clean. */
+    .section::before,
+    .hero_grain,
+    .herov2_grain,
+    .footer_grain,
+    [data-grain] {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      background-image: var(--grain-tile);
+      background-repeat: repeat;
+      background-size: 10rem 10rem;
+      opacity: var(--grain-opacity);
+    }
+
+    .section::before {
+      z-index: 0;
+    }
+
+    @media print {
+      .section::before,
+      .hero_grain,
+      .herov2_grain,
+      .footer_grain,
+      [data-grain],
+      .atmosphere_pointer {
+        display: none;
+      }
+    }
+
+    /* Anything marked lit carries a highlight that follows the cursor across
+       its own surface. Held at 15% because the green label on a card only
+       clears 4.5:1 up to about there. */
+    [data-lit] {
+      position: relative;
+      isolation: isolate;
+    }
+
+    [data-lit]::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      background: radial-gradient(
+        18rem 18rem at var(--_lit-x, 50%) var(--_lit-y, 50%),
+        color-mix(in srgb, var(--lit-color) 15%, transparent) 0%,
+        transparent 70%
+      );
+      opacity: 0;
+      transition: opacity var(--hover-duration) var(--hover-ease);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      [data-lit]:hover::before {
+        opacity: 1;
+      }
+    }
+  }
+</style>

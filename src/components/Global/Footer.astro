@@ -1,6 +1,9 @@
 ---
+import Paragraph from "@/components/Typography/Paragraph.astro";
+import Logo from "@/assets/logo/studeja-logo.svg";
 import Icon from "@/components/Media/Icon.astro";
-import logo from "@/assets/logo/logo.svg";
+import instagramMark from "@/assets/icons/streamline/instagram.svg";
+import facebookMark from "@/assets/icons/streamline/facebook.svg";
 import { SITE_NAME } from "@/consts.ts";
 
 interface Props {
@@ -9,36 +12,123 @@ interface Props {
 }
 
 const { render = true } = Astro.props;
+
+const columns = [
+  {
+    title: "Piedāvājums",
+    links: [
+      { label: "Koncertprogrammas", href: "/meklet?tips=koncertprogrammas" },
+      { label: "Grupas un mākslinieki", href: "/meklet?tips=makslinieki" },
+      { label: "Pakalpojumi", href: "/#pakalpojumi" },
+    ],
+  },
+  {
+    title: "STUDEJA",
+    links: [
+      { label: "Par STUDEJA", href: "/par-studeja" },
+      { label: "Projekti un sasniegumi", href: "/projekti" },
+      { label: "Festivāls SPAITS", href: "https://spaits.studeja.lv/" },
+      { label: "Biežāk uzdotie jautājumi", href: "/kontakti#buj" },
+    ],
+  },
+  {
+    title: "Saziņa",
+    links: [
+      { label: "Pieteikt ieceri", href: "/pieteikums" },
+      { label: "Sadarbība", href: "/sadarbiba" },
+      { label: "Kontakti un rekvizīti", href: "/kontakti" },
+      { label: "info@studeja.lv", href: "mailto:info@studeja.lv" },
+      { label: "+371 26394018", href: "tel:+37126394018" },
+    ],
+  },
+];
+
+const social = [
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/siastudeja/",
+    icon: instagramMark,
+  },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/profile.php?id=61590559761386",
+    icon: facebookMark,
+  },
+];
+
+const legal = [
+  { label: "Privātuma politika", href: "/privatuma-politika" },
+  { label: "Sīkdatņu informācija", href: "/sikdatnes" },
+];
 ---
 
 {
   render && (
     <footer class="footer_wrap">
+      <div class="footer_glow" aria-hidden="true" />
+      <div class="footer_grain" aria-hidden="true" />
       <div class="footer_inner">
         <div class="footer_top">
-          <a class="footer_logo" href="/" aria-label={SITE_NAME}>
-            <Icon src={logo} variant="full-width" />
-          </a>
-          <nav aria-label="Footer">
-            <ul class="footer_links">
-              <li>
-                <a class="footer_link" href="/">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a class="footer_link" href="/example-components">
-                  Example Components
-                </a>
-              </li>
+          <div class="footer_brand">
+            <a class="footer_logo" href="/" aria-label={SITE_NAME}>
+              <Logo class="footer_logo_art" />
+            </a>
+            <Paragraph variant="small" class="footer_blurb" maxWidth={32}>
+              Mūziķu, pasākumu veidotāju un kultūras aktīvistu kopiena. Saknes
+              Latgalē, darbs visā Latvijā.
+            </Paragraph>
+            <ul class="footer_social text-style-small">
+              {social.map((item) => (
+                <li>
+                  <a
+                    class="footer_link footer_social_link"
+                    href={item.href}
+                    rel="noopener"
+                    target="_blank"
+                  >
+                    <Icon
+                      class="footer_social_mark"
+                      src={item.icon}
+                      variant="small"
+                    />
+                    {item.label}
+                  </a>
+                </li>
+              ))}
             </ul>
+          </div>
+          <nav class="footer_nav" aria-label="Kājene">
+            {columns.map((column) => (
+              <div class="footer_column">
+                <h2 class="footer_title text-style-small">{column.title}</h2>
+                <ul class="footer_links text-style-small">
+                  {column.links.map((link) => (
+                    <li>
+                      <a class="footer_link" href={link.href}>
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </nav>
         </div>
-        <div class="footer_bottom">
-          <p class="footer_copyright text-style-small">
-            &copy; <span id="year">{new Date().getFullYear()}</span>&#160;
-            {SITE_NAME}
+        <div class="footer_bottom text-style-small">
+          <p class="footer_legal">
+            SIA STUDEJA · Reģ. Nr. 40203740201 · Studija: Strādnieku šķērsiela
+            5, Rēzekne, LV-4604 · &copy;{" "}
+            <span id="year">{new Date().getFullYear()}</span> {SITE_NAME}
           </p>
+          <ul class="footer_legal_links">
+            {legal.map((link) => (
+              <li>
+                <a class="footer_link" href={link.href}>
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </footer>
@@ -58,11 +148,51 @@ const { render = true } = Astro.props;
     .footer_wrap {
       display: flex;
       justify-content: center;
-      padding-block: var(--section-space-small);
+      padding-block: var(--section-space-medium) var(--section-space-small);
       padding-inline: var(--site-margin);
       background-color: var(--background);
       color: var(--text);
-      border-top: var(--border-width) solid var(--border);
+      position: relative;
+      overflow: clip;
+      isolation: isolate;
+    }
+
+    /* The brand gradient rising off the bottom edge. Its centre sits below
+       the footer so the copy only ever meets the faded part of it. */
+    .footer_glow {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      /* The glow paints over the well, not under it: the well fade only
+         carries the footer's tone up to meet the section above. */
+      background:
+        radial-gradient(
+          118% 104% at 50% 116%,
+          var(--gradient-to) 0%,
+          color-mix(in srgb, var(--gradient-to) 68%, transparent) 20%,
+          color-mix(in srgb, var(--gradient-from) 62%, transparent) 38%,
+          color-mix(in srgb, var(--gradient-from) 26%, transparent) 58%,
+          transparent 82%
+        ),
+        linear-gradient(
+          180deg,
+          transparent 0%,
+          var(--background-well) 38%,
+          var(--background-well) 100%
+        );
+    }
+
+    /* A heavier grain inside the glow, where a flat wash would band. */
+    .footer_grain {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-image: var(--grain-tile);
+      background-repeat: repeat;
+      background-size: 9rem 9rem;
+      opacity: 0.1;
     }
 
     .footer_inner {
@@ -70,56 +200,124 @@ const { render = true } = Astro.props;
       max-width: var(--max-width-main);
       display: flex;
       flex-direction: column;
-      gap: var(--space-6);
+      gap: var(--section-space-small);
+      position: relative;
     }
 
     .footer_top {
+      display: grid;
+      gap: var(--space-8) var(--site-gutter);
+      @media (width >= 64rem) {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+      }
+    }
+
+    .footer_brand {
       display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-4) var(--space-6);
+      flex-direction: column;
+      align-items: start;
+      gap: var(--space-4);
     }
 
     .footer_logo {
       display: block;
-      width: 7.5rem;
-      max-width: 100%;
+      border-radius: var(--radius-small);
       transition: opacity var(--hover-duration) var(--hover-ease);
       @media (hover: hover) {
         &:hover {
-          opacity: 0.6;
+          opacity: 0.62;
         }
       }
     }
 
-    .footer_links {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: var(--space-4);
-      font-size: var(--text-small);
-      font-weight: var(--primary-medium);
+    .footer_logo_art {
+      display: block;
+      width: auto;
+      height: 2.1rem;
+      color: var(--text);
     }
 
+    .footer_blurb {
+      color: var(--text-2);
+    }
+
+    .footer_social {
+      display: flex;
+      gap: var(--space-5);
+    }
+
+    .footer_social_link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      /* The travelling rule would otherwise run under the mark too. */
+      background-image: none;
+    }
+
+    .footer_social_mark {
+      width: 1.15em;
+    }
+
+    .footer_nav {
+      display: grid;
+      gap: var(--space-7) var(--site-gutter);
+      grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr));
+    }
+
+    .footer_column {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .footer_title {
+      color: var(--text);
+      font-weight: var(--primary-medium);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+    }
+
+    .footer_links {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    /* One travelling rule under every footer link, so the whole block behaves
+       the way the link buttons in the page do. */
     .footer_link {
       color: var(--text-2);
-      text-decoration: none;
-      transition: color var(--hover-duration) var(--hover-ease);
+      background-image: linear-gradient(currentcolor, currentcolor);
+      background-repeat: no-repeat;
+      background-position: 100% calc(100% - 0.05em);
+      background-size: 0 var(--border-width);
+      transition:
+        color var(--hover-duration) var(--hover-ease),
+        background-size var(--hover-duration) var(--hover-ease);
       @media (hover: hover) {
         &:hover {
           color: var(--text);
+          background-position: 0 calc(100% - 0.05em);
+          background-size: 100% var(--border-width);
         }
       }
     }
 
     .footer_bottom {
-      padding-top: var(--space-4);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--space-3) var(--space-6);
+      padding-top: var(--space-5);
       border-top: var(--border-width) solid var(--border);
+      color: var(--text-2);
     }
 
-    .footer_copyright {
-      color: var(--text-2);
+    .footer_legal_links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
     }
   }
 </style>

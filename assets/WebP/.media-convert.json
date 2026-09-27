@@ -1,0 +1,901 @@
+{
+  "version": 1,
+  "files": {
+    "2cf890c7-745e-438f-becf-0d46c851b5ae.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/2cf890c7-745e-438f-becf-0d46c851b5ae.JPG",
+      "source_sha256": "64068b6403c894890d6df74eb585d6ff13002a10e24aeb1a507832d6484e467e",
+      "output_sha256": "8cf4778271d51a2d0fe359fedfc0a56cc708660c19d0924c33407d0eb535142a",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:16.033754+00:00",
+      "bytes": 205310
+    },
+    "3ce1d976-32c0-4d8a-952d-61250e14c8b0.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/3ce1d976-32c0-4d8a-952d-61250e14c8b0.jpg",
+      "source_sha256": "15bc38dfcaa6d49104e3eb9b19e400dc7be4b184e965ffcd81a267eef4952a4d",
+      "output_sha256": "dcf01df6b2327d433aa9b393c4e7dacbfb478af925a39c1f07c264ad2592d14c",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:16.761826+00:00",
+      "bytes": 260604
+    },
+    "52a81b4e-42cf-42d5-992d-ae97262910d4.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/52a81b4e-42cf-42d5-992d-ae97262910d4.JPG",
+      "source_sha256": "d37064b2e1c8a022754b6542ff5291193d48139e2acd2a16205891f3b8879ff3",
+      "output_sha256": "53510a4f8a3650301c10559d5b0608fff91a8297efac878ce914c5b9ee4530e1",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:17.256137+00:00",
+      "bytes": 256120
+    },
+    "533490597_1129339569085952_868116117037316731_n.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/533490597_1129339569085952_868116117037316731_n.jpg",
+      "source_sha256": "6b48b42947b4b919028337ddc5b12bee8f5bedfb273f29703cd8301f73943230",
+      "output_sha256": "4ecb9c365e7939736b8b0354e4a9686a45deb7b1c1dd27eef9657900766d7e62",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:18.007287+00:00",
+      "bytes": 445940
+    },
+    "5eafac20-b56f-4184-bb7d-0b3ac3e35b04.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/5eafac20-b56f-4184-bb7d-0b3ac3e35b04.JPG",
+      "source_sha256": "ebfb286cff794bd9e91b3eb57be7def9919a39dab075e427f83a66abc0073e84",
+      "output_sha256": "0bd6e3aa711286b8b8902828329fefe25d2bca039216cfd399020c7226b81078",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:18.583101+00:00",
+      "bytes": 207908
+    },
+    "614679880_122143092806986631_8072930021162963603_n.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/614679880_122143092806986631_8072930021162963603_n.jpg",
+      "source_sha256": "191b006a57c39b09bbfc8b0751d2e9a7022d2d2faaf8de40742d33ae958f3f5b",
+      "output_sha256": "a0cf28ceefbc4c3b78a66a494a890f53bca4f0c1bade6d1df9234fc30bbd33e7",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:19.431773+00:00",
+      "bytes": 487756
+    },
+    "615081722_122143092854986631_7591145711001116115_n.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/615081722_122143092854986631_7591145711001116115_n.jpg",
+      "source_sha256": "79de4c32a14b205d596197f94260434f09555fc111252886ebc69f924e5f3415",
+      "output_sha256": "2869dd3fc56c370418ae5353c8442372f2cacf1e193765d32e8e295d26fd04bb",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:20.234730+00:00",
+      "bytes": 490644
+    },
+    "615438676_122143454450986631_1962216475742650419_n.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/615438676_122143454450986631_1962216475742650419_n.jpg",
+      "source_sha256": "29dd400f12778d33fe05d358dee5e8d9e4228013194ff35da2c670d0c99c61a8",
+      "output_sha256": "8a9b390ffcfed1534172027b2a9be310a08196d1e43835a55da5c553760be460",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:20.671409+00:00",
+      "bytes": 122514
+    },
+    "616288882_122143454510986631_781427371680685427_n.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/616288882_122143454510986631_781427371680685427_n.jpg",
+      "source_sha256": "e006867eddc5b7ee81ce8c5a64ea37b4a41a5e14c470b167ed7b8fade115d484",
+      "output_sha256": "0e171c3ba5f6eb65886c4cad7ce2bf5a835c7f2504b3c20bb985e19d3098fc12",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:21.049864+00:00",
+      "bytes": 119664
+    },
+    "616370973_122143454390986631_2472258306025178667_n.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/616370973_122143454390986631_2472258306025178667_n.jpg",
+      "source_sha256": "744f2c7a599f01fae5316f22fd5885d322bc0fb2519804bedfe6fa7ada31ea10",
+      "output_sha256": "7aaed0e161b3fdc284e5d08af2e8b7ef6c5198d08d898e7602e4ae7dc155d707",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:21.480783+00:00",
+      "bytes": 176984
+    },
+    "742198345_122172756008986631_2548127745184252184_n-2.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/742198345_122172756008986631_2548127745184252184_n-2.jpg",
+      "source_sha256": "ceb013b5a511c9af7bce348dbd8833c1130e9893924c0eb4c378e969c5a6e927",
+      "output_sha256": "628e3ff49fdbed8eb749105a2b4737eaa832181b952f6a109e259f508983fbe2",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:22.074180+00:00",
+      "bytes": 311632
+    },
+    "742198345_122172756008986631_2548127745184252184_n.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/742198345_122172756008986631_2548127745184252184_n.jpg",
+      "source_sha256": "ceb013b5a511c9af7bce348dbd8833c1130e9893924c0eb4c378e969c5a6e927",
+      "output_sha256": "628e3ff49fdbed8eb749105a2b4737eaa832181b952f6a109e259f508983fbe2",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:22.672144+00:00",
+      "bytes": 311632
+    },
+    "WhatsApp Image 2026-09-11 at 19.13.05.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/WhatsApp Image 2026-09-11 at 19.13.05.jpeg",
+      "source_sha256": "22b49df94313efbf708d5bb6e9b3ae6b17b867f32e284fa00de7cd5ed5216527",
+      "output_sha256": "b54b869d50db03515f6a74f307477991c9f6a67c59f199c9748e6afe298e8cc2",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:23.147297+00:00",
+      "bytes": 208190
+    },
+    "WhatsApp Image 2026-09-11 at 19.14.16.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/WhatsApp Image 2026-09-11 at 19.14.16.jpeg",
+      "source_sha256": "775969ceeb1df7c469b38c8334f1f297abce260a39c5c44ff14b72f4312769bd",
+      "output_sha256": "707242e073dc8d65d8e187bd0f2b6be3c82d09b28b6581f3da6609dc6e62f77b",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:24.147921+00:00",
+      "bytes": 775712
+    },
+    "WhatsApp Image 2026-09-11 at 19.14.32.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/WhatsApp Image 2026-09-11 at 19.14.32.jpeg",
+      "source_sha256": "c2a47c74882d30f43bfa66af7f047a59a552575134c0369f0c9250bfe1924cc7",
+      "output_sha256": "473f204516a583a6b1d8a6fb90bd384a759807a0284875db19b2f706bbd8ff27",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:24.600998+00:00",
+      "bytes": 267718
+    },
+    "WhatsApp Image 2026-09-11 at 19.17.31.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/WhatsApp Image 2026-09-11 at 19.17.31.jpeg",
+      "source_sha256": "48bc1a81345d3ec3d9bfc1bb64fdfa165d5ede40cbcc7b9696a16960cbdaa727",
+      "output_sha256": "6097c181d05dae4fcfb75d274ed07d5c8fb546817f92bf3e6efbd9c758f4f915",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:24.992161+00:00",
+      "bytes": 163186
+    },
+    "WhatsApp Image 2026-09-11 at 19.17.32 (1).webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/WhatsApp Image 2026-09-11 at 19.17.32 (1).jpeg",
+      "source_sha256": "cfd8b600f8157e5875161a39c92389ab687b792665790fe0eebe80313bcdb55b",
+      "output_sha256": "f5521c166b50266b2ffcf6e0bedcf8d32f3a10188b58c74a1124033d91e026fb",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:25.369482+00:00",
+      "bytes": 193920
+    },
+    "WhatsApp Image 2026-09-11 at 19.17.32 (2).webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/WhatsApp Image 2026-09-11 at 19.17.32 (2).jpeg",
+      "source_sha256": "e19dafcec99922c32919dfd4605c11f588fc342fdce48078f921bef3e25c37c4",
+      "output_sha256": "fdb8f546e87a39c94a092e39d230fa42c46eae74949830445fba630a3cfcd652",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:25.960164+00:00",
+      "bytes": 338328
+    },
+    "WhatsApp Image 2026-09-11 at 19.17.32 (3).webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/WhatsApp Image 2026-09-11 at 19.17.32 (3).jpeg",
+      "source_sha256": "540efd267672fbc98db51dcde6b08da91df987af25ad02129ffdc0cfb7fe0c9d",
+      "output_sha256": "2e8f59a5f070134bffee3f58042ad53548ba049228a9a20c41cea646ba01f4aa",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:26.459525+00:00",
+      "bytes": 257616
+    },
+    "WhatsApp Image 2026-09-11 at 19.17.32.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/WhatsApp Image 2026-09-11 at 19.17.32.jpeg",
+      "source_sha256": "0726dd3b5a6dab3d2f385b911937cbed8beca108daf8de8594b44e57ec2d3e01",
+      "output_sha256": "c483780e3d06b5516ffbd4472f2d32f3dce90a3d2b4adb0cdba7da34e11866d4",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:27.286846+00:00",
+      "bytes": 382066
+    },
+    "a634fa7a-283a-468d-bef1-88ba0005830e.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/a634fa7a-283a-468d-bef1-88ba0005830e.JPG",
+      "source_sha256": "bcf8e1bacb67b27c3c42bf5e2d521fc81e412d84cb7d1fd4f13b8abb94014dc6",
+      "output_sha256": "a32ccd0cb4752935846f14df363e4535e6dae1ffd33133da43cc27bf5732f9d5",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:28.064487+00:00",
+      "bytes": 346452
+    },
+    "aa3ff1f7-e2fb-47f8-89e0-0d4ab8b51f0f.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/aa3ff1f7-e2fb-47f8-89e0-0d4ab8b51f0f.JPG",
+      "source_sha256": "654dcad296af766c1ad3330a8cfef275f105659f383ab9811570f722d8d3169d",
+      "output_sha256": "1b7dd454235c3aca61abd16e6ce0d699f440d37b54a5e59643700d9c06982932",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:28.531130+00:00",
+      "bytes": 190344
+    },
+    "af5f3220-5737-4725-b3f0-13f9c7a0ce38.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/af5f3220-5737-4725-b3f0-13f9c7a0ce38.JPG",
+      "source_sha256": "fb1daaef16a27e79e95297c03c9582700af55c594fc34b23493856ec7c09d44c",
+      "output_sha256": "97f9675ae76c1c3e6d6d573829c4eb7aaf8eed30f52fab18768086db2385ba62",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:29.025005+00:00",
+      "bytes": 172120
+    },
+    "ce059140-bfdc-41de-a1bb-8780b7aa7982.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/ce059140-bfdc-41de-a1bb-8780b7aa7982.JPG",
+      "source_sha256": "8a1b5117af59adb5ac4239fe4ae9a7771e73c376183937bcb8a0a8f6a8d87e32",
+      "output_sha256": "9b6130c9f21864b76208e2f0a56140d05765b944ea730aea7b3578a3b3ebd3a6",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:29.402533+00:00",
+      "bytes": 179932
+    },
+    "d3bb9deb-3d39-4576-a264-5d1f191f5c06.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/d3bb9deb-3d39-4576-a264-5d1f191f5c06.jpg",
+      "source_sha256": "108c90b2f6322444217acaf23fbae85ad7fde90f404b921aad13954181e937f5",
+      "output_sha256": "a66a875140a84102b5eb5a53314750d03625f48123a8121dd53ba647fc7dc868",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:32.284112+00:00",
+      "bytes": 1275140
+    },
+    "ea437018-67e0-42e5-a012-713feb6c1647.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/ea437018-67e0-42e5-a012-713feb6c1647.JPG",
+      "source_sha256": "7735273e1be2fc6c2345050eba76f5da8a6b3570ddc05c57cfb0ced9deeb8119",
+      "output_sha256": "df503e14df20aa0cd0d24bb826c9dac8201d3bec80c5579e9136b2037cae5133",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:32.698242+00:00",
+      "bytes": 191792
+    },
+    "f0eb22c2-6f3b-4def-a657-06205fb970d0.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/f0eb22c2-6f3b-4def-a657-06205fb970d0.JPG",
+      "source_sha256": "314bea10febd3c09fa96eb734dee55f42626ef46fbe037434c34b95c6e804128",
+      "output_sha256": "6a48ff58d387dc3fa987eda70eee81417a918095a208587ba11cd87fdebbc851",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:33.409074+00:00",
+      "bytes": 335182
+    },
+    "f77b0dee-a952-440c-97fe-c9c86b0cab5f.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/f77b0dee-a952-440c-97fe-c9c86b0cab5f.JPG",
+      "source_sha256": "b531c9a0c019b7920d7deda89ca75b3643e9b2f605aedd09b530f42c2008b58c",
+      "output_sha256": "5805b585f9c51f59e041a5ef523f2267cc3b7914c0efbd27a16ec3efa30a7a7b",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:33.831402+00:00",
+      "bytes": 176918
+    },
+    "ff8020a7-2130-4635-98e8-a047876f7d53.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/ff8020a7-2130-4635-98e8-a047876f7d53.JPG",
+      "source_sha256": "5015fb951195362f6a3e12446ef32a9fa373f3fd73533408c35f4613cfb01cde",
+      "output_sha256": "321df46e2c37251cd4120e835df4cb95e952486482e0bca24271a412664765fc",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:17:34.215766+00:00",
+      "bytes": 191622
+    },
+    "IMG_3462.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/IMG_3462.jpg",
+      "source_sha256": "e0edbfe845b1b54549fdb66babf69fe227514195062cfcac70ee14023a4c4111",
+      "output_sha256": "71fcb35b215859ae665035ff36d81fe4ed7058a9d20b73b37c072d495c2c5529",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:18:29.455193+00:00",
+      "bytes": 813598
+    },
+    "IMG_3468.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/IMG_3468.jpg",
+      "source_sha256": "26a2229bb5d88d405f98150ad6dc469b1bf304aa62adc133905631bd0d8701ab",
+      "output_sha256": "3b85204c7a484fb89fca1d3a47f56da173c57f31604a223e8aabe5e32af3a116",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:18:32.193442+00:00",
+      "bytes": 1013162
+    },
+    "IMG_3497.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/IMG_3497.jpg",
+      "source_sha256": "32e6a0ad7ee69f7334cfe7c2cfd1f764601083bda7f32123f5f1b61a20fc54ff",
+      "output_sha256": "5a29377cf5db008b9a7ebc6e28f48e208ffafae904590d2eea9cda3e63416f2a",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:18:37.882915+00:00",
+      "bytes": 3221770
+    },
+    "IMG_3511.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/IMG_3511.jpg",
+      "source_sha256": "10241ddd02de557294e0289ed95a68a6c0cbe5e265bbbd1f46d16511bb07ee11",
+      "output_sha256": "c9e32bba2a39815133318ea4a40670317a1f3d6f30af654e05d1fa824da0a04a",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:18:42.100797+00:00",
+      "bytes": 2366752
+    },
+    "IMG_3551.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/IMG_3551.jpg",
+      "source_sha256": "d99e1cfa9b54cae3b948273cc1128454deae0d6d4a79bfeaa18e46de3ce40743",
+      "output_sha256": "08f694eb2a339551638ac6fa612739a7ae39fb3ec0e644c7cdac6f556f8e0310",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:18:44.420121+00:00",
+      "bytes": 1022666
+    },
+    "IMG_3557.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/IMG_3557.jpg",
+      "source_sha256": "a47bf58dbb20da21071632128d116b9a284df0345610f16b329b154c0ed9b0a2",
+      "output_sha256": "2a5d90f65bb8a89836cecf4c80ced5d0dda958479278abf96f061ea56a7a20fe",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:18:47.174789+00:00",
+      "bytes": 1037832
+    },
+    "IMG_3579.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/IMG_3579.jpg",
+      "source_sha256": "25a6a293e5911f4693f8c5a7207d7a01de264c9fc92f7e2a381401c540817dbc",
+      "output_sha256": "e59c4e9e94a1a96c2a3f4e5a408b55686960ee04be241178b9b642232258cb40",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:18:51.052606+00:00",
+      "bytes": 1457698
+    },
+    "IMG_3618.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/IMG_3618.jpg",
+      "source_sha256": "e6ac167a507c0421a2b7187174fa555e2f75c66bc789f6850019c589c87e59cf",
+      "output_sha256": "8db533a69aafe9f1af74346c87fa5f8d3e96a2029fb3a8642168a041d4cbcfd9",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:18:53.533577+00:00",
+      "bytes": 874970
+    },
+    "IMG_3634.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/IMG_3634.jpg",
+      "source_sha256": "6a931c54b49d1a9c9ccee4450b1c28a6a3eb3829d14195acff754299622bdc36",
+      "output_sha256": "675e9368d03a793dd42f9833424977506dbc9e7d11d8c0305f07efe81f708567",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:18:56.460067+00:00",
+      "bytes": 1275008
+    },
+    "IMG_3820.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/IMG_3820.jpg",
+      "source_sha256": "649129325a13b8aea14bedd969228ce1319a8ddf8ab1e55a6feffcfa783b9bca",
+      "output_sha256": "a4decf18e6403fd4243aadf9f8e0a30ce823c49f353d8808a7b2d52826badca1",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:18:59.236791+00:00",
+      "bytes": 1056062
+    },
+    "IMG_3845.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/IMG_3845.jpg",
+      "source_sha256": "3fe14258dd53370d036447e8f5c763fb6a6e42f624813ccc245ee631fb3d2379",
+      "output_sha256": "916a0277be0f42d282ab8abbf47daa545408b21eb619c0fd88a597975ae06fb8",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:02.494591+00:00",
+      "bytes": 1728046
+    },
+    "IMG_3858.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/IMG_3858.jpg",
+      "source_sha256": "db40aec5baa5375c6f7e596e194961623176f043100f2ba23d0ebc88649bbb27",
+      "output_sha256": "f9405207dec72c80166dcc71b7995902fdbde4ab4a59db13ae8945d504fb619f",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:05.101611+00:00",
+      "bytes": 1003736
+    },
+    "IMG_3896.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/IMG_3896.jpg",
+      "source_sha256": "238fe35275968a99cddf9d7b69efb6ea1bf262feb256e1c81f5c11eba69fa46a",
+      "output_sha256": "fe1c95f37c20d07311dd48e4e7c58270ea0716369adf99015b5ff50fba9d2d75",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:08.158953+00:00",
+      "bytes": 1215592
+    },
+    "IMG_3937.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/IMG_3937.jpg",
+      "source_sha256": "c0a6359ddf21b11e45714a20ab5ed9e6b9e9ccfa19348ab4af38c49a8db846ee",
+      "output_sha256": "02430d59d302078f4992b0673cfafa3a95f3470f8ee7aa144b68e342971c9f19",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:12.457704+00:00",
+      "bytes": 2041092
+    },
+    "Spaits_-127.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-127.jpg",
+      "source_sha256": "0dd40e7c2f1dff81901107564b7cf9a22eb80f8761aa9e098ee357280bc739c7",
+      "output_sha256": "4b6ce48889371d32f42efaf6af9c477d5408a51e80f4b86102fedcbe0ee8fec1",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:16.110075+00:00",
+      "bytes": 1679502
+    },
+    "Spaits_-131.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-131.jpg",
+      "source_sha256": "7bbfe1e62037795b1f7f41dfa1bf59927715973e008f4f05b49a9270c7bed00b",
+      "output_sha256": "70ae1a46002e97b6563ff3e5c593e2997d398040521804e474f87a8ee3c8e36e",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:20.120978+00:00",
+      "bytes": 1863820
+    },
+    "Spaits_-14.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-14.jpg",
+      "source_sha256": "f3cb425471710b8ab4108b51e2c439f0b42c3dbcddd488af804c64ccdace5623",
+      "output_sha256": "ff817bcf010b6f657783732b1a2ea9d9e9fb1f5b7d5106ef621fdbd3bd5eb972",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:23.877103+00:00",
+      "bytes": 2217204
+    },
+    "Spaits_-15.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-15.jpg",
+      "source_sha256": "518af9db81ebe050a3d6e23dc585b8bd3907c2e4c61ed6b797453e8af6a079fb",
+      "output_sha256": "7b30f9622ae09ecac8ade2d3db32aeb095457b1adb08ee86f0da490078363715",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:27.820980+00:00",
+      "bytes": 2244696
+    },
+    "Spaits_-177.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-177.jpg",
+      "source_sha256": "67b2bced38c68f56d7c703de070d80f65943b1cbec68d6f580b32b7128bbb0df",
+      "output_sha256": "8430387e0e4c90dde9a17cb1749e79795652b1e6af44070b86591bc1b9687b5e",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:31.063810+00:00",
+      "bytes": 1534562
+    },
+    "Spaits_-230.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-230.jpg",
+      "source_sha256": "506a5734a37bdae2c49adfeaa60fe348be3ccd190e624bb6c61effdf5baef06b",
+      "output_sha256": "f14e704fa771663c4ab2dda87ce9b2c7f894c971343374223d5a10fc570fd209",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:34.198604+00:00",
+      "bytes": 1555292
+    },
+    "Spaits_-246.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-246.jpg",
+      "source_sha256": "68936284814f632e2411dbeb65ada40fd61895329573fdfe1ac164f9c33c9a0c",
+      "output_sha256": "1400f6c36a29a109fe14826204aac3f24daff1d6c111cd35dc99d97206f2c1e2",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:40.546422+00:00",
+      "bytes": 4402440
+    },
+    "Spaits_-247.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-247.jpg",
+      "source_sha256": "be1e9fdfe21b03ea76ca5b398be34ce8cde5969f445b8c4c81cdc5c051a75823",
+      "output_sha256": "0ab5d784367129063278fa64da75cba9cb072d8a642eaa64b1d39db5a0b6155f",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:44.638849+00:00",
+      "bytes": 2091590
+    },
+    "Spaits_-263.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-263.jpg",
+      "source_sha256": "7d5a2b50d4e05d37ae5c516f48089b8bd34192aadee9f7c9bad0bdb24f26eb24",
+      "output_sha256": "002d9c3af24fb3b3969bfe5edcb7e90ecb55532bf836a1ecf6999870548233c2",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:49.372076+00:00",
+      "bytes": 2293598
+    },
+    "Spaits_-39.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-39.jpg",
+      "source_sha256": "4397492c1dc34584e1bb9b09ef3c8a08120e9147d0d69ff3371692b37a993774",
+      "output_sha256": "3727c0b3ca2178aa5c6a9f800296653415c069103ea0816d563c3243eec8ffc2",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:53.933143+00:00",
+      "bytes": 2757218
+    },
+    "Spaits_-43.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-43.jpg",
+      "source_sha256": "878d721d24d8b4c18fc58281fdfb33bb1ac8433bcf415098358997cdbe53f7ac",
+      "output_sha256": "617fa6f2af7156e457fe0445dd6a2ee47529b7cf9d6bdd35edc2b389cb6c6bbe",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:56.251747+00:00",
+      "bytes": 870666
+    },
+    "Spaits_-54.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-54.jpg",
+      "source_sha256": "4405a466d7336a279e7bbf8224b4886f1a5fe1060fa46c359b3be9cbd51e32a7",
+      "output_sha256": "54a980e82763c5b5b5355b85ec2e493301eccefe7054d1b16e9f27c5e0496b3d",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:19:58.602840+00:00",
+      "bytes": 969942
+    },
+    "Spaits_-58.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-58.jpg",
+      "source_sha256": "4d79d46c1883a6a5822927241597468667eb47e9b0c7b91097cf7c3a3bea888e",
+      "output_sha256": "374b60644f827c945de91c0d5056e2bcadda313f2e3770006bc54ae231bad0fe",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:20:02.243762+00:00",
+      "bytes": 2332214
+    },
+    "Spaits_-6 2.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-6 2.jpg",
+      "source_sha256": "6a8e362f83db596c99ef33eb51fcc2cc9a347c1cdd3e6cca29f75fb1ff2ecb43",
+      "output_sha256": "5d16873c4c24b43d2928ff5550f3ca7989a5971059e3809fca8f55cf72e3877f",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:20:06.710362+00:00",
+      "bytes": 2335060
+    },
+    "Spaits_-6.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-6.jpg",
+      "source_sha256": "6a8e362f83db596c99ef33eb51fcc2cc9a347c1cdd3e6cca29f75fb1ff2ecb43",
+      "output_sha256": "5d16873c4c24b43d2928ff5550f3ca7989a5971059e3809fca8f55cf72e3877f",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:20:10.838624+00:00",
+      "bytes": 2335060
+    },
+    "Spaits_-61.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-61.jpg",
+      "source_sha256": "3aeeb1ba13b37385fe1121090de95c08b44ccb7091aea8419b0076098efbadcc",
+      "output_sha256": "fc5c366220503aca5d7611e9f644955a77c26eb4f0288e93bff547de6c923d30",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:20:14.154629+00:00",
+      "bytes": 1941940
+    },
+    "Spaits_-74.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-74.jpg",
+      "source_sha256": "723b579ee5b2f59007309873270ecb76112f03db95eb8bad69aba43d52622f78",
+      "output_sha256": "2832dd081fc778c58ae6985ecbe671ef5bf12db95dfcc590ba1b3932441edf92",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:20:18.175207+00:00",
+      "bytes": 2470002
+    },
+    "Spaits_-76.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-76.jpg",
+      "source_sha256": "e5224fbd2f0d650432872a5b687d2ec6ccd6f5d73a682e184bc6a565c75fe2be",
+      "output_sha256": "ea0bcf6346df90283dc4ab03f4300e03be43f9cc0602a2ef741698908a891410",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:20:21.017961+00:00",
+      "bytes": 1109080
+    },
+    "Spaits_-77.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-77.jpg",
+      "source_sha256": "c02cc3e2f9d98f1aed0982193b153c6ff5a28d75a541b781de8e04f3826abada",
+      "output_sha256": "bb64a2a80e903fa76347964fab9e89cb402e0acb1f934b0edb2d18700f2150d5",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:20:23.986941+00:00",
+      "bytes": 1151282
+    },
+    "Spaits_-88.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-88.jpg",
+      "source_sha256": "05fc2c8dfd74e5db745bd7a73f57e3bc996a90cad45c6271f168a36fd1eb0fce",
+      "output_sha256": "ba5649e03c81c3be6a84788c5fd47b45fc97a2c1bfcba8fdb3183be1f1ef835d",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:20:29.149838+00:00",
+      "bytes": 3075596
+    },
+    "Spaits_-9.webp": {
+      "source": "/Users/emilsbauga/Downloads/Bildes/SPAITS 2026 bildes/Atlasītās/Spaits_-9.jpg",
+      "source_sha256": "5da8e2937f3dd96bdb061718c08edb7682f2e59ac2675aba553a589628e176f7",
+      "output_sha256": "8c0c5b95e4454624069591d69a9b8ea65d96e68867379fb3996499004b9c5f57",
+      "settings": {
+        "version": 1,
+        "mode": "webp",
+        "quality": 85,
+        "method": 6,
+        "metadata": "all"
+      },
+      "verified_at": "2026-09-16T18:20:31.993056+00:00",
+      "bytes": 1179056
+    }
+  }
+}

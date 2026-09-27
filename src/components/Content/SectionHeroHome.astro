@@ -1,0 +1,274 @@
+---
+import Heading from "@/components/Typography/Heading.astro";
+import Paragraph from "@/components/Typography/Paragraph.astro";
+import Button from "@/components/Button.astro";
+import ButtonWrapper from "@/components/Wrapper/ButtonWrapper.astro";
+import Img from "@/components/Media/Img.astro";
+import Symbol from "@/assets/logo/studeja-symbol.svg";
+
+interface Tile {
+  image: ImageMetadata;
+  /** Horizontal centre, as a percentage of the hero. */
+  x: number;
+  /** Vertical centre, as a percentage of the hero. */
+  y: number;
+  /** Width in rem at the largest size. */
+  w: number;
+  /** Tilt in degrees. */
+  rot: number;
+  /** How far it leans with the pointer. Higher reads as nearer. */
+  depth: number;
+  /** Whether it survives on a phone, where the centre column is the screen. */
+  small?: boolean;
+}
+
+interface Props {
+  /** Set to `false` to skip rendering this component and its children. */
+  render?: boolean;
+  /** The headline. */
+  heading: string;
+  /** The sentence under the headline. */
+  text: string;
+  /** Label of the leading button. */
+  buttonLabel: string;
+  /** Where the leading button leads. */
+  buttonHref: string;
+  /** Label of the button beside it. */
+  secondaryLabel: string;
+  /** Where that second button leads. */
+  secondaryHref: string;
+  /** The photographs scattered behind the headline. Decorative. */
+  tiles: Tile[];
+}
+
+const {
+  render = true,
+  heading,
+  text,
+  buttonLabel,
+  buttonHref,
+  secondaryLabel,
+  secondaryHref,
+  tiles,
+} = Astro.props;
+---
+
+{
+  render && (
+    <section class="hero_wrap">
+      <div class="hero_grain" aria-hidden="true" />
+      <div class="hero_scatter" aria-hidden="true">
+        {tiles.map((tile, index) => (
+          <div
+            class:list={["hero_tile", tile.small && "on-small"]}
+            style={`--_x:${tile.x}%;--_y:${tile.y}%;--_w:${tile.w}rem;--_rot:${tile.rot}deg;--_depth:${tile.depth};--_delay:${index * 55}ms`}
+          >
+            <Img
+              src={tile.image}
+              variant="constrained"
+              loading={index < 4 ? "eager" : "lazy"}
+              sizes="12rem"
+            />
+          </div>
+        ))}
+      </div>
+      <div class="hero_inner">
+        <Symbol class="hero_symbol" aria-hidden="true" />
+        <Heading tag="h1" variant="display" class="hero_heading" maxWidth={16}>
+          {heading}
+        </Heading>
+        <Paragraph variant="large" maxWidth={38} class="hero_text">
+          {text}
+        </Paragraph>
+        <ButtonWrapper class="hero_actions">
+          <Button element="link" href={buttonHref}>
+            {buttonLabel}
+          </Button>
+          <Button element="link" href={secondaryHref} emphasis="secondary">
+            {secondaryLabel}
+          </Button>
+        </ButtonWrapper>
+      </div>
+    </section>
+  )
+}
+
+<style is:global>
+  @layer components {
+    .hero_wrap {
+      display: grid;
+      place-items: center;
+      min-height: min(48rem, calc(100svh - var(--nav-height)));
+      padding-inline: var(--site-margin);
+      padding-block: var(--section-space-medium);
+      background-color: var(--background);
+      color: var(--text);
+      position: relative;
+      overflow: clip;
+      isolation: isolate;
+    }
+
+    .hero_scatter {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .hero_tile {
+      position: absolute;
+      left: var(--_x);
+      top: var(--_y);
+      width: var(--_w);
+      max-width: 26vw;
+      aspect-ratio: 4 / 5;
+      border-radius: var(--radius-main);
+      border: var(--border-width) solid
+        color-mix(in lab, var(--text) 10%, transparent);
+      overflow: clip;
+      rotate: var(--_rot);
+      /* Centring and the pointer lean share one property, so the tile keeps
+         its tilt while it leans. */
+      translate: calc(-50% + var(--pointer-nx) * var(--_depth) * -1rem)
+        calc(-50% + var(--pointer-ny) * var(--_depth) * -1rem);
+      opacity: 0.55;
+      box-shadow: 0 1.5rem 3rem -1rem rgb(0 0 0 / 0.55);
+      /* Each tile answers the cursor on its own. */
+      pointer-events: auto;
+      transition:
+        opacity calc(var(--hover-duration) * 2) var(--hover-ease),
+        rotate calc(var(--hover-duration) * 2.5) var(--hover-ease),
+        scale calc(var(--hover-duration) * 2.5) var(--hover-ease),
+        border-color calc(var(--hover-duration) * 2) var(--hover-ease),
+        box-shadow calc(var(--hover-duration) * 2.5) var(--hover-ease);
+      animation: hero-tile var(--reveal-duration) var(--reveal-ease) both;
+      animation-delay: var(--_delay);
+
+      & > .image {
+        width: 100%;
+        height: 100%;
+        transition: scale calc(var(--hover-duration) * 3) var(--hover-ease);
+      }
+    }
+
+    /* It straightens, lifts and brightens. Small enough to notice only once
+       the cursor is already on it. */
+    @media (hover: hover) and (pointer: fine) {
+      .hero_tile:hover {
+        opacity: 0.95;
+        rotate: calc(var(--_rot) * 0.3);
+        scale: 1.05;
+        border-color: color-mix(in lab, var(--text) 26%, transparent);
+        box-shadow: 0 2rem 4rem -1rem rgb(0 0 0 / 0.7);
+        z-index: 1;
+
+        & > .image {
+          scale: 1.06;
+        }
+      }
+    }
+
+    @keyframes hero-tile {
+      from {
+        opacity: 0;
+        scale: 0.88;
+      }
+      to {
+        opacity: 0.55;
+        scale: 1;
+      }
+    }
+
+    .hero_inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 42rem;
+      animation: hero-arrive var(--reveal-duration) var(--reveal-ease) both;
+    }
+
+    .hero_symbol {
+      display: block;
+      width: auto;
+      height: clamp(2.75rem, 6vw, 4.25rem);
+      margin-bottom: var(--space-5);
+      color: var(--text);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .hero_symbol {
+        animation: hero-symbol 1.1s var(--reveal-ease) both;
+      }
+    }
+
+    @keyframes hero-symbol {
+      from {
+        opacity: 0;
+        scale: 0.8;
+        rotate: -25deg;
+      }
+      to {
+        opacity: 1;
+        scale: 1;
+        rotate: 0deg;
+      }
+    }
+
+    .hero_heading {
+      margin-top: 0;
+    }
+
+    .hero_text {
+      margin-top: var(--space-5);
+      color: var(--text-2);
+    }
+
+    .hero_actions {
+      margin-top: var(--space-6);
+      justify-content: center;
+    }
+
+    @keyframes hero-arrive {
+      from {
+        opacity: 0;
+        translate: 0 1rem;
+      }
+      to {
+        opacity: 1;
+        translate: 0 0;
+      }
+    }
+
+    /* On a phone the centre column is the whole screen, so only the tiles
+       that sit clear of the text above and below it survive. */
+    .hero_tile:not(.on-small) {
+      display: none;
+    }
+
+    @media (width >= 48rem) {
+      .hero_tile:not(.on-small) {
+        display: block;
+      }
+    }
+
+    @media (width < 48rem) {
+      .hero_tile {
+        width: calc(var(--_w) * 0.78);
+        opacity: 0.4;
+      }
+      @keyframes hero-tile {
+        from {
+          opacity: 0;
+          scale: 0.88;
+        }
+        to {
+          opacity: 0.4;
+          scale: 1;
+        }
+      }
+    }
+  }
+</style>

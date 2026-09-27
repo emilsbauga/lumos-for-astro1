@@ -42,6 +42,10 @@ covers the conventions that keep a Lumos site consistent as it grows.
 Task-specific procedures live in `.claude/skills/`, one folder each, with a
 `SKILL.md` and any scripts it needs.
 
+- `lumos-build` — how the system works and how to work inside it: the shape of a
+  page, themes, tokens, the four cascade layers, prop or utility, and a script
+  that prints the component API from source. The general one; the rest are
+  particular jobs.
 - `lumos-import-figma` — build a page or fill in variables from a Figma file,
   including a messy one. Converts px to rem, line heights to unitless, and
   Figma's faked opacity back to `color-mix`.

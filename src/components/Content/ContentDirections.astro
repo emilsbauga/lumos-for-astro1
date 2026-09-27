@@ -1,0 +1,132 @@
+---
+import Heading from "@/components/Typography/Heading.astro";
+import Paragraph from "@/components/Typography/Paragraph.astro";
+import Img from "@/components/Media/Img.astro";
+import ArrowLong from "@/assets/icons/streamline/arrow-right.svg";
+
+interface Direction {
+  heading: string;
+  text: string;
+  linkLabel: string;
+  href: string;
+  image: ImageMetadata;
+  imageAlt?: string;
+}
+
+interface Props {
+  /** Set to `false` to skip rendering this component and its children. */
+  render?: boolean;
+  /** The directions, one row each, in the order they should be read. */
+  items: Direction[];
+  /** Heading level of each row title, for the page outline. */
+  headingTag?: "h2" | "h3" | "h4";
+}
+
+const { render = true, items, headingTag = "h3" } = Astro.props;
+---
+
+{
+  render && items.length > 0 && (
+    <ul class="directions_list" data-reveal-stagger>
+      {items.map((item) => (
+        <li class="directions_item" data-reveal>
+          <a class="directions_link" href={item.href}>
+            <span class="directions_media">
+              <Img
+                src={item.image}
+                alt={item.imageAlt}
+                variant="constrained"
+                sizes="(min-width: 64rem) 10rem, 100vw"
+              />
+            </span>
+            <span class="directions_body">
+              <Heading
+                tag={headingTag}
+                variant="h4"
+                class="directions_title margin-top-0"
+              >
+                {item.heading}
+              </Heading>
+              <Paragraph variant="small" class="directions_text" maxWidth={52}>
+                {item.text}
+              </Paragraph>
+            </span>
+            <span class="button_wrap link directions_cue text-style-small">
+              <span class="button_glow" aria-hidden="true" />
+              <ArrowLong class="button_arrow before" aria-hidden="true" />
+              <span class="button_text text-style-trim">{item.linkLabel}</span>
+              <ArrowLong class="button_arrow after" aria-hidden="true" />
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style is:global>
+  @layer components {
+    .directions_list {
+      width: 100%;
+      border-top: var(--border-width) solid var(--border);
+    }
+
+    .directions_item {
+      border-bottom: var(--border-width) solid var(--border);
+    }
+
+    .directions_link {
+      display: grid;
+      gap: var(--space-4);
+      padding-block: var(--space-6);
+      align-items: center;
+      transition: opacity var(--hover-duration) var(--hover-ease);
+    }
+
+    .directions_media {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius-small);
+      overflow: clip;
+      background-color: var(--background-2);
+
+      & > .image {
+        width: 100%;
+        height: 100%;
+        transition: scale calc(var(--hover-duration) * 2.5) var(--hover-ease);
+      }
+    }
+
+    .directions_body {
+      display: block;
+    }
+
+    .directions_text {
+      margin-top: var(--space-3);
+      color: var(--text-2);
+    }
+
+    .directions_cue {
+      justify-self: start;
+    }
+
+    @media (hover: hover) {
+      .directions_link:hover .directions_media > .image {
+        scale: 1.05;
+      }
+    }
+
+    @media (width >= 48rem) {
+      .directions_link {
+        grid-template-columns: 10rem minmax(0, 1fr) auto;
+        gap: var(--site-gutter);
+        padding-block: var(--space-6);
+      }
+
+      .directions_media {
+        aspect-ratio: 4 / 3;
+      }
+    }
+  }
+</style>

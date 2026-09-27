@@ -1,10 +1,10 @@
 ---
 import type { HTMLAttributes } from "astro/types";
 import Icon from "@/components/Media/Icon.astro";
-import arrow from "@/assets/icons/arrow-full.svg";
-import close from "@/assets/icons/close.svg";
-import play from "@/assets/icons/play.svg";
-import pause from "@/assets/icons/pause.svg";
+import arrow from "@/assets/icons/streamline/arrow-right.svg";
+import close from "@/assets/icons/streamline/close.svg";
+import play from "@/assets/icons/streamline/play.svg";
+import pause from "@/assets/icons/streamline/pause.svg";
 import { slotContent } from "@/utils/slots.ts";
 
 type Emphasis = "primary" | "secondary";
@@ -29,10 +29,11 @@ type Tag =
 type Kind =
   | {
       /**
-       * What kind of button it is.
+       * What kind of button it is. There are two written kinds, and they
+       * are the only two the site uses, so every action reads the same way.
        *
-       * - `main` — a labelled button (default)
-       * - `link` — text on a rule that travels across on hover
+       * - `main` — a button with a frame (default)
+       * - `link` — no frame until it is hovered, when it gains one
        * - `play`, `close`, `arrow` — a mark on its own, with a label for
        *   anyone who cannot see it
        */
@@ -123,11 +124,14 @@ const tagAttrs = isLink
   : { type: type === "submit" ? undefined : type };
 
 const marks = { play, close, arrow };
-/* main and link are written, the rest are marks with a label. */
+/* These carry words; the rest are marks with a label for screen readers. */
 const isWritten = variant === "main" || variant === "link";
 const content = isWritten ? await slotContent(Astro.slots) : "";
 
-const named = {
+const Svg = arrow;
+
+/* Only reached for the mark-only variants, which is what the cast says. */
+const named: Record<string, string> = {
   play: pressed ? "Pause" : "Play",
   close: "Close",
   arrow: direction === "back" ? "Previous" : "Next",
@@ -150,9 +154,14 @@ const named = {
       {...rest}
     >
       {isWritten && (
-        <span class="button_text text-style-trim">
-          <Fragment set:html={content} />
-        </span>
+        <Fragment>
+          <span class="button_glow" aria-hidden="true" />
+          <Svg class="button_arrow before" aria-hidden="true" />
+          <span class="button_text text-style-trim">
+            <Fragment set:html={content} />
+          </span>
+          <Svg class="button_arrow after" aria-hidden="true" />
+        </Fragment>
       )}
       {variant === "play" && (
         <Fragment>
@@ -172,23 +181,39 @@ const named = {
 
 <style is:global>
   @layer components {
+    /* Two written kinds share one skeleton: a travelling arrow, a light that
+       follows the cursor, and a frame. `main` wears its frame from the start;
+       `link` only takes one on hover. */
     .button_wrap {
+      --_arrow: 1.7em;
+      --_arrow-gap: 0.7em;
+      --_travel: calc(var(--_arrow) + var(--_arrow-gap));
+      --_swap-ease: cubic-bezier(0.86, 0, 0.07, 1);
+      --_pad-inline: 1.35em;
+
+      position: relative;
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      gap: 0.5em;
-      padding: 0.75em 1.5em;
+      gap: 0;
+      padding: 0.7em var(--_pad-inline) 0.7em
+        calc(var(--_pad-inline) + var(--_travel));
       background-color: var(--button-background);
+      background-image: var(--button-image, none);
       color: var(--button-text);
       border: var(--border-width) solid var(--button-border);
-      border-radius: 0.5em;
+      border-radius: var(--radius-small);
       line-height: 1.2;
       text-decoration: none;
       text-align: center;
+      overflow: clip;
+      isolation: isolate;
       transition:
         background-color var(--hover-duration) var(--hover-ease),
         color var(--hover-duration) var(--hover-ease),
-        border-color var(--hover-duration) var(--hover-ease);
+        border-color var(--hover-duration) var(--hover-ease),
+        scale var(--hover-duration) var(--hover-ease);
+
       @media (hover: hover) {
         &:hover:not(:disabled) {
           background-color: var(--button-background-hover);
@@ -196,67 +221,148 @@ const named = {
           border-color: var(--button-border-hover);
         }
       }
-      &.secondary {
-        --button-background: var(--button-2-background);
-        --button-text: var(--button-2-text);
-        --button-border: var(--button-2-border);
-        --button-background-hover: var(--button-2-background-hover);
-        --button-text-hover: var(--button-2-text-hover);
-        --button-border-hover: var(--button-2-border-hover);
-      }
-      &.link {
-        --button-background: transparent;
-        --button-text: var(--link-text);
-        --button-border: var(--link-border);
-        --button-background-hover: transparent;
-        --button-text-hover: var(--link-text-hover);
-        --button-border-hover: var(--link-border);
 
-        padding: 0.4em 0;
-        border: 0;
-        border-bottom: var(--border-width) solid var(--button-border);
-        border-radius: 0;
-        background-image: linear-gradient(
-          var(--link-border-hover),
-          var(--link-border-hover)
-        );
-        background-repeat: no-repeat;
-        background-origin: border-box;
-        background-position: 100% 100%;
-        background-size: 0 var(--border-width);
-        transition:
-          background-size calc(var(--hover-duration) * 2) var(--hover-ease),
-          color var(--hover-duration) var(--hover-ease),
-          border-color var(--hover-duration) var(--hover-ease);
-        @media (hover: hover) {
-          &:hover:not(:disabled) {
-            background-position: 0 100%;
-            background-size: 100% var(--border-width);
-          }
-        }
+      /* The press is the only feedback a touch device gets, so it is the one
+         movement kept on every button. */
+      &:active:not(:disabled) {
+        scale: 0.98;
       }
-      &:is(.play, .close, .arrow) {
-        gap: 0;
-        padding: 0.75em;
-        border-radius: var(--radius-round);
-      }
-      &.back .button_mark {
-        rotate: 180deg;
-      }
-      &.play .button_pause {
-        display: none;
-      }
-      &.play[aria-pressed="true"] {
-        & .button_play {
-          display: none;
-        }
-        & .button_pause {
-          display: block;
-        }
-      }
+
       &:disabled {
         cursor: not-allowed;
         opacity: 0.5;
+      }
+    }
+
+    /* The light. It sits above the fill and below the label, and follows the
+       cursor across the button; with no pointer it simply blooms from the
+       middle. */
+    .button_glow {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      border-radius: inherit;
+      background: radial-gradient(
+        10rem 10rem at var(--_lit-x, 50%) var(--_lit-y, 50%),
+        color-mix(in srgb, var(--button-glow-color) 62%, transparent) 0%,
+        color-mix(in srgb, var(--button-glow-color) 22%, transparent) 38%,
+        transparent 72%
+      );
+      opacity: 0;
+      transition: opacity calc(var(--hover-duration) * 1.4) var(--hover-ease);
+    }
+
+    @media (hover: hover) {
+      .button_wrap:hover:not(:disabled) .button_glow,
+      :where(a, button):hover .button_wrap:not(:disabled) .button_glow {
+        opacity: 1;
+      }
+    }
+
+    .button_wrap:focus-visible .button_glow {
+      opacity: 1;
+    }
+
+    /* The arrow passes through the label: the one on the left leaves as the
+       label slides into its place, and a second arrives on the right. */
+    .button_text {
+      display: inline-block;
+      position: relative;
+      z-index: 1;
+      transition: transform calc(var(--hover-duration) * 2) var(--_swap-ease);
+    }
+
+    /* Rendered as a bare SVG rather than through Icon, so it carries its own
+       size; a responsive SVG would otherwise fill the button. */
+    .button_arrow {
+      position: absolute;
+      top: 50%;
+      z-index: 1;
+      width: var(--_arrow);
+      height: auto;
+      aspect-ratio: 1 / 1;
+      translate: 0 -50%;
+      transition:
+        transform calc(var(--hover-duration) * 2) var(--_swap-ease),
+        opacity calc(var(--hover-duration) * 1.6) var(--_swap-ease);
+
+      &.before {
+        left: var(--_pad-inline);
+        transform-origin: left center;
+      }
+
+      &.after {
+        right: var(--_pad-inline);
+        opacity: 0;
+        transform: translateX(75%) scaleX(0.1);
+        transform-origin: right center;
+      }
+    }
+
+    /* Hovering the button itself, or the row or card that contains it. */
+    @media (hover: hover) {
+      .button_wrap:hover:not(:disabled),
+      :where(a, button):hover .button_wrap:not(:disabled) {
+        & .button_text {
+          transform: translateX(calc(var(--_travel) * -1));
+        }
+        & .button_arrow.before {
+          opacity: 0;
+          transform: translateX(-75%) scaleX(0.1);
+        }
+        & .button_arrow.after {
+          opacity: 1;
+          transform: translateX(0) scaleX(1);
+        }
+      }
+    }
+
+    .button_wrap.secondary {
+      --button-image: none;
+      --button-background: var(--button-2-background);
+      --button-text: var(--button-2-text);
+      --button-border: var(--button-2-border);
+      --button-background-hover: var(--button-2-background-hover);
+      --button-text-hover: var(--button-2-text-hover);
+      --button-border-hover: var(--button-2-border-hover);
+    }
+
+    /* The quiet kind. No frame until it is wanted, then the same frame and
+       fill every other button has. */
+    .button_wrap.link {
+      --button-image: none;
+      --button-background: transparent;
+      --button-text: var(--link-text);
+      --button-border: transparent;
+      --button-background-hover: var(--link-background-hover);
+      --button-text-hover: var(--link-text-hover);
+      --button-border-hover: var(--link-border-hover);
+      --_pad-inline: 1em;
+    }
+
+    .button_wrap:is(.play, .close, .arrow) {
+      --_pad-inline: 0.75em;
+      gap: 0;
+      padding: 0.75em;
+      border-radius: var(--radius-round);
+      overflow: visible;
+    }
+
+    .button_wrap.back .button_mark {
+      rotate: 180deg;
+    }
+
+    .button_wrap.play .button_pause {
+      display: none;
+    }
+
+    .button_wrap.play[aria-pressed="true"] {
+      & .button_play {
+        display: none;
+      }
+      & .button_pause {
+        display: block;
       }
     }
   }

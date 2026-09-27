@@ -1,0 +1,788 @@
+---
+import { getImage } from "astro:assets";
+import type { SvgComponent } from "astro/types";
+import Img from "@/components/Media/Img.astro";
+import Icon from "@/components/Media/Icon.astro";
+import arrowMark from "@/assets/icons/streamline/arrow-right.svg";
+
+interface Filter {
+  /** Matches the `filters` on a service. */
+  id: string;
+  /** What the pill says. */
+  label: string;
+}
+
+interface Service {
+  /** Names the service in the enquiry link, so the form can open with it chosen. */
+  id: string;
+  /** The mark beside the name. */
+  icon: SvgComponent;
+  /** An imported asset, a remote `http(s)` URL, or a path to a file in `public/`. */
+  image: ImageMetadata;
+  /** What the photograph shows. */
+  imageAlt: string;
+  /** The service's name. The only thing a closed row shows. */
+  name: string;
+  /** One or two paragraphs. This is everything the site says about the service. */
+  text: string[];
+  /** Which pills this service answers to. */
+  filters: string[];
+}
+
+interface Props {
+  /** Set to `false` to skip rendering this component and its children. */
+  render?: boolean;
+  /** The anchor site search and the drawer link to. */
+  id?: string;
+  /** The section title. */
+  heading: string;
+  /** The pills under it. The `all` one is added in front. */
+  filters: Filter[];
+  /** What the first pill says. */
+  allLabel?: string;
+  /** The full list. */
+  services: Service[];
+  /** How many rows show before the list has to be expanded. */
+  shown?: number;
+  /** The control that expands it. */
+  moreLabel?: string;
+  /** The link inside an open row. */
+  linkLabel?: string;
+  /** The enquiry form it leads to. The service's `id` is added as `?pakalpojums=`. */
+  linkHref?: string;
+}
+
+const {
+  render = true,
+  id = "pakalpojumi",
+  heading,
+  filters,
+  allLabel = "Visi",
+  services,
+  shown = 7,
+  moreLabel = "Rādīt visu",
+  linkLabel = "Pieteikt pakalpojumu",
+  linkHref = "/pieteikums",
+} = Astro.props;
+
+
+/* The floating preview is one element whose `src` is swapped, so each row
+   carries its own already-sized URL rather than a second image pipeline. */
+const previews = await Promise.all(
+  services.map((service) =>
+    getImage({ src: service.image, width: 720, height: 540, fit: "cover" }),
+  ),
+);
+---
+
+{
+  render && (
+    <section class="servv2_wrap" id={id} data-services data-shown={shown}>
+      <div data-grain aria-hidden="true" />
+
+      <div class="servv2_inner">
+        <h2 class="servv2_heading" data-reveal>
+          {heading}
+        </h2>
+
+        <ul class="servv2_pills" role="list" data-reveal>
+          <li>
+            <button
+              class="servv2_pill"
+              type="button"
+              data-filter="all"
+              aria-pressed="true"
+            >
+              {allLabel}
+            </button>
+          </li>
+          {filters.map((filter) => (
+            <li>
+              <button
+                class="servv2_pill"
+                type="button"
+                data-filter={filter.id}
+                aria-pressed="false"
+              >
+                {filter.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <ul class="servv2_list" role="list">
+          {services.map((service, index) => (
+            <li
+              class="servv2_item"
+              data-filters={["all", ...service.filters].join(" ")}
+              data-preview={previews[index].src}
+            >
+              <h3 class="servv2_row_heading">
+                <button
+                  class="servv2_row"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls={`${id}-panel-${index}`}
+                >
+                  <Icon
+                    class="servv2_row_icon"
+                    src={service.icon}
+                    variant="small"
+                  />
+                  <span class="servv2_row_name">{service.name}</span>
+                  <Icon
+                    class="servv2_row_mark"
+                    src={arrowMark}
+                    variant="small"
+                  />
+                </button>
+              </h3>
+
+              <div class="servv2_panel" id={`${id}-panel-${index}`}>
+                <div class="servv2_panel_clip">
+                  <div class="servv2_panel_body">
+                    <div class="servv2_detail">
+                      <div class="servv2_detail_text">
+                        {service.text.map((paragraph) => (
+                          <p>{paragraph}</p>
+                        ))}
+                      </div>
+
+                      <a
+                        class="servv2_link"
+                        href={`${linkHref}?pakalpojums=${service.id}`}
+                      >
+                        <span class="servv2_link_label">{linkLabel}</span>
+                        <Icon
+                          class="servv2_link_mark"
+                          src={arrowMark}
+                          variant="small"
+                        />
+                      </a>
+                    </div>
+
+                    <div class="servv2_shot">
+                      <Img
+                        src={service.image}
+                        alt={service.imageAlt}
+                        variant="constrained"
+                        loading="lazy"
+                        sizes="(width >= 64rem) 22rem, 88vw"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <div class="servv2_foot">
+          <button class="servv2_more" type="button" hidden>
+            {moreLabel}
+          </button>
+        </div>
+      </div>
+
+      {/* Rides along the right edge while a row is hovered, then flies into
+          that row once it opens. */}
+      <div class="servv2_float" aria-hidden="true">
+        <img class="servv2_float_art" alt="" decoding="async" />
+      </div>
+    </section>
+  )
+}
+
+<script>
+  const REACH = 380;
+
+  document
+    .querySelectorAll<HTMLElement>("[data-services]")
+    .forEach((section) => {
+      const list = section.querySelector<HTMLElement>(".servv2_list");
+      const float = section.querySelector<HTMLElement>(".servv2_float");
+      const art = section.querySelector<HTMLImageElement>(".servv2_float_art");
+      const more = section.querySelector<HTMLButtonElement>(".servv2_more");
+      const pills = [
+        ...section.querySelectorAll<HTMLButtonElement>(".servv2_pill"),
+      ];
+      const items = [...section.querySelectorAll<HTMLElement>(".servv2_item")];
+      if (!list || !float || !art || !more) return;
+
+      const shown = Number(section.dataset.shown ?? 6);
+      const still = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const pointer = window.matchMedia("(hover: hover)");
+
+      let filter = "all";
+      /* One way: the list stays open until the filter changes or the page is
+         loaded again. */
+      let expanded = false;
+
+      const matching = () =>
+        items.filter((item) =>
+          (item.dataset.filters ?? "").split(" ").includes(filter),
+        );
+
+      const close = (item: HTMLElement) => {
+        const row = item.querySelector<HTMLButtonElement>(".servv2_row");
+        row?.setAttribute("aria-expanded", "false");
+        item.classList.remove("is-open");
+      };
+
+      const paint = () => {
+        const hits = matching();
+        items.forEach((item) => {
+          const inFilter = hits.includes(item);
+          const rank = hits.indexOf(item);
+          const visible = inFilter && (expanded || rank < shown);
+          item.hidden = !visible;
+          if (!visible) close(item);
+        });
+        more.hidden = expanded || hits.length <= shown;
+      };
+
+      pills.forEach((pill) => {
+        pill.addEventListener("click", () => {
+          const next = pill.dataset.filter ?? "all";
+          if (next === filter) return;
+          filter = next;
+          expanded = false;
+          items.forEach(close);
+          hide();
+          pills.forEach((other) =>
+            other.setAttribute("aria-pressed", String(other === pill)),
+          );
+          paint();
+        });
+      });
+
+      more.addEventListener("click", () => {
+        expanded = true;
+        paint();
+      });
+
+      /* The preview */
+      let hovered: HTMLElement | null = null;
+
+      const hide = () => {
+        hovered = null;
+        float.classList.remove("is-shown");
+      };
+
+      const show = (item: HTMLElement) => {
+        if (!pointer.matches || item.classList.contains("is-open")) return;
+        const src = item.dataset.preview;
+        if (!src) return;
+        hovered = item;
+        if (art.getAttribute("src") !== src) art.setAttribute("src", src);
+
+        const box = section.getBoundingClientRect();
+        const row = item.getBoundingClientRect();
+        const rise = float.offsetHeight || REACH;
+        /* Centred on the row, but never hanging out of the section. */
+        const top = Math.min(
+          Math.max(row.top + row.height / 2 - box.top - rise / 2, 16),
+          box.height - rise - 16,
+        );
+        float.style.setProperty("--_top", `${Math.round(top)}px`);
+        float.classList.add("is-shown");
+      };
+
+      items.forEach((item) => {
+        const row = item.querySelector<HTMLButtonElement>(".servv2_row");
+        if (!row) return;
+
+        row.addEventListener("pointerenter", () => show(item));
+        row.addEventListener("focus", () => show(item));
+        row.addEventListener("pointerleave", () => {
+          if (hovered === item) hide();
+        });
+        row.addEventListener("blur", () => {
+          if (hovered === item) hide();
+        });
+
+        row.addEventListener("click", () => {
+          const opening = !item.classList.contains("is-open");
+          items.forEach((other) => {
+            if (other !== item) close(other);
+          });
+
+          row.setAttribute("aria-expanded", String(opening));
+          item.classList.toggle("is-open", opening);
+
+          if (!opening) {
+            hide();
+            return;
+          }
+
+          const shot = item.querySelector<HTMLElement>(".servv2_shot");
+          const flying =
+            hovered === item && float.classList.contains("is-shown");
+
+          if (!shot || !flying || still.matches || !("animate" in float)) {
+            hide();
+            return;
+          }
+
+          /* The row is still settling while the preview flies: the panel
+             grows and a row closing above it shrinks, which moves the slot.
+             So the target is read every frame rather than once, and the
+             preview always lands on it. A fixed target lands beside a moving
+             slot, which is exactly what reads as a glitch. */
+          const DURATION = 620;
+          const box = () => {
+            const frame = section.getBoundingClientRect();
+            return {
+              left: frame.left + float.offsetLeft,
+              top: frame.top + float.offsetTop,
+              width: float.offsetWidth,
+              height: float.offsetHeight,
+            };
+          };
+
+          if (shot.getBoundingClientRect().width === 0) {
+            hide();
+            return;
+          }
+
+          shot.style.transition = "none";
+          shot.style.opacity = "0";
+          float.classList.add("is-flying");
+
+          const began = performance.now();
+          const step = (now: number) => {
+            const p = Math.min((now - began) / DURATION, 1);
+            /* Gathers pace and settles, rather than leaving at full speed. */
+            const e = p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2;
+            const from = box();
+            const to = shot.getBoundingClientRect();
+
+            float.style.translate = `${
+              (to.left - from.left + (to.width - from.width) / 2) * e
+            }px ${(to.top - from.top + (to.height - from.height) / 2) * e}px`;
+            float.style.scale = `${1 + (to.width / from.width - 1) * e} ${
+              1 + (to.height / from.height - 1) * e
+            }`;
+
+            if (p < 1) {
+              requestAnimationFrame(step);
+              return;
+            }
+
+            /* Reveal the slot while the preview is still on top of it and
+               identical, then take the preview away a frame later. Neither
+               step changes a pixel, so there is nothing to see. */
+            shot.style.opacity = "1";
+            requestAnimationFrame(() => {
+              float.classList.add("is-done");
+              float.classList.remove("is-shown", "is-flying");
+              float.style.translate = "";
+              float.style.scale = "";
+              hovered = null;
+              requestAnimationFrame(() => {
+                float.classList.remove("is-done");
+                shot.style.transition = "";
+                shot.style.opacity = "";
+              });
+            });
+          };
+          requestAnimationFrame(step);
+        });
+      });
+
+      paint();
+    });
+</script>
+
+<style is:global>
+  @layer components {
+    .servv2_wrap {
+      /* A shade longer than the shared hover timing, and eased so the
+         preview settles rather than stops. */
+      --servv2-fade: 420ms;
+      --servv2-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100svh;
+      padding-inline: var(--site-margin);
+      padding-block: var(--section-space-large);
+      background-color: var(--field-green);
+      color: var(--sand-300);
+      isolation: isolate;
+    }
+
+    .servv2_inner {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 60rem;
+      margin-inline: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-6);
+      text-align: center;
+    }
+
+    .servv2_heading {
+      margin: 0;
+      font-family: var(--display-family);
+      font-size: clamp(2.125rem, 5vw, 4rem);
+      font-weight: var(--display-bold);
+      line-height: var(--line-height-small);
+      letter-spacing: var(--letter-spacing-display);
+      text-transform: uppercase;
+    }
+
+    /* Pills, in place of a sentence. */
+    .servv2_pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-2);
+      margin: 0 0 var(--space-4);
+      padding: 0;
+      list-style: none;
+    }
+
+    .servv2_pill {
+      padding: 0.42em 0.9em;
+      border: var(--border-width) solid
+        color-mix(in lab, var(--text) 20%, transparent);
+      border-radius: var(--radius-round);
+      background: none;
+      color: var(--text-2);
+      font-size: var(--text-small);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+      cursor: pointer;
+      transition:
+        border-color var(--hover-duration) var(--hover-ease),
+        background-color var(--hover-duration) var(--hover-ease),
+        color var(--hover-duration) var(--hover-ease);
+
+      @media (hover: hover) {
+        &:hover {
+          border-color: color-mix(in lab, var(--text) 45%, transparent);
+          color: var(--text);
+        }
+      }
+      &[aria-pressed="true"] {
+        background-color: var(--sand-100);
+        border-color: var(--sand-100);
+        color: var(--ink-900);
+      }
+      &:focus-visible {
+        outline: var(--focus-width) solid var(--text);
+        outline-offset: var(--focus-offset);
+      }
+    }
+
+    /* List */
+    .servv2_list {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      text-align: start;
+      border-top: var(--border-width) solid
+        color-mix(in lab, var(--text) 14%, transparent);
+    }
+
+    .servv2_item {
+      border-bottom: var(--border-width) solid
+        color-mix(in lab, var(--text) 14%, transparent);
+      &[hidden] {
+        display: none;
+      }
+    }
+
+    .servv2_row_heading {
+      margin: 0;
+      font: inherit;
+      letter-spacing: inherit;
+    }
+
+    .servv2_row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-5);
+      width: 100%;
+      padding: var(--space-6) var(--space-3);
+      background: none;
+      border: 0;
+      color: inherit;
+      text-align: start;
+      cursor: pointer;
+      position: relative;
+      isolation: isolate;
+
+      &::before {
+        content: "";
+        position: absolute;
+        inset: var(--space-2) 0;
+        z-index: -1;
+        border-radius: var(--radius-small);
+        background-color: transparent;
+        transition: background-color var(--hover-duration) var(--hover-ease);
+      }
+
+      @media (hover: hover) {
+        &:hover::before {
+          background-color: color-mix(in lab, var(--text) 5%, transparent);
+        }
+      }
+      &:focus-visible {
+        outline: var(--focus-width) solid var(--text);
+        outline-offset: calc(var(--space-2) * -1);
+        border-radius: var(--radius-small);
+      }
+    }
+
+    .servv2_row_icon {
+      flex: none;
+      width: 1.6em;
+      color: var(--green-200);
+    }
+
+    .servv2_row_name {
+      flex: 1 1 auto;
+      min-width: 0;
+      font-family: var(--display-family);
+      font-size: var(--h4);
+      font-weight: var(--display-bold);
+      line-height: var(--line-height-medium);
+      letter-spacing: var(--letter-spacing-display);
+    }
+
+    .servv2_row_mark {
+      flex: none;
+      width: 1.1em;
+      rotate: 90deg;
+      color: var(--text-2);
+      transition:
+        rotate var(--open-duration) var(--open-ease),
+        color var(--hover-duration) var(--hover-ease);
+    }
+
+    .servv2_item.is-open .servv2_row_mark {
+      rotate: -90deg;
+      color: var(--text);
+    }
+
+    /* Panel */
+    .servv2_panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows var(--open-duration) var(--open-ease);
+    }
+
+    .servv2_item.is-open .servv2_panel {
+      grid-template-rows: 1fr;
+    }
+
+    .servv2_panel_clip {
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .servv2_panel_body {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-7);
+      padding: var(--space-4) var(--space-3) var(--space-8);
+
+      @media (width >= 48rem) {
+        grid-template-columns: 1fr 22rem;
+        align-items: start;
+      }
+    }
+
+    .servv2_detail {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      gap: var(--space-5);
+    }
+
+    .servv2_detail_text {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      max-width: 52ch;
+      color: var(--text-2);
+
+      & > p {
+        margin: 0;
+      }
+    }
+
+    .servv2_link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0.62em 1.15em;
+      border: var(--border-width) solid
+        color-mix(in lab, var(--text) 24%, transparent);
+      border-radius: var(--radius-main);
+      color: var(--text);
+      font-size: var(--text-small);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+      text-decoration: none;
+      transition:
+        border-color var(--hover-duration) var(--hover-ease),
+        background-color var(--hover-duration) var(--hover-ease),
+        color var(--hover-duration) var(--hover-ease),
+        box-shadow calc(var(--hover-duration) * 1.6) var(--hover-ease);
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--sand-100);
+          border-color: var(--sand-100);
+          color: var(--ink-900);
+          box-shadow:
+            0 0 1.5rem color-mix(in srgb, var(--sand-100) 30%, transparent),
+            0 0 4rem color-mix(in srgb, var(--sand-100) 16%, transparent);
+        }
+      }
+      &:focus-visible {
+        outline: var(--focus-width) solid var(--text);
+        outline-offset: var(--focus-offset);
+      }
+    }
+
+    .servv2_link_mark {
+      width: 1em;
+      flex: none;
+    }
+
+    /* Where the preview lands. */
+    .servv2_shot {
+      overflow: clip;
+      aspect-ratio: 4 / 3;
+      border-radius: var(--radius-main);
+      border: var(--border-width) solid rgb(0 0 0 / 0.3);
+      box-shadow: 0 1.5rem 3rem -1rem rgb(0 0 0 / 0.4);
+      transition: opacity var(--servv2-fade) var(--servv2-ease);
+
+      & > .image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    /* Foot */
+    .servv2_foot {
+      display: flex;
+      justify-content: center;
+    }
+
+    .servv2_more {
+      padding: 0.62em 1.15em;
+      background: none;
+      border: var(--border-width) solid
+        color-mix(in lab, var(--text) 24%, transparent);
+      border-radius: var(--radius-main);
+      color: var(--text);
+      font-size: var(--text-small);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+      cursor: pointer;
+      transition:
+        border-color var(--hover-duration) var(--hover-ease),
+        background-color var(--hover-duration) var(--hover-ease),
+        color var(--hover-duration) var(--hover-ease);
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: color-mix(in lab, var(--text) 8%, transparent);
+          border-color: color-mix(in lab, var(--text) 45%, transparent);
+        }
+      }
+      &:focus-visible {
+        outline: var(--focus-width) solid var(--text);
+        outline-offset: var(--focus-offset);
+      }
+      &[hidden] {
+        display: none;
+      }
+    }
+
+    /* The floating preview */
+    .servv2_float {
+      position: absolute;
+      top: var(--_top, 30%);
+      /* Pulled in off the edge so it sits over the list rather than out in
+         the margin. Its right edge lands 36rem from the centre, and it falls
+         back to the site margin once the window is too narrow for that. */
+      right: max(var(--site-margin), calc(50% - 36rem));
+      z-index: 3;
+      width: 22rem;
+      aspect-ratio: 4 / 3;
+      pointer-events: none;
+      opacity: 0;
+      scale: 0.94;
+      translate: 1.5rem 0;
+      rotate: -3deg;
+      border-radius: var(--radius-main);
+      overflow: clip;
+      border: var(--border-width) solid rgb(0 0 0 / 0.3);
+      box-shadow: 0 2rem 4rem -1rem rgb(0 0 0 / 0.5);
+      transition:
+        opacity var(--servv2-fade) var(--servv2-ease),
+        scale var(--servv2-fade) var(--servv2-ease),
+        translate var(--servv2-fade) var(--servv2-ease),
+        top var(--servv2-fade) var(--servv2-ease);
+    }
+
+    .servv2_float.is-shown {
+      opacity: 1;
+      scale: 1;
+      translate: 0 0;
+    }
+
+    /* Straightens and takes on the slot's own shadow, so the two match by
+       the time it lands. */
+    .servv2_float.is-flying {
+      rotate: 0deg;
+      box-shadow: 0 1.5rem 3rem -1rem rgb(0 0 0 / 0.4);
+      transition:
+        rotate 620ms cubic-bezier(0.42, 0.04, 0.18, 1),
+        box-shadow 620ms cubic-bezier(0.42, 0.04, 0.18, 1);
+    }
+
+    /* The hand-off: gone at once, with nothing left to animate. */
+    .servv2_float.is-done {
+      display: none;
+      transition: none;
+    }
+
+    .servv2_float_art {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* No room beside the list, and nothing to hover with. */
+    @media (width < 64rem) {
+      .servv2_float {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .servv2_panel,
+      .servv2_row_mark,
+      .servv2_float,
+      .servv2_shot {
+        transition: none;
+      }
+    }
+  }
+</style>

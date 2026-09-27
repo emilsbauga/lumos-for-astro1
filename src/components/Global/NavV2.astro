@@ -1,0 +1,1253 @@
+---
+import Icon from "@/components/Media/Icon.astro";
+import Logo from "@/assets/logo/studeja-logo-wide.svg";
+import searchMark from "@/assets/icons/streamline/search.svg";
+import instagramMark from "@/assets/icons/streamline/instagram.svg";
+import facebookMark from "@/assets/icons/streamline/facebook.svg";
+import { SITE_NAME, SEARCH_INDEX } from "@/consts.ts";
+
+interface Props {
+  /** Set to `false` to skip rendering this component and its children. */
+  render?: boolean;
+  /** The bar's call to action. It is the only one the drawer shows as well. */
+  buttonLabel?: string;
+  buttonLabelAlt?: string;
+  drawerButtonLabel?: string;
+  drawerButtonLabelAlt?: string;
+  /** Where that call to action leads. */
+  buttonHref?: string;
+  /** What the search field says before anyone types. */
+  searchPlaceholder?: string;
+}
+
+const {
+  render = true,
+  buttonLabel = "SAZINIES",
+  buttonLabelAlt = "PASTUOSTI",
+  drawerButtonLabel = "SAZINIES AR MUMS",
+  drawerButtonLabelAlt = "PASTUOSTI PAR PASUOKUMU",
+  buttonHref = "/pieteikums",
+  searchPlaceholder = "Meklē",
+} = Astro.props;
+
+/* Seven links, and the hierarchy is the size they are set in rather than a
+   second block underneath. The catalogue links open search on one type. */
+const primary = [
+  { label: "Koncertprogrammas", href: "/meklet?tips=koncertprogrammas" },
+  { label: "Mākslinieki", href: "/meklet?tips=makslinieki" },
+  { label: "Pakalpojumi", href: "/#pakalpojumi" },
+];
+
+const secondary = [
+  { label: "Projekti", href: "/projekti" },
+  { label: "Par STUDEJA", href: "/par-studeja" },
+  { label: "Sadarbība", href: "/sadarbiba" },
+  { label: "Kontakti", href: "/kontakti" },
+];
+
+const social = [
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/siastudeja/",
+    icon: instagramMark,
+  },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/profile.php?id=61590559761386",
+    icon: facebookMark,
+  },
+];
+---
+
+{
+  render && (
+    <header class="navv2_wrap" data-nav>
+      <div class="navv2_inner">
+        <a class="navv2_logo" href="/" aria-label={SITE_NAME}>
+          <Logo class="navv2_logo_art" />
+        </a>
+
+        <div class="navv2_search">
+          <div class="navv2_field">
+            <Icon class="navv2_field_mark" src={searchMark} variant="small" />
+            <label class="sr-only" for="navv2-search">
+              Meklē vietnē
+            </label>
+            <input
+              class="navv2_input"
+              id="navv2-search"
+              type="search"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder={searchPlaceholder}
+              aria-expanded="false"
+              aria-controls="navv2-results"
+              aria-describedby="navv2-status"
+            />
+          </div>
+
+          {/* Grows out of the field rather than covering the page. */}
+          <div class="navv2_panel" id="navv2-results">
+            <div class="navv2_panel_inner">
+              <p
+                class="navv2_panel_label text-style-small"
+                id="navv2-status"
+                role="status"
+              />
+              <ul class="navv2_results" />
+              <button
+                class="navv2_more text-style-small"
+                type="button"
+                hidden
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="navv2_actions">
+          <a class="navv2_cta" href={buttonHref}>
+            <span class="navv2_roll">
+              <span class="navv2_roll_label">{buttonLabel}</span>
+              <span class="navv2_roll_label alt" aria-hidden="true">
+                {buttonLabelAlt}
+              </span>
+            </span>
+          </a>
+          <button
+            class="navv2_menu"
+            type="button"
+            aria-label="Izvēlne"
+            aria-expanded="false"
+            aria-controls="navv2-drawer"
+          >
+            <span class="navv2_menu_mark" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+
+      <div class="navv2_scrim" data-nav-close />
+
+      <div class="navv2_drawer" id="navv2-drawer" aria-label="Izvēlne" hidden>
+        <div class="navv2_drawer_top">
+          <button
+            class="navv2_close"
+            type="button"
+            aria-label="Aizvērt izvēlni"
+          >
+            <span class="navv2_close_mark" aria-hidden="true" />
+          </button>
+        </div>
+
+        <nav class="navv2_nav" aria-label="Galvenā">
+          <ul class="navv2_list">
+            {primary.map((link) => (
+              <li class="navv2_item">
+                <a class="navv2_link" href={link.href}>
+                  <span class="navv2_link_label">{link.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <ul class="navv2_list quiet">
+            {secondary.map((link) => (
+              <li class="navv2_item">
+                <a class="navv2_link" href={link.href}>
+                  <span class="navv2_link_label">{link.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div class="navv2_drawer_foot">
+          <a class="navv2_drawer_cta" href={buttonHref}>
+            <span class="navv2_roll">
+              <span class="navv2_roll_label">{drawerButtonLabel}</span>
+              <span class="navv2_roll_label alt" aria-hidden="true">
+                {drawerButtonLabelAlt}
+              </span>
+            </span>
+          </a>
+
+          <div class="navv2_utility text-style-small">
+            <ul class="navv2_langs" aria-label="Valoda">
+              <li>
+                <a class="navv2_lang" href="/" aria-current="true">
+                  LV
+                </a>
+              </li>
+              <li>
+                <a class="navv2_lang" href="/en/" hreflang="en">
+                  EN
+                </a>
+              </li>
+            </ul>
+            <ul class="navv2_social">
+              {social.map((item) => (
+                <li>
+                  <a
+                    class="navv2_social_link"
+                    href={item.href}
+                    rel="noopener"
+                    target="_blank"
+                  >
+                    <Icon
+                      class="navv2_social_mark"
+                      src={item.icon}
+                      variant="small"
+                    />
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <script
+        is:inline
+        type="application/json"
+        data-navv2-index
+        set:html={JSON.stringify(SEARCH_INDEX)}
+      />
+    </header>
+  )
+}
+
+<script>
+  type Entry = {
+    title: string;
+    text: string;
+    href: string;
+    group: string;
+    keywords?: string;
+    featured?: boolean;
+  };
+
+  const nav = document.querySelector<HTMLElement>("[data-nav]");
+  const raw = document.querySelector<HTMLScriptElement>("[data-navv2-index]");
+
+  if (nav && raw) {
+    const entries: Entry[] = JSON.parse(raw.textContent || "[]");
+    const input = nav.querySelector<HTMLInputElement>(".navv2_input");
+    const list = nav.querySelector<HTMLUListElement>(".navv2_results");
+    const status = nav.querySelector<HTMLElement>(".navv2_panel_label");
+    const more = nav.querySelector<HTMLButtonElement>(".navv2_more");
+    const menu = nav.querySelector<HTMLButtonElement>(".navv2_menu");
+    const close = nav.querySelector<HTMLButtonElement>(".navv2_close");
+    const drawer = nav.querySelector<HTMLElement>(".navv2_drawer");
+
+    /* Diacritics come off both sides, so "makslinieki" finds "Mākslinieki"
+       and a keyboard without ā still works. */
+    const plain = (value: string) =>
+      value.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+
+    const score = (entry: Entry, query: string) => {
+      const title = plain(entry.title);
+      const words = plain(`${entry.title} ${entry.text} ${entry.group}`);
+      const keys = plain(entry.keywords ?? "");
+      if (title.startsWith(query)) return 4;
+      if (title.includes(query)) return 3;
+      if (keys.includes(query)) return 2;
+      if (words.includes(query)) return 1;
+      return 0;
+    };
+
+    const escape = (value: string) =>
+      value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+    /* Empty field offers the few places most people want. Typing searches the
+       whole index instead, so it turns up entries the offer never held. */
+    const SHOWN = 5;
+    const MOST = 8;
+
+    const results = (query: string) => {
+      const q = plain(query.trim());
+      if (!q) return entries.filter((entry) => entry.featured);
+      return entries
+        .map((entry) => ({ entry, rank: score(entry, q) }))
+        .filter((hit) => hit.rank > 0)
+        .sort((a, b) => b.rank - a.rank)
+        .map((hit) => hit.entry)
+        .slice(0, MOST);
+    };
+
+    let cursor = -1;
+    let expanded = false;
+
+    const render = (query: string, keepExpanded = false) => {
+      if (!list || !status) return;
+      const all = results(query);
+      if (!keepExpanded) expanded = false;
+      const shown = expanded ? all : all.slice(0, SHOWN);
+      const rest = all.length - shown.length;
+      cursor = -1;
+      list.innerHTML = shown
+        .map(
+          (entry, index) => `
+            <li class="navv2_result">
+              <a class="navv2_hit" href="${entry.href}" data-index="${index}">
+                <span class="navv2_hit_title">${escape(entry.title)}</span>
+                <span class="navv2_hit_text text-style-small">${escape(entry.text)}</span>
+              </a>
+            </li>`,
+        )
+        .join("");
+
+      if (more) {
+        more.hidden = rest <= 0;
+        more.textContent = `Rādīt vēl ${rest}`;
+      }
+
+      const trimmed = query.trim();
+      if (!trimmed) status.textContent = "Populārākās sadaļas";
+      else if (all.length === 0)
+        status.textContent = `Nekas neatbilst vārdam "${trimmed}". Raksti uz info@studeja.lv.`;
+      else
+        status.textContent = `${all.length} ${all.length === 1 ? "atbilde" : "atbildes"}`;
+    };
+
+    more?.addEventListener("click", () => {
+      expanded = true;
+      render(input?.value ?? "", true);
+      input?.focus();
+    });
+
+    const openSearch = (open: boolean) => {
+      const was = nav.classList.contains("search-open");
+      nav.classList.toggle("search-open", open);
+      input?.setAttribute("aria-expanded", String(open));
+      /* Only on the way open, or refocusing the field would discard rows the
+         visitor just revealed. */
+      if (open && !was) render(input?.value ?? "");
+    };
+
+    input?.addEventListener("focus", () => openSearch(true));
+    input?.addEventListener("input", () => {
+      openSearch(true);
+      render(input.value);
+    });
+
+    /* The field says what it is; the hint says what is in the index. It runs
+       only while the field is idle and unfocused, holds each phrase for
+       seconds rather than blinking, and never runs at all when motion is
+       turned down. It is there to tell, not to catch the eye. */
+    const BASE = input?.getAttribute("placeholder") ?? "Meklē";
+    const HINTS = ["māksliniekus", "koncertprogrammas", "informāciju"];
+    const stillPlaceholder = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+
+    if (input && !stillPlaceholder.matches) {
+      const field = input;
+      const wait = (ms: number) => new Promise((done) => setTimeout(done, ms));
+      const idle = () =>
+        document.activeElement !== field &&
+        field.value === "" &&
+        !document.hidden;
+
+      const settle = async () => {
+        while (!idle()) {
+          if (field.placeholder !== BASE) field.placeholder = BASE;
+          await wait(400);
+        }
+      };
+
+      void (async () => {
+        await wait(4000);
+        let turn = 0;
+        for (;;) {
+          await settle();
+          const word = HINTS[turn++ % HINTS.length];
+          for (let i = 1; i <= word.length && idle(); i++) {
+            field.placeholder = `${BASE} ${word.slice(0, i)}`;
+            await wait(60);
+          }
+          if (idle()) await wait(5000);
+          for (let i = word.length; i > 0 && idle(); i--) {
+            field.placeholder = `${BASE} ${word.slice(0, i - 1)}`.trimEnd();
+            await wait(28);
+          }
+          field.placeholder = BASE;
+          await wait(2500);
+        }
+      })();
+    }
+
+    const focusHit = (next: number) => {
+      const hits = list?.querySelectorAll<HTMLAnchorElement>(".navv2_hit");
+      if (!hits || hits.length === 0) return;
+      cursor = (next + hits.length) % hits.length;
+      hits[cursor].focus();
+    };
+
+    nav.querySelector(".navv2_search")?.addEventListener("keydown", (event) => {
+      const key = (event as KeyboardEvent).key;
+      if (key === "Escape") {
+        event.preventDefault();
+        openSearch(false);
+        input?.focus();
+      } else if (key === "ArrowDown") {
+        event.preventDefault();
+        focusHit(cursor + 1);
+      } else if (key === "ArrowUp") {
+        event.preventDefault();
+        if (cursor <= 0) {
+          cursor = -1;
+          input?.focus();
+        } else focusHit(cursor - 1);
+      }
+    });
+
+    /* A result on this page is a jump, so the panel gets out of the way. */
+    list?.addEventListener("click", () => openSearch(false));
+
+    document.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (!nav.querySelector(".navv2_search")?.contains(target))
+        openSearch(false);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      const typing =
+        document.activeElement instanceof HTMLInputElement ||
+        document.activeElement instanceof HTMLTextAreaElement;
+      if (
+        event.key === "/" &&
+        !typing &&
+        !nav.classList.contains("drawer-open")
+      ) {
+        event.preventDefault();
+        input?.focus();
+      }
+    });
+
+    /* --- drawer --- */
+    const focusable = () =>
+      [
+        ...(drawer?.querySelectorAll<HTMLElement>(
+          "a[href], button:not([disabled])",
+        ) ?? []),
+      ].filter((el) => el.offsetParent !== null);
+
+    let restoreTo: HTMLElement | null = null;
+
+    const setDrawer = (open: boolean) => {
+      if (!drawer || !menu) return;
+      if (open) {
+        restoreTo = document.activeElement as HTMLElement;
+        drawer.hidden = false;
+        openSearch(false);
+      }
+      /* One frame with the panel in the tree before it slides, or the
+         transition has nothing to run from. */
+      requestAnimationFrame(() => {
+        nav.classList.toggle("drawer-open", open);
+        document.body.classList.toggle("navv2-locked", open);
+        menu.setAttribute("aria-expanded", String(open));
+        if (open) close?.focus();
+      });
+      if (!open) {
+        window.setTimeout(() => {
+          if (!nav.classList.contains("drawer-open")) drawer.hidden = true;
+        }, 320);
+        restoreTo?.focus();
+      }
+    };
+
+    menu?.addEventListener("click", () =>
+      setDrawer(menu.getAttribute("aria-expanded") !== "true"),
+    );
+    close?.addEventListener("click", () => setDrawer(false));
+    nav
+      .querySelectorAll("[data-nav-close]")
+      .forEach((el) => el.addEventListener("click", () => setDrawer(false)));
+    drawer
+      ?.querySelectorAll("a[href]")
+      .forEach((el) => el.addEventListener("click", () => setDrawer(false)));
+
+    document.addEventListener("keydown", (event) => {
+      if (!nav.classList.contains("drawer-open")) return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setDrawer(false);
+      } else if (event.key === "Tab") {
+        /* Tab stays inside the drawer while it covers the page. */
+        const items = focusable();
+        if (items.length === 0) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    /* The bar separates itself from the page only once the page has moved. */
+    const sentinel = document.createElement("div");
+    sentinel.setAttribute("aria-hidden", "true");
+    sentinel.style.cssText = "position:absolute;top:0;height:1px;width:1px;";
+    document.body.prepend(sentinel);
+    new IntersectionObserver(
+      ([entry]) => nav.classList.toggle("scrolled", !entry.isIntersecting),
+      { threshold: 0 },
+    ).observe(sentinel);
+
+    render("");
+  }
+</script>
+
+<style is:global>
+  @layer components {
+    /* Nothing in this bar carries a fill at rest. The page's own call to
+       action keeps the only solid button on screen. */
+    .navv2_wrap {
+      --navv2-line: color-mix(in lab, var(--text) 18%, transparent);
+      --navv2-line-lit: color-mix(in lab, var(--text) 38%, transparent);
+      --navv2-glow: color-mix(in srgb, var(--sand-100) 20%, transparent);
+      /* The filled CTA carries its own light, so its glow has to read
+         against that fill rather than against the dark bar. */
+      --navv2-glow-cta: color-mix(in srgb, var(--sand-100) 34%, transparent);
+      --navv2-glow-cta-far: color-mix(
+        in srgb,
+        var(--sand-100) 18%,
+        transparent
+      );
+      /* Glass rather than a dark slab: the page stays readable behind it. */
+      --navv2-glass: color-mix(in srgb, var(--background-2) 55%, transparent);
+      --navv2-bar: color-mix(in srgb, var(--ink-950) 38%, transparent);
+      --navv2-blur: blur(1.75rem) saturate(1.5);
+
+      /* Fixed over the page rather than sitting above it, so whatever is
+         behind shows through the glass. The first section clears it with
+         `--nav-height` of extra top padding. */
+      position: fixed;
+      inset-inline: 0;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding-inline: var(--site-margin);
+      color: var(--text);
+      border-bottom: var(--border-width) solid transparent;
+      transition: border-color var(--hover-duration) var(--hover-ease);
+
+      /* The glass sits on a pseudo-element, not on the bar itself. A
+         `backdrop-filter` here would make the bar the containing block for
+         its own fixed children, and the drawer scrim would shrink to the
+         bar instead of covering the page. */
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background-color: var(--navv2-bar);
+        backdrop-filter: var(--navv2-blur);
+        transition: background-color var(--hover-duration) var(--hover-ease);
+      }
+
+      &.scrolled {
+        border-bottom-color: var(--navv2-line);
+      }
+
+      &:is(.search-open, .drawer-open)::before {
+        background-color: color-mix(in srgb, var(--ink-950) 62%, transparent);
+      }
+    }
+
+    body.navv2-locked {
+      overflow: hidden;
+    }
+
+    .navv2_inner {
+      width: 100%;
+      max-width: var(--max-width-main);
+      display: grid;
+      grid-template-columns: 1fr minmax(0, 32rem) 1fr;
+      align-items: center;
+      gap: var(--space-5);
+      min-height: var(--nav-height);
+    }
+
+    .navv2_logo {
+      justify-self: start;
+      display: flex;
+      align-items: center;
+      border-radius: var(--radius-small);
+    }
+
+    .navv2_logo_art {
+      display: block;
+      width: auto;
+      height: 1.7rem;
+      color: var(--text);
+      transform-origin: left center;
+      transition:
+        scale var(--hover-duration) var(--hover-ease),
+        filter calc(var(--hover-duration) * 1.6) var(--hover-ease);
+      @media (width >= 48rem) {
+        height: 2.05rem;
+      }
+    }
+
+    @media (hover: hover) {
+      .navv2_logo:hover .navv2_logo_art {
+        scale: 1.035;
+        filter: drop-shadow(0 0 0.5rem var(--navv2-glow-cta))
+          drop-shadow(0 0 1.5rem var(--navv2-glow-cta-far));
+      }
+    }
+
+    .navv2_logo:focus-visible .navv2_logo_art {
+      filter: drop-shadow(0 0 0.5rem var(--navv2-glow-cta))
+        drop-shadow(0 0 1.5rem var(--navv2-glow-cta-far));
+    }
+
+    /* Search */
+    .navv2_search {
+      position: relative;
+      justify-self: stretch;
+      width: 100%;
+    }
+
+    .navv2_field {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0.6em 0.95em;
+      border: var(--border-width) solid var(--navv2-line);
+      border-radius: var(--radius-main);
+      color: var(--text-2);
+      transition:
+        border-color var(--hover-duration) var(--hover-ease),
+        color var(--hover-duration) var(--hover-ease),
+        box-shadow calc(var(--hover-duration) * 1.6) var(--hover-ease);
+
+      @media (hover: hover) {
+        &:hover {
+          border-color: var(--navv2-line-lit);
+          color: var(--text);
+        }
+      }
+    }
+
+    .navv2_wrap.search-open .navv2_field,
+    .navv2_field:focus-within {
+      border-color: var(--navv2-line-lit);
+      color: var(--text);
+      box-shadow: 0 0 2rem var(--navv2-glow);
+    }
+
+    .navv2_field_mark {
+      width: 1.05em;
+      flex: none;
+    }
+
+    .navv2_input {
+      width: 100%;
+      background: none;
+      border: 0;
+      color: var(--text);
+      font: inherit;
+      font-size: var(--text-small);
+      &::placeholder {
+        color: var(--text-2);
+      }
+      &:focus {
+        outline: none;
+      }
+      &::-webkit-search-cancel-button {
+        filter: invert(1);
+        opacity: 0.45;
+      }
+    }
+
+    /* The panel grows out of the field instead of covering the page. */
+    /* The results are free to be wider than the field they came from. */
+    .navv2_panel {
+      position: absolute;
+      top: calc(100% + var(--space-3));
+      left: 50%;
+      translate: -50% -0.35rem;
+      width: min(40rem, calc(100vw - var(--site-margin) * 2));
+      display: grid;
+      grid-template-rows: 0fr;
+      visibility: hidden;
+      background-color: var(--navv2-glass);
+      backdrop-filter: var(--navv2-blur);
+      border: var(--border-width) solid var(--navv2-line);
+      border-radius: var(--radius-main);
+      box-shadow: 0 1.5rem 3rem -1rem rgb(0 0 0 / 0.55);
+      overflow: hidden;
+      opacity: 0;
+      transition:
+        grid-template-rows var(--open-duration) var(--open-ease),
+        opacity var(--open-duration) var(--open-ease),
+        translate var(--open-duration) var(--open-ease),
+        visibility var(--open-duration) var(--open-ease);
+    }
+
+    .navv2_wrap.search-open .navv2_panel {
+      grid-template-rows: 1fr;
+      visibility: visible;
+      opacity: 1;
+      translate: -50% 0;
+    }
+
+    .navv2_panel_inner {
+      overflow: hidden;
+      min-height: 0;
+      padding: var(--space-4);
+    }
+
+    /* Same horizontal inset as a row, so the label sits on their left edge. */
+    .navv2_panel_label {
+      padding: var(--space-1) var(--space-3) var(--space-4);
+      color: var(--text-2);
+    }
+
+    .navv2_results {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      max-height: min(74vh, 44rem);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .navv2_more {
+      width: 100%;
+      margin-top: var(--space-3);
+      padding: var(--space-3);
+      color: var(--text-2);
+      border: var(--border-width) solid var(--navv2-line);
+      border-radius: var(--radius-small);
+      cursor: pointer;
+      transition:
+        color var(--hover-duration) var(--hover-ease),
+        border-color var(--hover-duration) var(--hover-ease);
+      @media (hover: hover) {
+        &:hover {
+          color: var(--text);
+          border-color: var(--navv2-line-lit);
+        }
+      }
+      &[hidden] {
+        display: none;
+      }
+    }
+
+    .navv2_hit {
+      display: grid;
+      gap: 0.15rem;
+      padding: var(--space-3);
+      border-radius: var(--radius-small);
+      transition: background-color var(--hover-duration) var(--hover-ease);
+      @media (hover: hover) {
+        &:hover {
+          background-color: color-mix(in lab, var(--text) 7%, transparent);
+        }
+      }
+      &:focus-visible {
+        background-color: color-mix(in lab, var(--text) 10%, transparent);
+      }
+    }
+
+    .navv2_hit_text {
+      color: var(--text-2);
+    }
+
+    /* Actions */
+    .navv2_actions {
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .navv2_cta {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.62em 1.15em;
+      border: var(--border-width) solid var(--navv2-line);
+      border-radius: var(--radius-main);
+      color: var(--text);
+      font-size: var(--text-small);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+      text-decoration: none;
+      transition:
+        border-color var(--hover-duration) var(--hover-ease),
+        background-color var(--hover-duration) var(--hover-ease),
+        color var(--hover-duration) var(--hover-ease),
+        box-shadow calc(var(--hover-duration) * 1.6) var(--hover-ease);
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--sand-100);
+          border-color: var(--sand-100);
+          color: var(--ink-900);
+          box-shadow:
+            0 0 1.5rem var(--navv2-glow-cta),
+            0 0 4rem var(--navv2-glow-cta-far);
+        }
+      }
+      &:focus-visible {
+        background-color: var(--sand-100);
+        border-color: var(--sand-100);
+        color: var(--ink-900);
+        box-shadow:
+          0 0 1.5rem var(--navv2-glow-cta),
+          0 0 4rem var(--navv2-glow-cta-far);
+        outline: var(--focus-width) solid var(--text);
+        outline-offset: var(--focus-offset);
+      }
+    }
+
+    /* Icon only, no label. */
+    .navv2_menu {
+      --_w: 1.25rem;
+      --_gap: 0.4375rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      color: var(--text);
+      border: var(--border-width) solid var(--navv2-line);
+      border-radius: var(--radius-main);
+      cursor: pointer;
+      transition:
+        border-color var(--hover-duration) var(--hover-ease),
+        background-color var(--hover-duration) var(--hover-ease),
+        box-shadow calc(var(--hover-duration) * 1.6) var(--hover-ease);
+      @media (hover: hover) {
+        &:hover {
+          border-color: var(--navv2-line-lit);
+          background-color: color-mix(in lab, var(--text) 6%, transparent);
+          box-shadow: 0 0 2rem var(--navv2-glow);
+        }
+      }
+      &:focus-visible {
+        outline: var(--focus-width) solid var(--text);
+        outline-offset: var(--focus-offset);
+      }
+    }
+
+    .navv2_menu_mark {
+      position: relative;
+      display: block;
+      width: var(--_w);
+      height: calc(var(--_gap) + var(--border-width));
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        height: var(--border-width);
+        background-color: currentcolor;
+        transition: transform var(--open-duration) var(--open-ease);
+      }
+      &::before {
+        top: 0;
+      }
+      &::after {
+        top: var(--_gap);
+      }
+    }
+
+    .navv2_wrap.drawer-open .navv2_menu_mark {
+      &::before {
+        transform: translateY(calc(var(--_gap) / 2)) rotate(45deg);
+      }
+      &::after {
+        transform: translateY(calc(var(--_gap) / -2)) rotate(-45deg);
+      }
+    }
+
+    /* The label rolls up and a copy rolls in behind it. */
+    .navv2_roll {
+      display: grid;
+      overflow: clip;
+    }
+
+    .navv2_roll_label {
+      grid-area: 1 / 1;
+      display: block;
+      text-align: center;
+      white-space: nowrap;
+      transition: translate calc(var(--hover-duration) * 1.8) var(--hover-ease);
+      &.alt {
+        translate: 0 110%;
+      }
+    }
+
+    @media (hover: hover) {
+      :is(.navv2_cta, .navv2_drawer_cta):hover .navv2_roll_label {
+        translate: 0 -110%;
+      }
+      :is(.navv2_cta, .navv2_drawer_cta):hover .navv2_roll_label.alt {
+        translate: 0 0;
+      }
+    }
+
+    :is(.navv2_cta, .navv2_drawer_cta):focus-visible .navv2_roll_label {
+      translate: 0 -110%;
+    }
+    :is(.navv2_cta, .navv2_drawer_cta):focus-visible .navv2_roll_label.alt {
+      translate: 0 0;
+    }
+
+    /* Drawer */
+    .navv2_scrim {
+      position: fixed;
+      inset: 0;
+      z-index: 110;
+      background-color: color-mix(in srgb, var(--ink-950) 62%, transparent);
+      backdrop-filter: blur(1.25rem) saturate(0.85);
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        opacity var(--open-duration) var(--open-ease),
+        visibility var(--open-duration) var(--open-ease);
+    }
+
+    .navv2_wrap.drawer-open .navv2_scrim {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .navv2_drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 120;
+      width: min(30rem, 92vw);
+      height: 100svh;
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-5) var(--space-6) var(--space-6);
+      background-color: var(--navv2-glass);
+      backdrop-filter: var(--navv2-blur);
+      border-left: var(--border-width) solid var(--navv2-line);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      translate: 100% 0;
+      transition: translate 380ms var(--open-ease);
+      &[hidden] {
+        display: none;
+      }
+    }
+
+    .navv2_wrap.drawer-open .navv2_drawer {
+      translate: 0 0;
+    }
+
+    /* Closing is quicker than opening: waiting to leave feels worse. */
+    .navv2_wrap:not(.drawer-open) .navv2_drawer {
+      transition-duration: 260ms;
+    }
+
+    .navv2_drawer_top {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .navv2_close {
+      --_w: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      color: var(--text-2);
+      border-radius: var(--radius-main);
+      cursor: pointer;
+      transition: color var(--hover-duration) var(--hover-ease);
+      @media (hover: hover) {
+        &:hover {
+          color: var(--text);
+        }
+      }
+      &:focus-visible {
+        outline: var(--focus-width) solid var(--text);
+        outline-offset: var(--focus-offset);
+      }
+    }
+
+    .navv2_close_mark {
+      position: relative;
+      display: block;
+      width: var(--_w);
+      height: var(--_w);
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        inset-inline: 0;
+        height: var(--border-width);
+        background-color: currentcolor;
+      }
+      &::before {
+        transform: rotate(45deg);
+      }
+      &::after {
+        transform: rotate(-45deg);
+      }
+    }
+
+    .navv2_nav {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: var(--space-6);
+      padding-block: var(--space-6);
+    }
+
+    .navv2_list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navv2_item {
+      border-bottom: var(--border-width) solid var(--navv2-line);
+    }
+
+    .navv2_link {
+      position: relative;
+      display: block;
+      padding-block: var(--space-4);
+      color: var(--text);
+      font-family: var(--display-family);
+      font-size: clamp(1.75rem, 4.4vw, 2.5rem);
+      letter-spacing: var(--letter-spacing-display);
+      line-height: 1.1;
+      text-decoration: none;
+      -webkit-text-stroke: var(--display-stroke) currentColor;
+      paint-order: stroke fill;
+    }
+
+    /* The row's own rule is drawn in, left to right, while the label steps
+       across to meet it. Quieter than the roll, and it suits a list. */
+    .navv2_link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: calc(var(--border-width) * -1);
+      width: 100%;
+      height: var(--border-width);
+      background-color: currentcolor;
+      scale: 0 1;
+      transform-origin: left center;
+      transition: scale calc(var(--hover-duration) * 2.2) var(--hover-ease);
+    }
+
+    .navv2_link_label {
+      display: inline-block;
+      transition: translate calc(var(--hover-duration) * 2) var(--hover-ease);
+    }
+
+    @media (hover: hover) {
+      .navv2_link:hover .navv2_link_label {
+        translate: var(--space-3) 0;
+      }
+      .navv2_link:hover::after {
+        scale: 1 1;
+      }
+    }
+
+    .navv2_link:focus-visible .navv2_link_label {
+      translate: var(--space-3) 0;
+    }
+    .navv2_link:focus-visible::after {
+      scale: 1 1;
+    }
+
+    .navv2_list.quiet {
+      border-top: 0;
+      & .navv2_item {
+        border-bottom: 0;
+      }
+      & .navv2_link::after {
+        display: none;
+      }
+      & .navv2_link {
+        padding-block: var(--space-2);
+        font-family: var(--primary-family);
+        font-size: var(--text-large);
+        letter-spacing: var(--letter-spacing-normal);
+        color: var(--text-2);
+        -webkit-text-stroke: 0;
+        transition: color var(--hover-duration) var(--hover-ease);
+        @media (hover: hover) {
+          &:hover {
+            color: var(--text);
+          }
+        }
+      }
+    }
+
+    /* Rows arrive behind the panel, one shortly after the next. */
+    @media (prefers-reduced-motion: no-preference) {
+      .navv2_wrap.drawer-open .navv2_item {
+        animation: navv2-row 420ms var(--open-ease) both;
+        animation-delay: calc(var(--_row, 0) * 45ms + 120ms);
+      }
+      .navv2_list .navv2_item:nth-child(2) {
+        --_row: 1;
+      }
+      .navv2_list .navv2_item:nth-child(3) {
+        --_row: 2;
+      }
+      .navv2_list .navv2_item:nth-child(4) {
+        --_row: 3;
+      }
+      .navv2_list.quiet .navv2_item {
+        --_row: 4;
+      }
+      .navv2_list.quiet .navv2_item:nth-child(2) {
+        --_row: 5;
+      }
+    }
+
+    @keyframes navv2-row {
+      from {
+        opacity: 0;
+        translate: 0 0.75rem;
+      }
+      to {
+        opacity: 1;
+        translate: 0 0;
+      }
+    }
+
+    .navv2_drawer_foot {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+
+    /* The one call to action in the drawer, and the only filled thing in it. */
+    .navv2_drawer_cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1em 1.4em;
+      background-color: var(--sand-100);
+      color: var(--ink-900);
+      border-radius: var(--radius-main);
+      font-weight: var(--primary-medium);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+      text-decoration: none;
+      transition:
+        background-color var(--hover-duration) var(--hover-ease),
+        box-shadow calc(var(--hover-duration) * 1.6) var(--hover-ease);
+      @media (hover: hover) {
+        &:hover {
+          background-color: #f2ede6;
+          box-shadow:
+            0 0 1.75rem color-mix(in srgb, #f2ede6 38%, transparent),
+            0 0 4.5rem color-mix(in srgb, #f2ede6 20%, transparent);
+        }
+      }
+      &:focus-visible {
+        outline: var(--focus-width) solid var(--text);
+        outline-offset: var(--focus-offset);
+      }
+    }
+
+    .navv2_utility {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      color: var(--text-2);
+    }
+
+    .navv2_langs {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      letter-spacing: var(--letter-spacing-wide);
+      & > li + li::before {
+        content: "/";
+        margin-right: var(--space-2);
+        color: color-mix(in lab, currentcolor 40%, transparent);
+      }
+    }
+
+    .navv2_lang {
+      color: var(--text-2);
+      transition: color var(--hover-duration) var(--hover-ease);
+      &[aria-current="true"] {
+        color: var(--text);
+      }
+      @media (hover: hover) {
+        &:hover {
+          color: var(--text);
+        }
+      }
+    }
+
+    .navv2_social {
+      display: flex;
+      gap: var(--space-4);
+    }
+
+    .navv2_social_link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      color: var(--text-2);
+      transition: color var(--hover-duration) var(--hover-ease);
+      @media (hover: hover) {
+        &:hover {
+          color: var(--text);
+        }
+      }
+    }
+
+    .navv2_social_mark {
+      width: 1.05em;
+    }
+
+    /* Under reduced motion nothing slides or rolls. */
+    @media (prefers-reduced-motion: reduce) {
+      .navv2_logo:hover .navv2_logo_art {
+        scale: 1;
+      }
+      .navv2_logo_art,
+      .navv2_drawer,
+      .navv2_panel,
+      .navv2_roll_label,
+      .navv2_link_label,
+      .navv2_link::after {
+        transition: none;
+      }
+      .navv2_roll_label.alt {
+        display: none;
+      }
+    }
+
+    @media (width < 64rem) {
+      .navv2_inner {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: var(--space-3);
+      }
+      .navv2_cta {
+        display: none;
+      }
+    }
+  }
+</style>

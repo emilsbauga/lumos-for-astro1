@@ -1,0 +1,258 @@
+---
+import Heading from "@/components/Typography/Heading.astro";
+import Paragraph from "@/components/Typography/Paragraph.astro";
+import Button from "@/components/Button.astro";
+import Icon from "@/components/Media/Icon.astro";
+import { uid } from "@/utils/uid.ts";
+
+interface Service {
+  /** Which band of the offering this belongs to. Rows are grouped by it, in order. */
+  group: string;
+  /** An SVG imported from `src/assets`, rendered inline beside the number. */
+  icon: unknown;
+  /** The service's name, on the control that opens it. */
+  heading: string;
+  /** What it is, in a sentence or two. */
+  text: string;
+  /** Label of the link inside the opened row. */
+  linkLabel: string;
+  /** Where that link leads. */
+  href: string;
+}
+
+interface Props {
+  /** Set to `false` to skip rendering this component and its children. */
+  render?: boolean;
+  /** The services, in the order they should be read. */
+  items: Service[];
+  /** Heading level of each row title, for the page outline. */
+  headingTag?: "h2" | "h3" | "h4";
+}
+
+const { render = true, items, headingTag = "h3" } = Astro.props;
+
+const group = uid("services");
+
+/* A row opens a band whenever the band changes, so the list reads as a few
+   named groups rather than one long run. */
+const rows = items.map((item, index) => ({
+  ...item,
+  index: index + 1,
+  startsGroup: index === 0 || items[index - 1].group !== item.group,
+}));
+---
+
+{
+  render && rows.length > 0 && (
+    <div class="services_wrap">
+      {rows.map((row) => (
+        <Fragment>
+          {row.startsGroup && (
+            <p class="services_group text-style-small">{row.group}</p>
+          )}
+          <details class="services_item" name={group}>
+            <summary class="services_toggle">
+              <span class="services_number text-style-small">
+                {String(row.index).padStart(2, "0")}
+              </span>
+              <Icon
+                class="services_icon"
+                src={row.icon as any}
+                variant="small"
+              />
+              <Heading
+                tag={headingTag}
+                variant="h4"
+                class="services_title margin-top-0"
+              >
+                {row.heading}
+              </Heading>
+              <span class="services_mark" aria-hidden="true" />
+            </summary>
+            <div class="services_body">
+              <Paragraph maxWidth={56} class="services_text">
+                {row.text}
+              </Paragraph>
+              <Button element="link" href={row.href} variant="link">
+                {row.linkLabel}
+              </Button>
+            </div>
+          </details>
+        </Fragment>
+      ))}
+    </div>
+  )
+}
+
+<style is:global>
+  @layer components {
+    .services_wrap {
+      width: 100%;
+    }
+
+    .services_group {
+      margin-top: var(--space-8);
+      margin-bottom: var(--space-3);
+      color: var(--heading-accent);
+      font-weight: var(--primary-medium);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    .services_item {
+      interpolate-size: allow-keywords;
+      position: relative;
+      border-top: var(--border-width) solid var(--border);
+
+      &:last-of-type {
+        border-bottom: var(--border-width) solid var(--border);
+      }
+    }
+
+    /* The light only reaches a row once it is open, so the list stays quiet
+       until it is being read. */
+    .services_item::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(
+        90deg,
+        color-mix(in lab, var(--text) 6%, transparent) 0%,
+        transparent 46%
+      );
+      opacity: 0;
+      transition: opacity var(--open-duration) var(--open-ease);
+    }
+
+    .services_item[open]::before {
+      opacity: 1;
+    }
+
+    .services_toggle {
+      position: relative;
+      display: grid;
+      grid-template-columns: auto auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--space-4);
+      padding-block: var(--space-5);
+      list-style: none;
+      cursor: pointer;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+    }
+
+    .services_number {
+      color: var(--text-2);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: var(--letter-spacing-wide);
+      transition: color var(--open-duration) var(--open-ease);
+    }
+
+    .services_icon {
+      width: 1.35em;
+      color: var(--text-2);
+      transition: color var(--open-duration) var(--open-ease);
+    }
+
+    .services_title {
+      transition: translate var(--open-duration) var(--open-ease);
+    }
+
+    .services_item[open] {
+      & .services_number,
+      & .services_icon {
+        color: var(--heading-accent);
+      }
+      & .services_title {
+        translate: var(--space-2) 0;
+      }
+    }
+
+    @media (hover: hover) {
+      .services_toggle:hover .services_title {
+        translate: var(--space-2) 0;
+      }
+    }
+
+    /* A plus that becomes a minus. Two rules, no artwork. */
+    .services_mark {
+      position: relative;
+      display: block;
+      width: 0.75rem;
+      height: 0.75rem;
+      flex: none;
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        background-color: currentcolor;
+        transition:
+          rotate var(--open-duration) var(--open-ease),
+          opacity var(--open-duration) var(--open-ease);
+      }
+      &::before {
+        width: 100%;
+        height: var(--border-width);
+      }
+      &::after {
+        width: var(--border-width);
+        height: 100%;
+      }
+    }
+
+    .services_item[open] .services_mark::after {
+      rotate: 90deg;
+      opacity: 0;
+    }
+
+    .services_item::details-content {
+      block-size: 0;
+      overflow: hidden;
+      content-visibility: hidden;
+      transition:
+        block-size var(--open-duration) var(--open-ease),
+        content-visibility var(--open-duration) var(--open-ease) allow-discrete;
+    }
+
+    .services_item[open]::details-content {
+      block-size: auto;
+      content-visibility: visible;
+    }
+
+    .services_body {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      gap: var(--space-4);
+      padding-bottom: var(--space-6);
+    }
+
+    .services_text {
+      margin-top: 0;
+      color: var(--text-2);
+    }
+
+    @media (width >= 48rem) {
+      .services_toggle {
+        gap: var(--space-6);
+        padding-block: var(--space-6);
+      }
+
+      /* The body lines up under the title, clear of the number and mark. */
+      .services_body {
+        padding-left: calc(var(--space-6) * 2 + 2ch + 1.35em);
+      }
+    }
+  }
+</style>

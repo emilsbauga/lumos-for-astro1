@@ -1,41 +1,497 @@
 ---
-import Layout from "@/layouts/BaseLayout.astro";
-import Section from "@/components/Wrapper/Section.astro";
-import Heading from "@/components/Typography/Heading.astro";
-import Eyebrow from "@/components/Typography/Eyebrow.astro";
-import Img from "@/components/Media/Img.astro";
-import lumos_background from "@/assets/graphics/lumos-background.svg";
-import Icon from "@/components/Media/Icon.astro";
-import logo_icon from "@/assets/logo/logo-icon.svg";
-import ContentWrapper from "@/components/Wrapper/ContentWrapper.astro";
+/**
+ * Main homepage. Sections are full screen and run one after the other.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHeroV2 from "@/components/Content/SectionHeroV2.astro";
+import SectionFeedV2 from "@/components/Content/SectionFeedV2.astro";
+import SectionProgrammesV2 from "@/components/Content/SectionProgrammesV2.astro";
+import SectionServicesV2 from "@/components/Content/SectionServicesV2.astro";
+
+import instagramMark from "@/assets/icons/streamline/instagram.svg";
+import facebookMark from "@/assets/icons/streamline/facebook.svg";
+import youtubeMark from "@/assets/icons/streamline/youtube.svg";
+import musicMark from "@/assets/icons/streamline/music.svg";
+import ticketMark from "@/assets/icons/streamline/ticket.svg";
+import speakerMark from "@/assets/icons/streamline/speaker.svg";
+import microphoneMark from "@/assets/icons/streamline/microphone.svg";
+import cameraMark from "@/assets/icons/streamline/camera.svg";
+import playlistMark from "@/assets/icons/streamline/playlist.svg";
+import usersMark from "@/assets/icons/streamline/users.svg";
+import headphonesMark from "@/assets/icons/streamline/headphones.svg";
+
+import heroKoncerts from "@/assets/photos/hero-koncerts.webp";
+import programmasVokals from "@/assets/photos/programmas-vokals.webp";
+import pasakumiNorise from "@/assets/photos/pasakumi-norise.webp";
+import pakalpojumiSkatuve from "@/assets/photos/pakalpojumi-skatuve.webp";
+import spaitsSkatuve from "@/assets/photos/spaits-skatuve.webp";
+import komandaSpaits from "@/assets/photos/komanda-spaits.webp";
+import komandaSaruna from "@/assets/photos/komanda-saruna.webp";
+import programma01 from "@/assets/photos/programma-01.webp";
+import programma02 from "@/assets/photos/programma-02.webp";
+import programma03 from "@/assets/photos/programma-03.webp";
+import programma04 from "@/assets/photos/programma-04.webp";
+
+/* The pills. Their ids are what a programme lists in `filters`. */
+const programmeFilters = [
+  { id: "ziemassvetki", label: "Ziemassvētki" },
+  { id: "jaunais-gads", label: "Jaunais gads" },
+  { id: "valsts-svetki", label: "Valsts svētki" },
+  { id: "pilsetu-svetki", label: "Pilsētu svētki" },
+  { id: "koncertizrades", label: "Koncertizrādes" },
+  { id: "kazas", label: "Kāzas" },
+  { id: "valentindiena", label: "Valentīndiena" },
+  { id: "ligo", label: "Līgo un Jāņi" },
+  { id: "dazadi", label: "Dažādi" },
+];
+
+/* Names, descriptions, genres and pages are bracketed: the catalogue is not
+   written yet. The photographs and the filters are real, so the layout and
+   the filtering can be judged as they will behave. */
+const programmes = [
+  {
+    image: programmasVokals,
+    imageAlt: "Dziedātājas pie mikrofoniem koncerta laikā",
+    name: "[Koncertprogrammas nosaukums 1]",
+    text: "[Divas rindas par programmas saturu un noskaņu, tik daudz, cik ietilpst kartītē.]",
+    genres: ["[Žanrs]", "[Otrs žanrs]"],
+    performers: ["[Grupa vai solists]", "[Mūziķis]"],
+    filters: ["ziemassvetki"],
+    href: "[Programmas lapa]",
+  },
+  {
+    image: programma01,
+    imageAlt: "Mūziķis ar ģitāru uz skatuves",
+    name: "[Koncertprogrammas nosaukums 2]",
+    text: "[Divas rindas par programmas saturu un noskaņu, tik daudz, cik ietilpst kartītē.]",
+    genres: ["[Žanrs]", "[Otrs žanrs]"],
+    performers: ["[Grupa vai solists]", "[Mūziķis]"],
+    filters: ["ziemassvetki", "koncertizrades"],
+    href: "[Programmas lapa]",
+  },
+  {
+    image: pasakumiNorise,
+    imageAlt: "Pasākuma norise brīvā dabā",
+    name: "[Koncertprogrammas nosaukums 3]",
+    text: "[Divas rindas par programmas saturu un noskaņu, tik daudz, cik ietilpst kartītē.]",
+    genres: ["[Žanrs]", "[Otrs žanrs]"],
+    performers: ["[Grupa vai solists]", "[Mūziķis]"],
+    filters: ["jaunais-gads"],
+    href: "[Programmas lapa]",
+  },
+  {
+    image: programma03,
+    imageAlt: "Grupa uz skatuves koncerta apgaismojumā",
+    name: "[Koncertprogrammas nosaukums 4]",
+    text: "[Divas rindas par programmas saturu un noskaņu, tik daudz, cik ietilpst kartītē.]",
+    genres: ["[Žanrs]", "[Otrs žanrs]"],
+    performers: ["[Grupa vai solists]", "[Mūziķis]"],
+    filters: ["valsts-svetki"],
+    href: "[Programmas lapa]",
+  },
+  {
+    image: komandaSaruna,
+    imageAlt: "Divi pasākuma vadītāji ar mikrofoniem",
+    name: "[Koncertprogrammas nosaukums 5]",
+    text: "[Divas rindas par programmas saturu un noskaņu, tik daudz, cik ietilpst kartītē.]",
+    genres: ["[Žanrs]", "[Otrs žanrs]"],
+    performers: ["[Grupa vai solists]", "[Mūziķis]"],
+    filters: ["valsts-svetki", "pilsetu-svetki"],
+    href: "[Programmas lapa]",
+  },
+  {
+    image: programma04,
+    imageAlt: "Mūziķi koncerta laikā zālē",
+    name: "[Koncertprogrammas nosaukums 6]",
+    text: "[Divas rindas par programmas saturu un noskaņu, tik daudz, cik ietilpst kartītē.]",
+    genres: ["[Žanrs]", "[Otrs žanrs]"],
+    performers: ["[Grupa vai solists]", "[Mūziķis]"],
+    filters: ["pilsetu-svetki"],
+    href: "[Programmas lapa]",
+  },
+  {
+    image: heroKoncerts,
+    imageAlt: "Dziedātāja uz skatuves koncerta laikā",
+    name: "[Koncertprogrammas nosaukums 7]",
+    text: "[Divas rindas par programmas saturu un noskaņu, tik daudz, cik ietilpst kartītē.]",
+    genres: ["[Žanrs]", "[Otrs žanrs]"],
+    performers: ["[Grupa vai solists]", "[Mūziķis]"],
+    filters: ["koncertizrades"],
+    href: "[Programmas lapa]",
+  },
+  {
+    image: pakalpojumiSkatuve,
+    imageAlt: "Grupa uz skatuves koncerta apgaismojumā",
+    name: "[Koncertprogrammas nosaukums 8]",
+    text: "[Divas rindas par programmas saturu un noskaņu, tik daudz, cik ietilpst kartītē.]",
+    genres: ["[Žanrs]", "[Otrs žanrs]"],
+    performers: ["[Grupa vai solists]", "[Mūziķis]"],
+    filters: ["kazas"],
+    href: "[Programmas lapa]",
+  },
+  {
+    image: programma02,
+    imageAlt: "Folkloras grupa koncerta laikā",
+    name: "[Koncertprogrammas nosaukums 9]",
+    text: "[Divas rindas par programmas saturu un noskaņu, tik daudz, cik ietilpst kartītē.]",
+    genres: ["[Žanrs]", "[Otrs žanrs]"],
+    performers: ["[Grupa vai solists]", "[Mūziķis]"],
+    filters: ["kazas", "valentindiena"],
+    href: "[Programmas lapa]",
+  },
+  {
+    image: spaitsSkatuve,
+    imageAlt: "Grupa uz festivāla skatuves vakara gaismā",
+    name: "[Koncertprogrammas nosaukums 10]",
+    text: "[Divas rindas par programmas saturu un noskaņu, tik daudz, cik ietilpst kartītē.]",
+    genres: ["[Žanrs]", "[Otrs žanrs]"],
+    performers: ["[Grupa vai solists]", "[Mūziķis]"],
+    filters: ["valentindiena"],
+    href: "[Programmas lapa]",
+  },
+  {
+    image: komandaSpaits,
+    imageAlt: "Pasākuma komanda festivālā",
+    name: "[Koncertprogrammas nosaukums 11]",
+    text: "[Divas rindas par programmas saturu un noskaņu, tik daudz, cik ietilpst kartītē.]",
+    genres: ["[Žanrs]", "[Otrs žanrs]"],
+    performers: ["[Grupa vai solists]", "[Mūziķis]"],
+    filters: ["ligo"],
+    href: "[Programmas lapa]",
+  },
+  {
+    image: programmasVokals,
+    imageAlt: "Dziedātājas pie mikrofoniem koncerta laikā",
+    name: "[Koncertprogrammas nosaukums 12]",
+    text: "[Divas rindas par programmas saturu un noskaņu, tik daudz, cik ietilpst kartītē.]",
+    genres: ["[Žanrs]", "[Otrs žanrs]"],
+    performers: ["[Grupa vai solists]", "[Mūziķis]"],
+    filters: ["dazadi"],
+    href: "[Programmas lapa]",
+  },
+];
+
+/* The pills. Their ids are what a service lists in `filters`. */
+const serviceFilters = [
+  { id: "privatpersonas", label: "Privātpersonām" },
+  { id: "organizacijas", label: "Uzņēmumiem un organizācijām" },
+  { id: "makslinieki", label: "Mūziķiem un māksliniekiem" },
+];
+
+/* Everything aimed at an event is offered to both kinds of client alike. */
+const clients = ["privatpersonas", "organizacijas"];
+
+/* The copy is the v1 homepage's. Which audiences each service answers to is a
+   first guess, listed in TODO.md for confirming. */
+const services = [
+  {
+    id: "koncertprogrammas",
+    icon: musicMark,
+    image: programmasVokals,
+    imageAlt: "Dziedātājas pie mikrofoniem koncerta laikā",
+    name: "Koncertprogrammas un mākslinieki",
+    text: [
+      "Izvēlies koncertprogrammu, iepazīsti grupas un māksliniekus vai piesaki īpaši savam notikumam veidotu muzikālo piedāvājumu. Par pieejamību un uzstāšanās nosacījumiem sazinies ar STUDEJA.",
+    ],
+    filters: clients,
+  },
+  {
+    id: "pasakumi",
+    icon: ticketMark,
+    image: pasakumiNorise,
+    imageAlt: "Pasākuma norise brīvā dabā",
+    name: "Pasākumu organizēšana un producēšana",
+    text: [
+      "Veidojam pasākumus uzņēmumiem, pašvaldībām un privātiem klientiem. Var uzticēt visu organizēšanu vai piesaistīt STUDEJA konkrētam uzdevumam: idejai, programmai, māksliniekiem, tehniskajam nodrošinājumam vai norises koordinēšanai.",
+    ],
+    filters: clients,
+  },
+  {
+    id: "apskanosana",
+    icon: speakerMark,
+    image: pakalpojumiSkatuve,
+    imageAlt: "Grupa uz skatuves koncerta apgaismojumā",
+    name: "Apskaņošana un tehniskais nodrošinājums",
+    text: [
+      "Apskaņošana koncertiem, svinībām, runām un citām norisēm. Atbilstoši vietai un programmai nodrošinām nepieciešamo tehniku un speciālistus. Piesaistām arī skatuves un gaismu risinājumus.",
+    ],
+    filters: [...clients, "makslinieki"],
+  },
+  {
+    id: "vaditaji",
+    icon: microphoneMark,
+    image: komandaSaruna,
+    imageAlt: "Divi pasākuma vadītāji ar mikrofoniem",
+    name: "Pasākumu vadītāji",
+    text: [
+      "Piemeklējam pasākuma vadītāju atbilstoši notikuma formātam, auditorijai un valodai. Vadītāju var piesaistīt atsevišķi vai kopā ar programmas un scenārija veidošanu.",
+    ],
+    filters: clients,
+  },
+  {
+    id: "foto-video",
+    icon: cameraMark,
+    image: komandaSpaits,
+    imageAlt: "Pasākuma komanda festivālā",
+    name: "Foto un video",
+    text: [
+      "Sadarbības partneru fotogrāfi un video veidotāji pasākuma dokumentēšanai un satura radīšanai. Pirms darba vienojamies par nepieciešamo materiālu, darba apjomu un tā izmantošanu.",
+    ],
+    filters: [...clients, "makslinieki"],
+  },
+  {
+    id: "programmas",
+    icon: playlistMark,
+    image: programma03,
+    imageAlt: "Grupa uz skatuves koncerta apgaismojumā",
+    name: "Individuālu programmu veidošana",
+    text: [
+      "Īpaši konkrētam pasākumam izstrādāts saturs. Apvienojam māksliniekus, repertuāru un programmas elementus atbilstoši notikuma tēmai un iecerei.",
+    ],
+    filters: clients,
+  },
+  {
+    id: "menedzments",
+    icon: usersMark,
+    image: programma01,
+    imageAlt: "Mūziķis ar ģitāru uz skatuves",
+    name: "Mūziķu menedžments",
+    text: [
+      "Palīdzam grupām un māksliniekiem attīstīt darbību, veidot piedāvājumu un organizēt sadarbības. Menedžmenta apjomu nosakām kopā ar mākslinieku, ņemot vērā viņa mērķus un nepieciešamo iesaisti.",
+    ],
+    filters: ["makslinieki"],
+  },
+  {
+    id: "producesana",
+    icon: headphonesMark,
+    image: programma04,
+    imageAlt: "Mūziķi koncerta laikā zālē",
+    name: "Mūzikas producēšana",
+    text: [
+      "Palīdzam radīt un attīstīt mūziku, no ieceres un aranžējuma līdz ieraksta producēšanai un izdošanai. Sadarbojamies ar grupām un māksliniekiem gan atsevišķos darba posmos, gan visā tapšanas procesā.",
+    ],
+    filters: ["makslinieki"],
+  },
+];
+
+/* Instagram and Facebook are the profiles confirmed in the company's own
+   information; there is no YouTube channel on record yet, so its address is
+   bracketed like any other content that does not exist. */
+const socials = [
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/siastudeja/",
+    icon: instagramMark,
+  },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/profile.php?id=61590559761386",
+    icon: facebookMark,
+  },
+  {
+    label: "YouTube",
+    href: "[YouTube kanāla adrese]",
+    icon: youtubeMark,
+  },
+];
+
+const headings = [
+  { lang: "lv", lines: ["TAVI NOTIKUMI.", "MŪSU TALANTI."] },
+  { lang: "ltg", lines: ["TOVYS NŪTIKŠONYS.", "MYUSU TALANTI."] },
+];
+
+/* Scattered right around the copy, in mixed sizes and shapes. The scrim over
+   them fades anything that drifts near the middle back into the field, so the
+   spread can run much closer in than a hard clear zone would allow. Swap any
+   `image` for a `video` and the slot plays a muted loop with that still as
+   its poster. */
+const media = [
+  {
+    image: programmasVokals,
+    x: 7,
+    y: 14,
+    width: 13,
+    ratio: "4 / 5",
+    rot: -7,
+    duration: 17,
+    delay: 0,
+    small: true,
+  },
+  {
+    image: programma01,
+    x: 13,
+    y: 33,
+    width: 8.5,
+    ratio: "1",
+    rot: 5,
+    duration: 21,
+    delay: 4,
+  },
+  {
+    image: pasakumiNorise,
+    x: 5,
+    y: 60,
+    width: 11.5,
+    ratio: "3 / 4",
+    rot: 3,
+    duration: 24,
+    delay: 9,
+  },
+  {
+    image: programma03,
+    x: 18,
+    y: 84,
+    width: 10,
+    ratio: "16 / 10",
+    rot: -5,
+    duration: 19,
+    delay: 6,
+    small: true,
+  },
+  {
+    image: komandaSaruna,
+    x: 29,
+    y: 5,
+    width: 8,
+    ratio: "1",
+    rot: 6,
+    duration: 22,
+    delay: 12,
+  },
+  {
+    image: programma04,
+    x: 28,
+    y: 95,
+    width: 9.5,
+    ratio: "3 / 2",
+    rot: -4,
+    duration: 26,
+    delay: 3,
+  },
+  {
+    image: heroKoncerts,
+    x: 50,
+    y: 4,
+    width: 11,
+    ratio: "16 / 9",
+    rot: 2,
+    duration: 20,
+    delay: 7,
+    small: true,
+  },
+  {
+    image: pakalpojumiSkatuve,
+    x: 51,
+    y: 95,
+    width: 10.5,
+    ratio: "4 / 5",
+    rot: -6,
+    duration: 23,
+    delay: 14,
+    small: true,
+  },
+  {
+    image: programma02,
+    x: 72,
+    y: 6,
+    width: 9,
+    ratio: "3 / 4",
+    rot: -3,
+    duration: 18,
+    delay: 2,
+  },
+  {
+    image: spaitsSkatuve,
+    x: 73,
+    y: 94,
+    width: 8.5,
+    ratio: "1",
+    rot: 5,
+    duration: 25,
+    delay: 10,
+  },
+  {
+    image: komandaSpaits,
+    x: 88,
+    y: 28,
+    width: 12,
+    ratio: "4 / 5",
+    rot: 6,
+    duration: 21,
+    delay: 5,
+    small: true,
+  },
+  {
+    image: programma01,
+    x: 95,
+    y: 55,
+    width: 9.5,
+    ratio: "3 / 4",
+    rot: -4,
+    duration: 27,
+    delay: 15,
+  },
+  {
+    image: pasakumiNorise,
+    x: 86,
+    y: 78,
+    width: 10,
+    ratio: "16 / 10",
+    rot: 4,
+    duration: 19,
+    delay: 11,
+    small: true,
+  },
+  {
+    image: programma04,
+    x: 95,
+    y: 12,
+    width: 8,
+    ratio: "1",
+    rot: -6,
+    duration: 24,
+    delay: 8,
+  },
+];
 ---
 
-<Layout theme="dark">
-  <Section
-    paddingBottom="even"
-    containerClass="flex-grow"
-    paddingTop="even"
-    class="flex-grow"
-    style="min-height: calc(100svh - var(--nav-height));"
-  >
-    <ContentWrapper
-      class="flex-grow theme-brand"
-      variant="card"
-      mediaOpacity={100}
-    >
-      <Icon src={logo_icon} variant="large" />
-      <Heading variant="display" tag="h1" class="margin-block-8"
-        >Style Guide</Heading
-      >
-      <Eyebrow variant="tag">v0.0.3</Eyebrow>
-      <Img
-        slot="column2"
-        src={lumos_background}
-        width={1920}
-        height={1080}
-        loading="eager"
-        fetchPriority="high"
-      />
-    </ContentWrapper>
-  </Section>
-</Layout>
+<BaseLayout
+  nav="v2"
+  title="Tavi notikumi. Mūsu talanti."
+  description="STUDEJA rada mūziku, veido programmas un organizē pasākumus no sākuma līdz beigām."
+>
+  <!-- Hero -->
+  <SectionHeroV2
+    headings={headings}
+    text="Tavam pasākumam piemeklējam mūziķus, saliekam programmu un noorganizējam norisi no sākuma līdz beigām."
+    buttonLabel="SĀKAM AR SARUNU"
+    buttonHoverLabel="PARUNUOSIM?"
+    buttonHref="/pieteikums"
+    media={media}
+  />
+
+  <!-- Programmes -->
+  <SectionProgrammesV2
+    heading="Koncertprogrammas un mākslinieki"
+    text="Dažādu žanru grupas un solisti, kuri spēj saviļņot tavu publiku."
+    filters={programmeFilters}
+    programmes={programmes}
+    linkLabel="SKATĪT KATALOGU"
+    linkHoverLabel="APSAVĒRT VYSU"
+    linkHref="/meklet?tips=koncertprogrammas"
+  />
+
+  <!-- Services -->
+  <SectionServicesV2
+    heading="Ar ko varam palīdzēt"
+    filters={serviceFilters}
+    services={services}
+  />
+
+  <!-- Feed -->
+  <SectionFeedV2
+    heading="@siastudeja jaunumi"
+    elfsightId="a546cf55-7526-46c7-956c-88807ed4eedc"
+    socials={socials}
+  />
+</BaseLayout>

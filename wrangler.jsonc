@@ -1,23 +1,17 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "lumos-for-astro",
+  "name": "studeja-lv",
+  "main": "src/worker.js",
   "compatibility_date": "2026-08-13",
+  "workers_dev": true,
 
-  // The built site. There is no `main`, so this deploys as an assets-only
-  // Worker: Cloudflare serves the files and no script runs per request.
+  // The Worker handles form delivery, then serves the built site from assets.
   "assets": {
     "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true,
     "not_found_handling": "404-page",
   },
-
-  // The domain the Worker answers on. `custom_domain` makes Cloudflare create
-  // and manage the DNS record for it, so the zone needs to be in this account.
-  "routes": [
-    {
-      "pattern": "preview.lumosframework.com",
-      "custom_domain": true,
-    },
-  ],
 
   "observability": {
     "enabled": true,
