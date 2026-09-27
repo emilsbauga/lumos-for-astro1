@@ -1,20 +1,13 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import SectionTitleV2 from "@/components/Content/SectionTitleV2.astro";
 import Section from "@/components/Wrapper/Section.astro";
-import Paragraph from "@/components/Typography/Paragraph.astro";
 import ContentArtistIntake from "@/components/Form/ContentArtistIntake.astro";
 ---
 
 <BaseLayout nav="v2" title="Mākslinieku un partneru anketa">
-  <!-- Title -->
-  <SectionTitleV2 heading="Mākslinieku un partneru anketa" />
   <!-- Intake -->
-  <Section>
-    <Paragraph maxWidth={48}
-      >Pastāstiet par savu darbu, pieredzi un sadarbības iespējām. Ar zvaigznīti
-      atzīmētie lauki ir obligāti.</Paragraph
-    >
+  <Section paddingTop="navoverlap">
+    <h1 class="sr-only">Mākslinieku un partneru anketa</h1>
     <ContentArtistIntake />
   </Section>
 </BaseLayout>

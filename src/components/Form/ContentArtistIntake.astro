@@ -46,12 +46,7 @@ const DRIVE_FOLDER_URL =
     <input type="hidden" name="pieteikuma-tips" data-intake-type />
 
     <fieldset class="artist-intake_type" data-type-picker>
-      <legend class="artist-intake_label text-style-h5"
-        >Par ko aizpildāt anketu?</legend
-      >
-      <p class="artist-intake_hint text-style-main">
-        Izvēlieties vienu kategoriju, lai atvērtu atbilstošos jautājumus.
-      </p>
+      <legend class="sr-only">Par ko aizpildāt anketu?</legend>
       <div class="artist-intake_type-list">
         <button
           class="artist-intake_type-option"
@@ -59,11 +54,7 @@ const DRIVE_FOLDER_URL =
           data-type="grupa"
           aria-pressed="false"
         >
-          <span class="artist-intake_type-number">01</span>
-          <span
-            ><strong>Grupa</strong><small>Mūziķu apvienība vai projekts</small
-            ></span
-          >
+          <strong>Grupa</strong>
         </button>
         <button
           class="artist-intake_type-option"
@@ -71,12 +62,7 @@ const DRIVE_FOLDER_URL =
           data-type="muzikis"
           aria-pressed="false"
         >
-          <span class="artist-intake_type-number">02</span>
-          <span
-            ><strong>Mūziķis</strong><small
-              >Izpildītājs, ko var piesaistīt dažādiem sastāviem</small
-            ></span
-          >
+          <strong>Mūziķis</strong>
         </button>
         <button
           class="artist-intake_type-option"
@@ -84,46 +70,31 @@ const DRIVE_FOLDER_URL =
           data-type="partneris"
           aria-pressed="false"
         >
-          <span class="artist-intake_type-number">03</span>
-          <span
-            ><strong>Partneris</strong><small
-              >Pakalpojumu sniedzējs vai sadarbības partneris</small
-            ></span
-          >
+          <strong>Partneris</strong>
         </button>
       </div>
     </fieldset>
 
     <section class="artist-intake_panel" data-panel="grupa" hidden>
-      <Fieldset legend="Pamatinformācija" variant="columns">
-        <Input label="Grupas nosaukums" name="grupas-nosaukums" required />
-        <Fieldset legend="Repertuārs" variant="inline" legendStyle="label">
-          <Choice
-            type="radio"
-            name="grupas-repertuars"
-            label="Oriģinālmūzika"
-            value="originalmuzika"
-            required
-          />
-          <Choice
-            type="radio"
-            name="grupas-repertuars"
-            label="Kaveri"
-            value="kaveri"
-          />
-          <Choice
-            type="radio"
-            name="grupas-repertuars"
-            label="Abi"
-            value="abi"
-          />
-        </Fieldset>
+      <Input label="Grupas nosaukums" name="grupas-nosaukums" required />
+      <Fieldset legend="Repertuārs" variant="inline" legendStyle="label">
+        <Choice
+          type="radio"
+          name="grupas-repertuars"
+          label="Oriģinālmūzika"
+          value="originalmuzika"
+          required
+        />
+        <Choice
+          type="radio"
+          name="grupas-repertuars"
+          label="Kaveri"
+          value="kaveri"
+        />
+        <Choice type="radio" name="grupas-repertuars" label="Abi" value="abi" />
       </Fieldset>
 
-      <Fieldset legend="Žanri" legendStyle="label">
-        <p class="artist-intake_hint text-style-main">
-          Atzīmējiet līdz trim žanriem.
-        </p>
+      <Fieldset legend="Žanri (līdz 3)" legendStyle="label">
         <div class="artist-intake_genres" data-genres>
           {
             genres.map((genre) => (
@@ -151,312 +122,296 @@ const DRIVE_FOLDER_URL =
         </p>
       </Fieldset>
 
-      <Fieldset legend="Sastāvs un stāsts">
-        <Textarea
-          label="Cilvēki grupā"
-          name="grupas-dalibnieki"
-          placeholder="Vārds Uzvārds — instruments / loma"
-          minLines={4}
-          required
-        />
-        <Textarea
-          label="Grupas apraksts"
-          name="grupas-apraksts"
-          placeholder="Aprakstiet grupu vismaz vienā 4–5 teikumu rindkopā: skanējumu, pieredzi, repertuāru un to, kas jūs raksturo."
-          minLines={8}
-          maxLines={22}
-          minlength="250"
-          required
-        />
-        <Textarea
-          label="Apbalvojumi, sasniegumi un nozīmīgas uzstāšanās"
-          name="grupas-sasniegumi"
-          placeholder="Festivāli, konkursi, nozīmīgi pasākumi, sadarbības vai citi sasniegumi."
-        />
-      </Fieldset>
+      <Textarea
+        label="Cilvēki grupā"
+        name="grupas-dalibnieki"
+        placeholder="Vārds Uzvārds — instruments / loma"
+        minLines={4}
+        required
+      />
+      <Textarea
+        label="Grupas apraksts"
+        name="grupas-apraksts"
+        placeholder="4–5 teikumi līdz vienai A4 lapai par grupas skanējumu, pieredzi un repertuāru."
+        minLines={8}
+        maxLines={22}
+        minlength="250"
+        required
+      />
+      <Textarea
+        label="Apbalvojumi, sasniegumi un nozīmīgas uzstāšanās"
+        name="grupas-sasniegumi"
+        placeholder="Festivāli, konkursi, nozīmīgi pasākumi, sadarbības vai citi sasniegumi."
+      />
 
-      <Fieldset legend="Mūzika un saites">
-        <Textarea
-          label="Līdz 5 dziesmu vai priekšnesumu saites"
-          name="grupas-top-saites"
-          placeholder="Ievietojiet katru saiti jaunā rindā. Ja nav ko pievienot, ierakstiet “nav”."
-          minLines={5}
-        />
-        <Textarea
-          label="Sociālie un citi linki"
-          name="grupas-socialie-tikli"
-          placeholder="Facebook, Instagram, YouTube, TikTok, Spotify, SoundCloud, Bandcamp un citas saites — katru jaunā rindā."
-          minLines={5}
-        />
-      </Fieldset>
+      <Textarea
+        label="Līdz 5 dziesmu vai priekšnesumu saites"
+        name="grupas-top-saites"
+        placeholder="Ievietojiet katru saiti jaunā rindā. Ja nav ko pievienot, ierakstiet “nav”."
+        minLines={5}
+      />
+      <Textarea
+        label="Sociālo tīklu un citas saites"
+        name="grupas-socialie-tikli"
+        placeholder="Facebook, Instagram, YouTube, TikTok, Spotify, SoundCloud, Bandcamp un citas saites — katru jaunā rindā."
+        minLines={5}
+      />
 
       <aside class="artist-intake_drive" aria-labelledby="group-drive-heading">
-        <p class="artist-intake_kicker">Materiāli</p>
-        <h3 id="group-drive-heading" class="text-style-h5">
+        <h2 id="group-drive-heading" class="field-label text-style-main">
           Google Drive mape
-        </h3>
+        </h2>
         <p class="text-style-main">
-          Izveidojiet Google Drive mapi ar grupas nosaukumu un ievietojiet tajā
-          logo, tehnisko raideri, foto, video un citus noderīgus materiālus mūsu
-          kopīgajā Drive mapē.
+          Kopīgajā Drive mapē izveidojiet mapi ar grupas nosaukumu. Ielieciet
+          tajā logo, raideri, foto, video un citus materiālus.
         </p>
         <Button
           element="link"
           href={DRIVE_FOLDER_URL}
           target="_blank"
-          rel="noreferrer">Atvērt kopīgo Google Drive mapi</Button
+          rel="noreferrer">Atvērt Drive mapi</Button
         >
       </aside>
 
-      <Fieldset legend="Pasākumi un cena" variant="columns">
-        <Textarea
-          label="Kādos pasākumos uzstājaties?"
-          name="grupas-pasakumi"
-          placeholder="Festivāli, korporatīvie pasākumi, kāzas, koncerti u.c."
-          required
-        />
-        <Textarea
-          label="Standarta programmas garums un formāts"
-          name="grupas-programma"
-          placeholder="Piem., 1 h koncerts vai 3 × 40 min seti."
-          required
-        />
-        <Input
-          variant="text"
-          label="Minimālā cena"
-          name="grupas-min-cena"
-          placeholder="Piem., no 1 200 EUR + PVN"
-          required
-        />
-        <Input
-          variant="text"
-          label="Vēlamā cena"
-          name="grupas-velama-cena"
-          placeholder="Piem., 1 800 EUR + PVN"
-        />
-      </Fieldset>
-
-      <Fieldset legend="Norēķini un kontakts" variant="columns">
-        <Fieldset
-          legend="Vai ir juridiska persona un/vai pašnodarbinātā statuss?"
-          variant="inline"
-          legendStyle="label"
-        >
-          <Choice
-            type="radio"
-            name="grupas-rekini"
-            label="Jā"
-            value="ja"
-            required
-          />
-          <Choice type="radio" name="grupas-rekini" label="Nē" value="ne" />
-          <Choice
-            type="radio"
-            name="grupas-rekini"
-            label="Jāprecizē"
-            value="japrecize"
-          />
-        </Fieldset>
-        <Input
-          label="Galvenās kontaktpersonas vārds, uzvārds"
-          name="grupas-kontaktpersona"
-          required
-        />
-        <Input variant="email" label="E-pasts" name="grupas-epasts" required />
-        <Input
-          variant="phone"
-          label="Tālrunis"
-          name="grupas-talrunis"
-          required
-        />
-      </Fieldset>
       <Textarea
-        label="Citas piezīmes"
-        name="grupas-piezimes"
-        placeholder="Viss, ko mums būtu svarīgi zināt par jūsu darbu vai organizēšanos."
+        label="Kādos pasākumos uzstājaties?"
+        name="grupas-pasakumi"
+        placeholder="Festivāli, korporatīvie pasākumi, kāzas, koncerti u.c."
+        required
       />
+      <Textarea
+        label="Standarta programmas garums un formāts"
+        name="grupas-programma"
+        placeholder="Piem., 1 h koncerts vai 3 × 40 min seti."
+        required
+      />
+      <Input
+        variant="text"
+        label="Minimālā cena uz rokas (EUR)"
+        name="grupas-min-cena"
+        placeholder="Summa, ko saņemat pēc nodokļiem"
+        required
+      />
+      <Input
+        variant="text"
+        label="Vēlamā cena uz rokas (EUR)"
+        name="grupas-velama-cena"
+        placeholder="Summa, ko saņemat pēc nodokļiem"
+      />
+      <Textarea
+        label="Kādus nodokļus maksājat un kā aprēķināt kopējo cenu?"
+        name="grupas-nodokli"
+        placeholder="Norādiet nodokļus un aprēķinu no summas uz rokas līdz kopējai cenai. Ja nezināt, rakstiet “Nezinu”."
+        required
+      />
+
+      <Fieldset
+        legend="Vai ir juridiska persona un/vai pašnodarbinātā statuss?"
+        variant="inline"
+        legendStyle="label"
+      >
+        <Choice
+          type="radio"
+          name="grupas-rekini"
+          label="Jā"
+          value="ja"
+          required
+        />
+        <Choice type="radio" name="grupas-rekini" label="Nē" value="ne" />
+        <Choice
+          type="radio"
+          name="grupas-rekini"
+          label="Jāprecizē"
+          value="japrecize"
+        />
+      </Fieldset>
+      <Input
+        label="Galvenās kontaktpersonas vārds, uzvārds"
+        name="grupas-kontaktpersona"
+        required
+      />
+      <Input variant="email" label="E-pasts" name="grupas-epasts" required />
+      <Input variant="phone" label="Tālrunis" name="grupas-talrunis" required />
+
+      <Textarea label="Citas piezīmes" name="grupas-piezimes" />
     </section>
 
     <section class="artist-intake_panel" data-panel="muzikis" hidden>
-      <Fieldset legend="Pamatinformācija" variant="columns">
-        <Input label="Vārds, uzvārds" name="muzika-vards" required />
-        <Input
-          label="Galvenais instruments vai loma"
-          name="muzika-instruments"
-          placeholder="Piem., kontrabass, bungas, vokāls"
+      <Input label="Vārds, uzvārds" name="muzika-vards" required />
+      <Input
+        label="Galvenais instruments vai loma"
+        name="muzika-instruments"
+        placeholder="Piem., kontrabass, bungas, vokāls"
+        required
+      />
+      <Textarea
+        label="Kādos sastāvos / grupās spēlējat?"
+        name="muzika-grupas"
+        placeholder="Norādiet grupu vai projektu nosaukumus."
+        required
+      />
+      <Fieldset
+        legend="Vai esat arī solo mākslinieks?"
+        variant="inline"
+        legendStyle="label"
+      >
+        <Choice
+          type="radio"
+          name="muzika-solo"
+          label="Jā"
+          value="ja"
           required
         />
-        <Textarea
-          label="Kādos sastāvos / grupās spēlējat?"
-          name="muzika-grupas"
-          placeholder="Norādiet grupu vai projektu nosaukumus."
-          required
-        />
-        <Fieldset
-          legend="Vai esat arī solo mākslinieks?"
-          variant="inline"
-          legendStyle="label"
-        >
-          <Choice
-            type="radio"
-            name="muzika-solo"
-            label="Jā"
-            value="ja"
-            required
-          />
-          <Choice type="radio" name="muzika-solo" label="Nē" value="ne" />
-        </Fieldset>
+        <Choice type="radio" name="muzika-solo" label="Nē" value="ne" />
       </Fieldset>
-      <Fieldset legend="Profils un pieredze">
-        <Textarea
-          label="Mūziķa apraksts"
-          name="muzika-apraksts"
-          placeholder="Īsi aprakstiet savu muzikālo pieredzi, stiprās puses, stilus un sadarbības formātus."
-          minLines={6}
-          required
-        />
-        <Textarea
-          label="Sasniegumi un nozīmīgas uzstāšanās"
-          name="muzika-sasniegumi"
-          placeholder="Festivāli, ieraksti, projekti, apbalvojumi vai citi būtiski fakti."
-        />
-        <Textarea
-          label="Līdz 5 saites uz ierakstiem vai priekšnesumiem"
-          name="muzika-top-saites"
-          placeholder="Katra saite jaunā rindā. Ja nav ko pievienot, ierakstiet “nav”."
-          minLines={5}
-        />
-        <Textarea
-          label="Sociālie un citi linki"
-          name="muzika-socialie-tikli"
-          placeholder="Instagram, Facebook, YouTube, Spotify, personīgā mājaslapa u.c."
-          minLines={4}
-        />
-      </Fieldset>
+
+      <Textarea
+        label="Mūziķa apraksts"
+        name="muzika-apraksts"
+        placeholder="Īsi aprakstiet savu muzikālo pieredzi, stiprās puses, stilus un sadarbības formātus."
+        minLines={6}
+        required
+      />
+      <Textarea
+        label="Sasniegumi un nozīmīgas uzstāšanās"
+        name="muzika-sasniegumi"
+        placeholder="Festivāli, ieraksti, projekti, apbalvojumi vai citi būtiski fakti."
+      />
+      <Textarea
+        label="Līdz 5 saites uz ierakstiem vai priekšnesumiem"
+        name="muzika-top-saites"
+        placeholder="Katra saite jaunā rindā. Ja nav ko pievienot, ierakstiet “nav”."
+        minLines={5}
+      />
+      <Textarea
+        label="Sociālo tīklu un citas saites"
+        name="muzika-socialie-tikli"
+        placeholder="Instagram, Facebook, YouTube, Spotify, personīgā mājaslapa u.c."
+        minLines={4}
+      />
+
       <aside
         class="artist-intake_drive"
         aria-labelledby="musician-drive-heading"
       >
-        <p class="artist-intake_kicker">Materiāli</p>
-        <h3 id="musician-drive-heading" class="text-style-h5">
+        <h2 id="musician-drive-heading" class="field-label text-style-main">
           Google Drive mape
-        </h3>
+        </h2>
         <p class="text-style-main">
-          Izveidojiet Google Drive mapi ar savu vārdu un uzvārdu. Pievienojiet
-          foto, video, tehnisko informāciju un citus materiālus mūsu kopīgajā
-          Drive mapē.
+          Kopīgajā Drive mapē izveidojiet mapi ar savu vārdu un uzvārdu.
+          Ielieciet tajā foto, video un tehnisko informāciju.
         </p>
         <Button
           element="link"
           href={DRIVE_FOLDER_URL}
           target="_blank"
-          rel="noreferrer">Atvērt kopīgo Google Drive mapi</Button
+          rel="noreferrer">Atvērt Drive mapi</Button
         >
       </aside>
-      <Fieldset legend="Pieejamība, cena un kontakts" variant="columns">
-        <Textarea
-          label="Kādos pasākumos vai formātos esat pieejams?"
-          name="muzika-pasakumi"
-          placeholder="Koncerti, studijas ieraksti, kāzas, privāti un korporatīvi pasākumi u.c."
-        />
-        <Textarea
-          label="Standarta programmas garums vai darba formāts"
-          name="muzika-programma"
-          placeholder="Piem., 2 × 45 min, viena dziesma ierakstā, mēģinājumu diena."
-        />
-        <Input
-          variant="text"
-          label="Minimālā cena"
-          name="muzika-min-cena"
-          placeholder="Brīvā formātā"
-        />
-        <Input
-          variant="text"
-          label="Vēlamā cena"
-          name="muzika-velama-cena"
-          placeholder="Brīvā formātā"
-        />
-        <Fieldset
-          legend="Vai varat izrakstīt rēķinu?"
-          variant="inline"
-          legendStyle="label"
-        >
-          <Choice
-            type="radio"
-            name="muzika-rekini"
-            label="Jā"
-            value="ja"
-            required
-          />
-          <Choice type="radio" name="muzika-rekini" label="Nē" value="ne" />
-          <Choice
-            type="radio"
-            name="muzika-rekini"
-            label="Jāprecizē"
-            value="japrecize"
-          />
-        </Fieldset>
-        <Input variant="email" label="E-pasts" name="muzika-epasts" required />
-        <Input
-          variant="phone"
-          label="Tālrunis"
-          name="muzika-talrunis"
+
+      <Textarea
+        label="Kādos pasākumos vai formātos esat pieejams?"
+        name="muzika-pasakumi"
+        placeholder="Koncerti, studijas ieraksti, kāzas, privāti un korporatīvi pasākumi u.c."
+      />
+      <Textarea
+        label="Standarta programmas garums vai darba formāts"
+        name="muzika-programma"
+        placeholder="Piem., 2 × 45 min, viena dziesma ierakstā, mēģinājumu diena."
+      />
+      <Input
+        variant="text"
+        label="Minimālā cena uz rokas (EUR)"
+        name="muzika-min-cena"
+        placeholder="Summa, ko saņemat pēc nodokļiem"
+      />
+      <Input
+        variant="text"
+        label="Vēlamā cena uz rokas (EUR)"
+        name="muzika-velama-cena"
+        placeholder="Summa, ko saņemat pēc nodokļiem"
+      />
+      <Textarea
+        label="Kādus nodokļus maksājat un kā aprēķināt kopējo cenu?"
+        name="muzika-nodokli"
+        placeholder="Norādiet nodokļus un aprēķinu no summas uz rokas līdz kopējai cenai. Ja nezināt, rakstiet “Nezinu”."
+        required
+      />
+      <Fieldset
+        legend="Vai varat izrakstīt rēķinu?"
+        variant="inline"
+        legendStyle="label"
+      >
+        <Choice
+          type="radio"
+          name="muzika-rekini"
+          label="Jā"
+          value="ja"
           required
         />
+        <Choice type="radio" name="muzika-rekini" label="Nē" value="ne" />
+        <Choice
+          type="radio"
+          name="muzika-rekini"
+          label="Jāprecizē"
+          value="japrecize"
+        />
       </Fieldset>
+      <Input variant="email" label="E-pasts" name="muzika-epasts" required />
+      <Input variant="phone" label="Tālrunis" name="muzika-talrunis" required />
+
       <Textarea label="Citas piezīmes" name="muzika-piezimes" />
     </section>
 
     <section class="artist-intake_panel" data-panel="partneris" hidden>
-      <Fieldset legend="Partnera informācija" variant="columns">
-        <Input
-          label="Vārds vai uzņēmuma nosaukums"
-          name="partnera-nosaukums"
-          required
-        />
-        <Textarea
-          label="Ko jūs darāt?"
-          name="partnera-apraksts"
-          placeholder="Aprakstiet pakalpojumu, specializāciju un pieredzi."
-          required
-        />
-        <Input
-          variant="url"
-          label="Google Drive saite ar logo un foto"
-          name="partnera-drive-saite"
-          placeholder="https://drive.google.com/..."
-        />
-        <Textarea
-          label="Mājaslapas un sociālo tīklu saites"
-          name="partnera-saites"
-          placeholder="Mājaslapa, Instagram, Facebook, LinkedIn u.c."
-          minLines={4}
-        />
-        <Textarea
-          label="Cenu informācija"
-          name="partnera-cenas"
-          placeholder="Kur atrast cenu lapu, kā tiek aprēķināta cena un aptuvenās izmaksas vienam pasākumam."
-          minLines={5}
-          required
-        />
-        <Input
-          label="Kontaktpersonas vārds, uzvārds"
-          name="partnera-kontaktpersona"
-          required
-        />
-        <Input
-          variant="email"
-          label="E-pasts"
-          name="partnera-epasts"
-          required
-        />
-        <Input
-          variant="phone"
-          label="Tālrunis"
-          name="partnera-talrunis"
-          required
-        />
-      </Fieldset>
+      <Input
+        label="Vārds vai uzņēmuma nosaukums"
+        name="partnera-nosaukums"
+        required
+      />
+      <Textarea
+        label="Ko jūs darāt?"
+        name="partnera-apraksts"
+        placeholder="Aprakstiet pakalpojumu, specializāciju un pieredzi."
+        required
+      />
+      <Input
+        variant="url"
+        label="Google Drive saite ar logo un foto"
+        name="partnera-drive-saite"
+        placeholder="https://drive.google.com/..."
+      />
+      <Textarea
+        label="Mājaslapas un sociālo tīklu saites"
+        name="partnera-saites"
+        placeholder="Mājaslapa, Instagram, Facebook, LinkedIn u.c."
+        minLines={4}
+      />
+      <Textarea
+        label="Cena uz rokas un tās aprēķins"
+        name="partnera-cenas"
+        placeholder="Summa pēc nodokļiem, aptuvenā cena par pasākumu vai saite uz cenrādi."
+        minLines={5}
+        required
+      />
+      <Textarea
+        label="Kādus nodokļus maksājat un kā aprēķināt kopējo cenu?"
+        name="partnera-nodokli"
+        placeholder="Norādiet nodokļus un aprēķinu no summas uz rokas līdz kopējai cenai. Ja nezināt, rakstiet “Nezinu”."
+        required
+      />
+      <Input
+        label="Kontaktpersonas vārds, uzvārds"
+        name="partnera-kontaktpersona"
+        required
+      />
+      <Input variant="email" label="E-pasts" name="partnera-epasts" required />
+      <Input
+        variant="phone"
+        label="Tālrunis"
+        name="partnera-talrunis"
+        required
+      />
     </section>
 
     <ButtonWrapper
@@ -548,7 +503,7 @@ const DRIVE_FOLDER_URL =
 <style is:global>
   @layer components {
     .artist-intake_wrap {
-      width: min(100%, 60rem);
+      width: min(100%, 44rem);
       margin-inline: auto;
       & [hidden] {
         display: none;
@@ -572,7 +527,6 @@ const DRIVE_FOLDER_URL =
     .artist-intake_type-list {
       display: grid;
       gap: var(--space-3);
-      margin-top: var(--space-5);
 
       @media (width >= 48rem) {
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -637,8 +591,8 @@ const DRIVE_FOLDER_URL =
     .artist-intake_panel {
       display: flex;
       flex-direction: column;
-      gap: var(--space-8);
-      padding-top: var(--space-8);
+      gap: var(--space-5);
+      scroll-margin-top: calc(var(--nav-height) + var(--space-5));
     }
 
     .artist-intake_genres {
@@ -656,12 +610,10 @@ const DRIVE_FOLDER_URL =
       display: flex;
       flex-direction: column;
       gap: var(--space-3);
-      padding: var(--space-5);
-      background: var(--background-2);
-      border-left: var(--border-width) solid var(--text);
+      align-items: flex-start;
     }
 
-    .artist-intake_drive h3,
+    .artist-intake_drive h2,
     .artist-intake_drive p {
       margin: 0;
     }
