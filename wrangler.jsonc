@@ -16,4 +16,9 @@
   "observability": {
     "enabled": true,
   },
+
+  "vars": {
+    "RESEND_FROM": "STUDEJA anketa <noreply@anketas.studeja.lv>",
+    "RESEND_TO": "info@studeja.lv",
+  },
 }
