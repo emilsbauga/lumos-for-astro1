@@ -20,9 +20,17 @@ type Props = SeoProps & {
   overlap?: boolean;
   /** Which navigation the page carries. v1 keeps the one it shipped with. */
   nav?: "v1" | "v2";
+  /** Whether the page includes the public navigation and footer. */
+  chrome?: "full" | "none";
 };
 
-const { theme = "inherit", overlap = false, nav = "v1", ...seo } = Astro.props;
+const {
+  theme = "inherit",
+  overlap = false,
+  nav = "v1",
+  chrome = "full",
+  ...seo
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -33,11 +41,14 @@ const { theme = "inherit", overlap = false, nav = "v1", ...seo } = Astro.props;
   </head>
   <body>
     <SkipLink label="Pāriet uz saturu" />
-    {nav === "v2" ? <NavV2 /> : <Nav overlap={overlap} />}
+    {
+      chrome === "full" &&
+        (nav === "v2" ? <NavV2 /> : <Nav overlap={overlap} />)
+    }
     <main id="main" tabindex="-1">
       <slot />
     </main>
-    <Footer />
+    {chrome === "full" && <Footer />}
     <ScrollReveal />
     <Atmosphere />
   </body>
