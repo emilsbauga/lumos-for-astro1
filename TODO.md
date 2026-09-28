@@ -146,29 +146,40 @@ Questions:
 
 ## Homepage
 
-### Par STUDEJA section
+### Team section ("Aizkulisēs")
 
-A section that shows the team members in a creative way, with a team photo
-and a short description. It leads to `/par-studeja`.
+Built as `SectionTeamV2.astro`, last on the homepage above the footer. The
+order may change. A 16:9 frame for the team photo or video sits above six
+credit lines, set like the credits on a record sleeve. Pointing at a name, or
+at the person in the photo, dims the frame except for a spotlight on that
+person. Nothing is lit until someone points, so nobody is picked out by
+default. "Iepazīt mūs" leads to `/par-studeja`.
 
 Known:
 
 - Founders: Emīls Bauga, Ralfs Arbidāns, Kristaps Višs and Imants Spīčs (company
   file §5). The company file does not confirm board roles or signing rights, so
-  do not state them.
-- The brief's draft: "STUDEJA vieno profesionālus mūziķus, pasākumu vadītājus un
-  producentus, mārketinga speciālistus un kultūras aktīvistus." Roots in
-  Latgale, working across Latvia.
-- Real photos of people at work matter more than a formal company description
-  (brief §6).
+  roles describe the work, not company positions.
+- Madara Arbidāne, "Sociālo tīklu guru".
+- Damians Pavlovičs runs stage management and logistics: who, what and where
+  at each moment. The title must not read as a helper's. "Diriģents" is out,
+  because in music it means a conductor.
 
 Questions:
 
-- Where does it sit: after services and before the feed?
-- Which people appear, only the four founders or the wider team?
-- Each person's role, one line about them, and a portrait. None of this is
-  written yet.
-- Is there a team photo?
+- Each person's role. Founders show `[Loma]`, Damians shows
+  `[Skatuves un loģistikas vadītājs]`.
+- Team photo or video. Once there is one, set each person's `x` and `y` in
+  `src/pages/index.astro` to where they stand in it. With a video, the
+  spotlight only works if people stay in place, so shoot a mostly still group
+  or drop the spotlight.
+- The Latgalian hover label for "Iepazīt mūs". It shows `[LATGALISKI]` now.
+- Should the spotlight move through the people on its own when nobody is
+  pointing? It would be allowed, since it lights everyone in turn, but it adds
+  motion to a page that already has a lot.
+- At 1280×720 the section is 15px taller than the screen, and at 360×740 it is
+  47px taller, because the frame has hit its minimum size. Accept, or shorten
+  the description on small screens?
 
 ---
 

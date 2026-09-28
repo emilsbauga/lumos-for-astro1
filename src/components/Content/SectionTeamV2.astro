@@ -1,0 +1,516 @@
+---
+import Img from "@/components/Media/Img.astro";
+
+interface Member {
+  /** The person's full name. */
+  name: string;
+  /** What they do, as a credit line would put it. */
+  role: string;
+  /** Adds the founder mark after the role. */
+  founder?: boolean;
+  /** Where they stand in the team photograph, as a percentage across. */
+  x: number;
+  /** And a percentage down. */
+  y: number;
+}
+
+interface Props {
+  /** Set to `false` to skip rendering this component and its children. */
+  render?: boolean;
+  /** The anchor site search and the drawer link to. */
+  id?: string;
+  /** The section title. */
+  heading: string;
+  /** One or two sentences under it. */
+  text: string;
+  /** The team photograph. Left out, the frame holds a placeholder. */
+  image?: ImageMetadata;
+  /** A muted loop in place of the photograph, which becomes its poster. */
+  video?: string;
+  /** What the photograph shows, naming everyone from the left. */
+  imageAlt?: string;
+  /** What the empty frame says until there is a photograph. */
+  placeholder?: string;
+  /** The credits, in the order they are listed. */
+  members: Member[];
+  /** The mark after a founder's role. */
+  founderLabel?: string;
+  /** The label on the link below the credits. */
+  linkLabel: string;
+  /** What rolls up in its place on hover. Decorative, so it is never announced. */
+  linkHoverLabel: string;
+  /** Where that link leads. */
+  linkHref: string;
+}
+
+const {
+  render = true,
+  id = "komanda",
+  heading,
+  text,
+  image,
+  video,
+  imageAlt = "",
+  placeholder = "[Komandas foto vai video]",
+  members,
+  founderLabel = "dibinātājs",
+  linkLabel,
+  linkHoverLabel,
+  linkHref,
+} = Astro.props;
+---
+
+{
+  render && (
+    <section class="teamv2_wrap" id={id} data-team>
+      <div data-grain aria-hidden="true" />
+
+      <div class="teamv2_inner">
+        <header class="teamv2_head" data-reveal-stagger>
+          <h2 class="teamv2_heading" data-reveal>
+            {heading}
+          </h2>
+          <p class="teamv2_text" data-reveal>
+            {text}
+          </p>
+        </header>
+
+        <figure class="teamv2_stage" data-reveal>
+          {video ? (
+            <video
+              class="teamv2_media"
+              src={video}
+              poster={image?.src}
+              autoplay
+              muted
+              loop
+              playsinline
+              aria-label={imageAlt}
+            />
+          ) : image ? (
+            <Img
+              class="teamv2_media"
+              src={image}
+              alt={imageAlt}
+              variant="constrained"
+              loading="lazy"
+              sizes="(width >= 64rem) 52rem, 92vw"
+            />
+          ) : (
+            <span class="teamv2_placeholder">{placeholder}</span>
+          )}
+
+          {/* The dark around the light. Nothing is lit until someone points
+              at a person, so nobody is picked out by default. */}
+          <span class="teamv2_dim" aria-hidden="true" />
+
+          {members.map((member, index) => (
+            <span
+              class="teamv2_spot"
+              style={`left: ${member.x}%; top: ${member.y}%;`}
+              data-index={index}
+              aria-hidden="true"
+            />
+          ))}
+        </figure>
+
+        <ul class="teamv2_credits" role="list" data-reveal-stagger>
+          {members.map((member, index) => (
+            <li
+              class="teamv2_row"
+              data-index={index}
+              data-x={member.x}
+              data-y={member.y}
+              data-reveal
+            >
+              <span class="teamv2_name">{member.name}</span>
+              <span class="teamv2_leader" aria-hidden="true" />
+              <span class="teamv2_role">
+                {member.role}
+                {member.founder && (
+                  <span class="teamv2_founder"> · {founderLabel}</span>
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <div class="teamv2_foot" data-reveal>
+          <a class="teamv2_link" href={linkHref}>
+            <span class="teamv2_roll">
+              <span class="teamv2_roll_label">{linkLabel}</span>
+              <span class="teamv2_roll_label alt" aria-hidden="true">
+                {linkHoverLabel}
+              </span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-team]").forEach((section) => {
+    const stage = section.querySelector<HTMLElement>(".teamv2_stage");
+    const rows = [...section.querySelectorAll<HTMLElement>(".teamv2_row")];
+    const spots = [...section.querySelectorAll<HTMLElement>(".teamv2_spot")];
+    const video = section.querySelector<HTMLVideoElement>("video");
+    if (!stage) return;
+
+    if (
+      video &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      video.removeAttribute("autoplay");
+      video.pause();
+    }
+
+    let active: number | null = null;
+
+    /* One person lit, or nobody. The light moves between people rather than
+       going out and coming back, so it reads as one spotlight. */
+    const light = (index: number | null) => {
+      active = index;
+      const row = index === null ? null : rows[index];
+      if (row) {
+        stage.style.setProperty("--teamv2-x", `${row.dataset.x}%`);
+        stage.style.setProperty("--teamv2-y", `${row.dataset.y}%`);
+      }
+      stage.classList.toggle("is-lit", row !== null);
+      section.classList.toggle("has-active", row !== null);
+      rows.forEach((other) =>
+        other.classList.toggle("is-active", other === row),
+      );
+    };
+
+    const indexOf = (element: HTMLElement) => Number(element.dataset.index);
+
+    [...rows, ...spots].forEach((element) => {
+      element.addEventListener("pointerenter", (event) => {
+        if (event.pointerType === "mouse") light(indexOf(element));
+      });
+      element.addEventListener("pointerleave", (event) => {
+        if (event.pointerType === "mouse" && active === indexOf(element))
+          light(null);
+      });
+    });
+
+    /* A tap lights a person, a second tap puts it out, and a tap anywhere
+       else in the section puts it out too. */
+    rows.forEach((row) => {
+      row.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const index = indexOf(row);
+        light(active === index ? null : index);
+      });
+    });
+    spots.forEach((spot) => {
+      spot.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const index = indexOf(spot);
+        light(active === index ? null : index);
+      });
+    });
+    section.addEventListener("click", () => {
+      if (active !== null) light(null);
+    });
+  });
+</script>
+
+<style is:global>
+  /* Registered so the spotlight glides from one person to the next instead
+     of jumping. */
+  @property --teamv2-x {
+    syntax: "<percentage>";
+    inherits: true;
+    initial-value: 50%;
+  }
+  @property --teamv2-y {
+    syntax: "<percentage>";
+    inherits: true;
+    initial-value: 50%;
+  }
+
+  @layer components {
+    .teamv2_wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100svh;
+      padding-inline: var(--site-margin);
+      /* Small, like the hero: a frame and six credits have to share one
+         screen, and the large spacing would push the link off it. */
+      padding-block: var(--section-space-small);
+      background-color: var(--field-green);
+      color: var(--sand-300);
+      isolation: isolate;
+    }
+
+    .teamv2_inner {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 52rem;
+      margin-inline: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-6);
+    }
+
+    /* Head */
+    .teamv2_head {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-5);
+      text-align: center;
+    }
+
+    .teamv2_heading {
+      margin: 0;
+      font-family: var(--display-family);
+      font-size: clamp(2.125rem, 5vw, 4rem);
+      font-weight: var(--display-bold);
+      line-height: var(--line-height-small);
+      letter-spacing: var(--letter-spacing-display);
+      text-transform: uppercase;
+    }
+
+    .teamv2_text {
+      margin: 0;
+      max-width: 52ch;
+      color: var(--text-2);
+      text-wrap: pretty;
+    }
+
+    /* Stage. As wide as the column, but never so tall that the credits
+       fall out of the screen. */
+    .teamv2_stage {
+      --teamv2-x: 50%;
+      --teamv2-y: 50%;
+      position: relative;
+      width: min(100%, calc((100svh - 36rem) * 16 / 9));
+      min-width: min(100%, 20rem);
+      aspect-ratio: 16 / 9;
+      margin: 0;
+      overflow: clip;
+      container-type: inline-size;
+      border-radius: var(--radius-main);
+      border: var(--border-width) solid
+        color-mix(in lab, var(--text) 14%, transparent);
+      background-color: color-mix(in lab, var(--text) 4%, transparent);
+      transition:
+        --teamv2-x 560ms var(--open-ease),
+        --teamv2-y 560ms var(--open-ease);
+    }
+
+    .teamv2_media {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .teamv2_placeholder {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: var(--text-2);
+      font-size: var(--text-small);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+    }
+
+    /* The spotlight: clear in a circle around the person, dark around it. */
+    .teamv2_dim {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(
+        circle 13cqw at var(--teamv2-x) var(--teamv2-y),
+        color-mix(in srgb, var(--sand-100) 10%, transparent) 0%,
+        transparent 55%,
+        rgb(6 22 21 / 0.74) 100%
+      );
+      opacity: 0;
+      transition: opacity 420ms var(--open-ease);
+    }
+
+    .teamv2_stage.is-lit .teamv2_dim {
+      opacity: 1;
+    }
+
+    /* Where each person stands, so pointing at them lights their credit. */
+    .teamv2_spot {
+      position: absolute;
+      width: 12cqw;
+      aspect-ratio: 1;
+      translate: -50% -50%;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    /* Credits */
+    .teamv2_credits {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      /* Two columns at every width. Stacked in one, six credits would push
+         the link off a phone's screen. */
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: var(--space-5);
+
+      @media (width >= 48rem) {
+        column-gap: var(--space-8);
+      }
+    }
+
+    .teamv2_row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: baseline;
+      gap: var(--space-3);
+      padding-block: var(--space-3);
+      border-bottom: var(--border-width) solid
+        color-mix(in lab, var(--text) 10%, transparent);
+      cursor: default;
+      transition: opacity var(--hover-duration) var(--hover-ease);
+
+      /* Name over role in the narrower columns, where the dots would have
+         no room. */
+      @media (width < 48rem) {
+        grid-template-columns: 1fr;
+        align-content: start;
+        gap: var(--space-1);
+      }
+    }
+
+    /* Everyone reads the same at rest. Only while one person is lit do the
+       others step back. */
+    .teamv2_wrap.has-active .teamv2_row:not(.is-active) {
+      opacity: 0.45;
+    }
+
+    .teamv2_name {
+      font-family: var(--display-family);
+      font-size: var(--h6);
+      font-weight: var(--display-bold);
+      letter-spacing: var(--letter-spacing-display);
+    }
+
+    .teamv2_leader {
+      border-bottom: var(--border-width) dotted
+        color-mix(in lab, var(--text) 30%, transparent);
+      translate: 0 -0.3em;
+
+      @media (width < 48rem) {
+        display: none;
+      }
+    }
+
+    .teamv2_role {
+      color: var(--text-2);
+      font-size: var(--text-small);
+      text-align: end;
+
+      @media (width < 48rem) {
+        text-align: start;
+      }
+    }
+
+    .teamv2_founder {
+      color: var(--green-200);
+    }
+
+    /* Foot */
+    .teamv2_foot {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* The label rolls up and its Latgalian twin rolls in behind it. */
+    .teamv2_roll {
+      display: grid;
+      overflow: clip;
+    }
+
+    .teamv2_roll_label {
+      grid-area: 1 / 1;
+      display: block;
+      text-align: center;
+      white-space: nowrap;
+      transition: translate calc(var(--hover-duration) * 1.8) var(--hover-ease);
+      &.alt {
+        translate: 0 110%;
+      }
+    }
+
+    @media (hover: hover) {
+      .teamv2_link:hover .teamv2_roll_label {
+        translate: 0 -110%;
+      }
+      .teamv2_link:hover .teamv2_roll_label.alt {
+        translate: 0 0;
+      }
+    }
+    .teamv2_link:focus-visible .teamv2_roll_label {
+      translate: 0 -110%;
+    }
+    .teamv2_link:focus-visible .teamv2_roll_label.alt {
+      translate: 0 0;
+    }
+
+    .teamv2_link {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.62em 1.15em;
+      border: var(--border-width) solid
+        color-mix(in lab, var(--text) 24%, transparent);
+      border-radius: var(--radius-main);
+      color: var(--text);
+      font-size: var(--text-small);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+      text-decoration: none;
+      transition:
+        border-color var(--hover-duration) var(--hover-ease),
+        background-color var(--hover-duration) var(--hover-ease),
+        color var(--hover-duration) var(--hover-ease),
+        box-shadow calc(var(--hover-duration) * 1.6) var(--hover-ease);
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--sand-100);
+          border-color: var(--sand-100);
+          color: var(--ink-900);
+          box-shadow:
+            0 0 1.5rem color-mix(in srgb, var(--sand-100) 30%, transparent),
+            0 0 4rem color-mix(in srgb, var(--sand-100) 16%, transparent);
+        }
+      }
+      &:focus-visible {
+        outline: var(--focus-width) solid var(--text);
+        outline-offset: var(--focus-offset);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .teamv2_stage,
+      .teamv2_dim,
+      .teamv2_row,
+      .teamv2_roll_label {
+        transition: none;
+      }
+      .teamv2_roll_label.alt {
+        display: none;
+      }
+    }
+  }
+</style>

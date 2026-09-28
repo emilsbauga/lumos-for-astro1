@@ -7,6 +7,7 @@ import SectionHeroV2 from "@/components/Content/SectionHeroV2.astro";
 import SectionFeedV2 from "@/components/Content/SectionFeedV2.astro";
 import SectionProgrammesV2 from "@/components/Content/SectionProgrammesV2.astro";
 import SectionServicesV2 from "@/components/Content/SectionServicesV2.astro";
+import SectionTeamV2 from "@/components/Content/SectionTeamV2.astro";
 
 import instagramMark from "@/assets/icons/streamline/instagram.svg";
 import facebookMark from "@/assets/icons/streamline/facebook.svg";
@@ -274,6 +275,22 @@ const services = [
   },
 ];
 
+/* Roles are bracketed until each person's title is agreed. The x and y are
+   where they stand in the team photograph, spread evenly until there is one. */
+const team = [
+  { name: "Emīls Bauga", role: "[Loma]", founder: true, x: 12, y: 55 },
+  { name: "Ralfs Arbidāns", role: "[Loma]", founder: true, x: 27, y: 55 },
+  { name: "Kristaps Višs", role: "[Loma]", founder: true, x: 42, y: 55 },
+  { name: "Imants Spīčs", role: "[Loma]", founder: true, x: 58, y: 55 },
+  { name: "Madara Arbidāne", role: "Sociālo tīklu guru", x: 73, y: 55 },
+  {
+    name: "Damians Pavlovičs",
+    role: "[Skatuves un loģistikas vadītājs]",
+    x: 88,
+    y: 55,
+  },
+];
+
 /* Instagram and Facebook are the profiles confirmed in the company's own
    information; there is no YouTube channel on record yet, so its address is
    bracketed like any other content that does not exist. */
@@ -493,5 +510,15 @@ const media = [
     heading="@siastudeja jaunumi"
     elfsightId="a546cf55-7526-46c7-956c-88807ed4eedc"
     socials={socials}
+  />
+
+  <!-- Team -->
+  <SectionTeamV2
+    heading="Aizkulisēs"
+    text="Seši cilvēki, kuri rūpējas, lai katrs koncerts un pasākums notiek tā, kā iecerēts. Aiz mums stāv plašāka mūziķu un radošo cilvēku kopiena."
+    members={team}
+    linkLabel="IEPAZĪT MŪS"
+    linkHoverLabel="[LATGALISKI]"
+    linkHref="/par-studeja"
   />
 </BaseLayout>
